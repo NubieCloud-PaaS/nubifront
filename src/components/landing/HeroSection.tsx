@@ -1,11 +1,20 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Badge from '@/components/ui/Badge';
 import GradientText from '@/components/ui/GradientText';
 import AnimatedTerminal from './AnimatedTerminal';
 
 const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubiecloud.io';
+
+const rotatingWords = [
+  'En toute simplicite.',
+  'En quelques clics.',
+  'Sans effort.',
+  'Sans ops.',
+  'A votre rythme.',
+];
 
 const container = {
   hidden: {},
@@ -18,6 +27,15 @@ const item = {
 };
 
 export default function HeroSection() {
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative min-h-[calc(100vh-4rem)] pt-28 pb-20 bg-surface-0 glow-blue bg-grid-pattern overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -34,9 +52,22 @@ export default function HeroSection() {
             >
               Deployer.
               <br />
-              <GradientText from="from-blue-400" to="to-blue-600">
-                Sans la complexite.
-              </GradientText>
+              <span className="inline-block h-[1.2em] overflow-hidden align-bottom">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ y: '100%', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: '-100%', opacity: 0 }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="inline-block"
+                  >
+                    <GradientText from="from-blue-400" to="to-blue-600">
+                      {rotatingWords[wordIndex]}
+                    </GradientText>
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </motion.h1>
 
             <motion.p
