@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ── Nubiecloud Design Tokens – Dark-First ── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-nubitech-50: #f0f9ff;
+  --color-nubitech-100: #e0f2fe;
+  --color-nubitech-200: #bae6fd;
+  --color-nubitech-300: #7dd3fc;
+  --color-nubitech-400: #38bdf8;
+  --color-nubitech-500: #0ea5e9;
+  --color-nubitech-600: #0284c7;
+  --color-nubitech-700: #0369a1;
+  --color-nubitech-800: #075985;
+  --color-nubitech-900: #0c4a6e;
+
+  --color-surface-0: var(--token-surface-0);
+  --color-surface-1: var(--token-surface-1);
+  --color-surface-2: var(--token-surface-2);
+  --color-surface-3: var(--token-surface-3);
+  --color-surface-4: var(--token-surface-4);
+
+  --color-border-0: var(--token-border-0);
+  --color-border-1: var(--token-border-1);
+  --color-border-2: var(--token-border-2);
+
+  --color-text-primary: var(--token-text-1);
+  --color-text-secondary: var(--token-text-2);
+  --color-text-tertiary: var(--token-text-3);
+  --color-text-quaternary: var(--token-text-4);
+
+  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-input: 6px;
+  --radius-modal: 16px;
+  --radius-badge: 20px;
+
+  --shadow-glow-blue: 0 0 15px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.1);
+  --shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(59, 130, 246, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark mode tokens (DEFAULT) */
+:root {
+  --font-main: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Surfaces – soft dark (Railway-style) */
+  --token-surface-0: #13111a;
+  --token-surface-1: #1a1825;
+  --token-surface-2: #211f2e;
+  --token-surface-3: #2a2838;
+  --token-surface-4: #343244;
+
+  /* Borders */
+  --token-border-0: #2a2838;
+  --token-border-1: #3d3b4f;
+  --token-border-2: #555368;
+
+  /* Text */
+  --token-text-1: #fafafa;
+  --token-text-2: #a1a1aa;
+  --token-text-3: #71717a;
+  --token-text-4: #52525b;
+}
+
+/* Light mode tokens – Fly.io tinted bg + Vercel text + Railway borders */
+.light {
+  /* Surfaces – lavender-tinted white (Fly.io style) */
+  --token-surface-0: #f4f5fa;
+  --token-surface-1: #ffffff;
+  --token-surface-2: #ffffff;
+  --token-surface-3: #edeef5;
+  --token-surface-4: #e4e5f0;
+
+  /* Borders – alpha-style soft (Vercel-inspired) */
+  --token-border-0: rgba(0, 0, 0, 0.06);
+  --token-border-1: rgba(0, 0, 0, 0.10);
+  --token-border-2: rgba(0, 0, 0, 0.16);
+
+  /* Text – purple-tinted dark (Railway-inspired) */
+  --token-text-1: #13111c;
+  --token-text-2: #555566;
+  --token-text-3: #71717a;
+  --token-text-4: #a39ac1;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--token-surface-0);
+  color: var(--token-text-1);
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* ── Utility Classes ── */
+
+/* Grid dot pattern background */
+.bg-grid-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.light .bg-grid-pattern {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+}
+
+/* Blue glow effect */
+.glow-blue {
+  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(46, 108, 230, 0.1) 0%, transparent 70%);
+}
+.light .glow-blue {
+  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(56, 130, 246, 0.08) 0%, transparent 70%);
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 70, 0.4);
+}
+.light .glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Primary CTA button – inverts between dark/light */
+.btn-primary {
+  background-color: #ffffff;
+  color: #13111c;
+}
+.btn-primary:hover {
+  background-color: #e4e5f0;
+}
+.light .btn-primary {
+  background-color: #13111c;
+  color: #ffffff;
+}
+.light .btn-primary:hover {
+  background-color: #2a2838;
+}
+
+/* Gradient text adjustment for light mode */
+.light .gradient-hero {
+  --tw-gradient-from: #0284c7;
+  --tw-gradient-to: #2563eb;
+}
+
+/* Illustration overflow mask (Render.com style fade) */
+.illustration-mask {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--token-surface-1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--token-border-2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #71717a;
 }

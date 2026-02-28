@@ -1,0 +1,40 @@
+# Nubiecloud
+
+> Plateforme cloud PaaS pour deployer applications, SaaS et bases de donnees en quelques minutes.
+
+Nubiecloud est une plateforme de deploiement cloud concue pour les developpeurs, startups, agences et PME en Afrique de l'Ouest. Elle permet de deployer des applications web, des SaaS (WordPress, Odoo, Dolibarr) et des bases de donnees managees sans gerer l'infrastructure.
+
+## Fonctionnalites cles
+
+- Deploiement CI/CD automatise via Git (GitHub, GitLab)
+- Certificats SSL automatiques
+- Monitoring et logs en temps reel
+- SaaS 1-Click (WordPress, Odoo, Dolibarr)
+- Bases de donnees managees (PostgreSQL, MySQL, MongoDB, Redis)
+- Auto-scaling et load balancing
+- Support de Node.js, Python, PHP, Go, Java, .NET et frameworks populaires (Next.js, React, Django, Laravel)
+
+## Cible
+
+- Developpeurs et equipes techniques
+- Startups et PME en Afrique de l'Ouest
+- Agences digitales
+- Entreprises deploying SaaS/ERP
+
+## Tarification
+
+Tarification en XOF (Franc CFA) pour eliminer les complications liees au change. Plans disponibles : Free (0 XOF), Starter, Professional, Business, Enterprise, et offre sur mesure.
+
+## Blog
+
+- [Kubernetes sans la complexite](https://nubiecloud.io/blog/adieu-complexite-kubernetes)
+- [Deployer sans etre DevOps](https://nubiecloud.io/blog/deployer-sans-etre-devops)
+- [Deployer WordPress et Odoo en un clic](https://nubiecloud.io/blog/deployer-wordpress-odoo-en-un-clic)
+- [Du git push a la production](https://nubiecloud.io/blog/du-git-push-a-la-production)
+- [Pourquoi le PaaS pour les startups africaines](https://nubiecloud.io/blog/pourquoi-le-paas-pour-startups-africaines)
+
+## Liens
+
+- Site web : https://nubiecloud.io
+- Blog : https://nubiecloud.io/blog
+- Contact : contact@nubiecloud.io
