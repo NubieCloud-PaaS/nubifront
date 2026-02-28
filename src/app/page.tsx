@@ -6,7 +6,6 @@ import ProcessSection from '@/components/landing/ProcessSection';
 import FeaturesSection from '@/components/landing/FeaturesSection';
 import ComparisonTable from '@/components/landing/ComparisonTable';
 import PricingSection from '@/components/landing/PricingSection';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import EnterpriseSection from '@/components/landing/EnterpriseSection';
 import FAQSection from '@/components/landing/FAQSection';
 import CTASection from '@/components/landing/CTASection';
@@ -144,7 +143,6 @@ export default function HomePage() {
         <FeaturesSection />
         <ComparisonTable />
         <PricingSection />
-        <TestimonialsSection />
         <EnterpriseSection />
         <FAQSection />
         <CTASection />
