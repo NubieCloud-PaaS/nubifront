@@ -23,7 +23,7 @@ interface Plan {
   ctaStyle: 'default' | 'primary' | 'enterprise';
 }
 
-const row1: Plan[] = [
+const plans: Plan[] = [
   {
     name: 'FREE',
     subtitle: 'Test et POC',
@@ -44,7 +44,7 @@ const row1: Plan[] = [
   {
     name: 'STARTER',
     subtitle: 'Projets personnels',
-    price: '120K XOF',
+    price: '49K XOF',
     period: '/mois',
     cta: 'Commencer',
     ctaHref: `${CONSOLE_URL}/register`,
@@ -82,52 +82,13 @@ const row1: Plan[] = [
       'Load balancing, SLA 99.5%',
     ],
   },
-];
-
-const row2: Plan[] = [
-  {
-    name: 'BUSINESS',
-    subtitle: 'Applications critiques',
-    price: '450K XOF',
-    period: '/mois',
-    cta: 'Choisir Business',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'default',
-    features: [
-      '8 vCPU, 16 GB RAM, 160 GB SSD',
-      '10 projets, 2 TB transfert',
-      'Build dedie (4 vCPU, 8 GB)',
-      'Canary + Blue/Green deployment',
-      'Backup quotidien (90j)',
-      'Support 24/7 (< 1h)',
-      'Account Manager, SLA 99.9%',
-    ],
-  },
-  {
-    name: 'SCALE',
-    subtitle: 'Grandes applications',
-    price: '800K XOF',
-    period: '/mois',
-    cta: 'Choisir Scale',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'default',
-    features: [
-      '16 vCPU, 32 GB RAM, 320 GB SSD',
-      'Projets illimites, 5 TB transfert',
-      'Build dedie (8 vCPU, 16 GB)',
-      'Multi-region + CDN premium',
-      'Backup geo-replique (90j)',
-      'Support VIP (< 30 min)',
-      'Architecture review, SLA 99.99%',
-    ],
-  },
   {
     name: 'ENTERPRISE',
     subtitle: 'Sur-mesure dedie',
     price: 'Contactez-nous',
     period: 'Tarification personnalisee',
     cta: 'Contacter Nubiecloud',
-    ctaHref: 'mailto:contact@nubitech.io',
+    ctaHref: 'mailto:contact@nubiecloud.io',
     ctaStyle: 'enterprise',
     badge: 'PREMIUM',
     badgeIcon: 'trophy',
@@ -222,15 +183,9 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {row1.map((plan, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {plans.map((plan, i) => (
             <PricingCard key={plan.name} plan={plan} index={i} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {row2.map((plan, i) => (
-            <PricingCard key={plan.name} plan={plan} index={i + 3} />
           ))}
         </div>
 

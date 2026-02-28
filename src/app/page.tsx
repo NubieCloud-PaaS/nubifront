@@ -38,7 +38,7 @@ const jsonLd = {
       '@type': 'AggregateOffer',
       lowPrice: '0',
       priceCurrency: 'XOF',
-      offerCount: 6,
+      offerCount: 4,
     },
     featureList: [
       'Deploiement CI/CD automatise via Git',
