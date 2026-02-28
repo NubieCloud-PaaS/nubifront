@@ -48,23 +48,23 @@
   --font-main: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Surfaces – soft dark (Railway-style) */
-  --token-surface-0: #13111a;
-  --token-surface-1: #1a1825;
-  --token-surface-2: #211f2e;
-  --token-surface-3: #2a2838;
-  --token-surface-4: #343244;
+  /* Surfaces – Midnight Azure (nubitech-frontend) */
+  --token-surface-0: #0B1120;
+  --token-surface-1: #0F1729;
+  --token-surface-2: #151E31;
+  --token-surface-3: #1B2540;
+  --token-surface-4: #223052;
 
   /* Borders */
-  --token-border-0: #2a2838;
-  --token-border-1: #3d3b4f;
-  --token-border-2: #555368;
+  --token-border-0: #1E293B;
+  --token-border-1: #2A3A55;
+  --token-border-2: #3B4F73;
 
   /* Text */
-  --token-text-1: #fafafa;
-  --token-text-2: #a1a1aa;
-  --token-text-3: #71717a;
-  --token-text-4: #52525b;
+  --token-text-1: #F1F5F9;
+  --token-text-2: #CBD5E1;
+  --token-text-3: #7C8DB5;
+  --token-text-4: #4A5A7A;
 }
 
 /* Light mode tokens – Fly.io tinted bg + Vercel text + Railway borders */
@@ -81,11 +81,11 @@
   --token-border-1: rgba(0, 0, 0, 0.10);
   --token-border-2: rgba(0, 0, 0, 0.16);
 
-  /* Text – purple-tinted dark (Railway-inspired) */
-  --token-text-1: #13111c;
-  --token-text-2: #555566;
-  --token-text-3: #71717a;
-  --token-text-4: #a39ac1;
+  /* Text – blue-tinted dark */
+  --token-text-1: #0B1120;
+  --token-text-2: #475569;
+  --token-text-3: #64748B;
+  --token-text-4: #94A3B8;
 }
 
 body {
@@ -122,9 +122,9 @@ code, pre {
 
 /* Glass card */
 .glass-card {
-  background: rgba(24, 24, 27, 0.6);
+  background: rgba(11, 17, 32, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(63, 63, 70, 0.4);
+  border: 1px solid rgba(42, 58, 85, 0.4);
 }
 .light .glass-card {
   background: rgba(255, 255, 255, 0.85);
@@ -136,17 +136,17 @@ code, pre {
 /* Primary CTA button – inverts between dark/light */
 .btn-primary {
   background-color: #ffffff;
-  color: #13111c;
+  color: #0B1120;
 }
 .btn-primary:hover {
   background-color: #e4e5f0;
 }
 .light .btn-primary {
-  background-color: #13111c;
+  background-color: #0B1120;
   color: #ffffff;
 }
 .light .btn-primary:hover {
-  background-color: #2a2838;
+  background-color: #151E31;
 }
 
 /* Gradient text adjustment for light mode */
@@ -177,5 +177,5 @@ code, pre {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #71717a;
+  background: #4A5A7A;
 }
