@@ -69,23 +69,23 @@
 
 /* Light mode tokens – Fly.io tinted bg + Vercel text + Railway borders */
 .light {
-  /* Surfaces – lavender-tinted white (Fly.io style) */
-  --token-surface-0: #f4f5fa;
-  --token-surface-1: #ffffff;
-  --token-surface-2: #ffffff;
-  --token-surface-3: #edeef5;
-  --token-surface-4: #e4e5f0;
+  /* Surfaces (nubitech-frontend) */
+  --token-surface-0: #F1F5F9;
+  --token-surface-1: #FFFFFF;
+  --token-surface-2: #FFFFFF;
+  --token-surface-3: #F8FAFC;
+  --token-surface-4: #EFF6FF;
 
-  /* Borders – alpha-style soft (Vercel-inspired) */
-  --token-border-0: rgba(0, 0, 0, 0.06);
-  --token-border-1: rgba(0, 0, 0, 0.10);
-  --token-border-2: rgba(0, 0, 0, 0.16);
+  /* Borders (nubitech-frontend) */
+  --token-border-0: #E2E8F0;
+  --token-border-1: #CBD5E1;
+  --token-border-2: #94A3B8;
 
-  /* Text – blue-tinted dark */
-  --token-text-1: #0B1120;
-  --token-text-2: #475569;
-  --token-text-3: #64748B;
-  --token-text-4: #94A3B8;
+  /* Text (nubitech-frontend) */
+  --token-text-1: #0F172A;
+  --token-text-2: #1E293B;
+  --token-text-3: #475569;
+  --token-text-4: #64748B;
 }
 
 body {
