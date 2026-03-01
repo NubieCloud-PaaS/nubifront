@@ -1,0 +1,13 @@
+{
+  "name": "Nubiecloud",
+  "short_name": "Nubiecloud",
+  "description": "Plateforme cloud PaaS - Deployez vos applications en quelques clics",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1120",
+  "theme_color": "#0B1120",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

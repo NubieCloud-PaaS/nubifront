@@ -58,7 +58,7 @@ export default function AnimatedTerminal() {
         <span className="text-xs text-text-tertiary font-mono ml-2">terminal — nubi deploy</span>
       </div>
       {/* Terminal body */}
-      <div className="p-5 font-mono text-sm leading-7 min-h-[280px]">
+      <div className="p-3 sm:p-5 font-mono text-xs sm:text-sm leading-6 sm:leading-7 min-h-[220px] sm:min-h-[280px]">
         {lines.slice(0, visibleLines).map((line, i) => (
           <motion.div
             key={`${i}-${visibleLines > i ? 'show' : 'hide'}`}

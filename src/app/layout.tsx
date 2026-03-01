@@ -33,6 +33,12 @@ export const metadata: Metadata = {
     icon: "/favicon.png",
     shortcut: "/favicon.ico",
   },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Nubiecloud',
+  },
   openGraph: {
     title: "Nubiecloud - Simplifying Cloud, Amplifying Business",
     description:
@@ -62,6 +68,8 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light')};}catch(e){}})();`,

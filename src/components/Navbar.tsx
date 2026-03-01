@@ -100,35 +100,35 @@ export default function Navbar() {
             transition={{ duration: 0.25 }}
             className="md:hidden overflow-hidden bg-surface-0/95 backdrop-blur-xl border-b border-border-0"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-3 space-y-1">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block text-lg text-text-secondary hover:text-text-primary font-medium transition-colors"
+                  className="block text-base text-text-secondary hover:text-text-primary font-medium transition-colors"
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="pt-4 border-t border-border-0 flex items-center gap-4">
+              <div className="pt-3 border-t border-border-0 flex items-center gap-4">
                 <button
                   onClick={toggleDarkMode}
-                  className="h-10 w-10 flex items-center justify-center rounded-md hover:bg-surface-3 transition-colors"
+                  className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-surface-3 transition-colors"
                 >
                   {isDarkMode ? (
-                    <svg className="h-5 w-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-4 w-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-4 w-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                   )}
                 </button>
                 <a
                   href={`${CONSOLE_URL}/login`}
-                  className="flex-1 text-center btn-primary px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 text-center btn-primary px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   Lancez-vous
                 </a>

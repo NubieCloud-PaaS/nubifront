@@ -8,7 +8,7 @@ interface LogoProps {
 }
 
 const sizeClasses: Record<string, string> = {
-  small: 'h-12',
+  small: 'h-8',
   medium: 'h-20',
   large: 'h-24',
   xl: 'h-32',
