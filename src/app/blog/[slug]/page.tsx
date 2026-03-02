@@ -132,7 +132,7 @@ export default async function PostPage({ params }: Props) {
 
           {/* Content */}
           <div
-            className="prose dark:prose-invert max-w-none mx-auto prose-headings:text-text-primary prose-headings:tracking-tight prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:font-bold prose-img:rounded-lg prose-code:text-blue-300 prose-code:bg-surface-3 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-surface-1 prose-pre:border prose-pre:border-border-1"
+            className="prose dark:prose-invert max-w-none mx-auto prose-headings:font-bold prose-headings:text-text-primary prose-headings:tracking-tight prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:font-bold prose-img:rounded-lg prose-code:text-blue-300 prose-code:bg-surface-3 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-surface-1 prose-pre:border prose-pre:border-border-1 prose-pre:p-0 prose-hr:border-border-1"
             dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
           />
         </article>
