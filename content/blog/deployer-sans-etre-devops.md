@@ -8,147 +8,69 @@ image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=63
 readingTime: 7
 ---
 
-Vous avez passe des semaines a coder votre application. Elle fonctionne en local. Et maintenant ?
+On connait tous ce moment. L'application tourne sur `localhost:3000`, les tests passent, tout est vert. Et puis quelqu'un pose la question : *"OK super, mais comment on met ca en prod ?"*
 
-La mise en production se transforme en parcours du combattant : configurer un serveur, installer les dependances, gerer Nginx, obtenir un certificat SSL, mettre en place un pipeline CI/CD...
+Silence dans la salle.
 
-**Et si tout ca n'etait plus votre probleme ?**
+Parce que la mise en production, c'est un autre monde. Provisionner un serveur, installer les dependances, configurer Nginx, obtenir un certificat SSL, mettre en place un pipeline CI/CD, le monitoring, les backups... Chacune de ces etapes est presque un metier a part entiere.
 
-> **TL;DR** — Le PaaS elimine 100% de la complexite infrastructure. Connectez votre depot Git, configurez vos variables, deployez en un clic. Votre application est en production en 5 minutes, avec SSL, monitoring et backups inclus.
+Quand vous etes une startup de 3 developpeurs ou un freelance solo, la question c'est : qui fait tout ca ?
 
----
+## Le quotidien des equipes en Afrique de l'Ouest
 
-## Le gouffre entre le code et la production
+En Afrique de l'Ouest, cette complexite est encore plus penalisante. Les talents DevOps sont rares et chers. La plupart des equipes sont composees de developpeurs full-stack qui doivent *aussi* gerer l'infrastructure, souvent sur des plateformes concues pour le marche americain et facturees en dollars.
 
-Chaque developpeur connait ce moment. L'application tourne sur `localhost:3000`, les tests passent, tout est vert. Puis vient la question fatidique : *comment on met ca en prod ?*
+On le voit regulierement chez les equipes qui nous contactent. Le resultat est presque toujours le meme :
 
-Traditionnellement, la reponse implique :
+- Des heures perdues a deboguer des configurations serveur au lieu de coder des features
+- Des mises en production risquees le vendredi soir (spoiler : ca finit mal)
+- Des applications qui tombent sans monitoring ni alertes, et on apprend la panne par les utilisateurs sur WhatsApp
 
-- **Provisionner un serveur** — choisir l'OS, la region, le dimensionnement
-- **Configurer l'environnement** — installer Node.js, Python ou PHP, gerer les versions
-- **Mettre en place un reverse proxy** — Nginx ou Traefik, avec les bonnes regles
-- **Obtenir un certificat SSL** — Let's Encrypt, renouvellement automatique
-- **Configurer le CI/CD** — GitHub Actions, GitLab CI, Jenkins...
-- **Mettre en place le monitoring** — metriques, alertes, dashboards
-- **Gerer les backups** — base de donnees, fichiers, rotation
+Le temps passe sur l'infrastructure est du temps qui ne va pas dans le produit. Pour une startup, c'est un cout d'opportunite enorme.
 
-Chacune de ces etapes est un metier a part entiere. Quand vous etes une startup de 3 developpeurs, ou un freelance solo, qui s'en charge ?
+## Ce que change un PaaS
 
----
+Un PaaS abstrait toute cette complexite. Vous lui donnez votre code, il s'occupe du reste.
 
-## La realite des equipes en Afrique de l'Ouest
+Sur Nubiecloud, le workflow ressemble a ca :
 
-En Afrique de l'Ouest, cette complexite est encore plus penalisante.
+**1. Connectez votre depot Git.** Nubiecloud detecte automatiquement votre framework (Next.js, Django, Laravel, Express, Spring Boot...) et configure le build.
 
-Les talents DevOps sont rares et chers. La plupart des equipes techniques sont composees de developpeurs full-stack qui doivent **aussi** gerer l'infrastructure — souvent sur des plateformes concues pour le marche americain, facturees en dollars.
+**2. Configurez vos variables d'environnement.** Les variables sensibles sont chiffrees et isolees de votre code.
 
-Le resultat ?
+**3. Deployez.** Un clic, ou un simple `git push`. Votre application est en production en quelques minutes avec SSL, monitoring et backups.
 
-- Des heures perdues a deboguer des configurations serveur
-- Des mises en production risquees le vendredi soir
-- Des applications qui tombent sans monitoring ni alertes
-
-> **Note** — Le temps passe sur l'infrastructure est du temps qui ne va pas dans le produit. Pour une startup, c'est un cout d'opportunite enorme.
-
----
-
-## Le PaaS : votre equipe DevOps en un clic
-
-Un PaaS abstrait toute cette complexite. Vous lui donnez votre code, il s'occupe du reste. C'est exactement le principe de Nubiecloud.
-
-### Etape 1 — Connectez votre depot Git
-
-```bash
-$ nubi connect
-  Scanning repositories...
-  → acme/mon-application
-  → acme/api-backend
-  → acme/landing-page
-  Selection: acme/mon-application
-  Branch: main
-  ✓ Repository connected
-```
-
-Nubiecloud detecte automatiquement votre framework (Next.js, Django, Laravel, Express, Spring Boot...) et configure le build.
-
-### Etape 2 — Configurez vos variables
-
-```bash
-# Variables d'environnement
-DATABASE_URL=postgres://user:****@db.nubiecloud.io:5432/mydb
-NODE_ENV=production
-API_KEY=sk_live_●●●●●●●●●●●●
-```
-
-Les variables sensibles sont chiffrees et isolees de votre code.
-
-### Etape 3 — Deployez
-
-Un clic. C'est tout.
-
-```bash
-$ nubi deploy --prod
-  Detecting framework... Next.js 15
-  Building application...
-  ████████████████████ 100%
-  ✓ Tests passed (24/24)
-  ✓ Image built (187 MB)
-  ✓ SSL certificate provisioned
-  ✓ DNS configured
-  ✓ Monitoring active
-
-  Ready! https://mon-app.nubiecloud.io
-  Deployed in 4.2s
-```
-
-> **Astuce** — Nubiecloud lance le build, execute les tests, deploie votre application, configure le SSL, le CDN, le monitoring et les backups automatiques. En moins de 5 minutes, votre app est en production.
-
----
+C'est tout. Pas de Nginx a configurer. Pas de certificat a renouveler. Pas de cron job pour les backups. Pas de Dockerfile a ecrire (sauf si vous en avez deja un, auquel cas on l'utilise).
 
 ## Ce que vous n'avez plus a gerer
 
-| Avant (IaaS / VPS) | Avec Nubiecloud |
+| Avant (IaaS / VPS) | Avec un PaaS |
 |---|---|
 | Installer et maintenir le serveur | Automatique |
 | Configurer Nginx / reverse proxy | Automatique |
 | Obtenir et renouveler les certificats SSL | Automatique |
 | Mettre en place le CI/CD | Integre (git push = deploy) |
 | Configurer le monitoring | Dashboard integre |
-| Gerer les backups | Backups automatiques quotidiens |
+| Gerer les backups | Sauvegardes automatiques quotidiennes |
 | Scaler manuellement | Auto-scaling |
 | Gerer la securite (DDoS, WAF) | Protection incluse |
 
----
+## A qui ca s'adresse ?
 
-## Pour qui c'est fait ?
+On ne va pas pretendre que c'est pour tout le monde. Mais si vous vous reconnaissez dans un de ces profils, ca vaut le coup d'y reflechir :
 
-- **Startups** — vous voulez aller vite sans recruter un DevOps
-- **Freelances** — vous deployez des projets clients chaque semaine
-- **Equipes produit** — vous voulez vous concentrer sur les fonctionnalites, pas l'infra
-- **Agences web** — vous gerez des dizaines de sites et applications
-- **Entreprises** — vous voulez industrialiser vos deploiements sans complexite
+Les **startups** qui veulent shipper vite sans recruter un DevOps. Les **freelances** qui deployent des projets clients chaque semaine et perdent du temps sur la meme config a chaque fois. Les **equipes produit** qui veulent se concentrer sur les fonctionnalites. Les **agences web** qui gerent des dizaines de sites. Et les **entreprises** qui veulent industrialiser leurs deploiements sans rajouter de la complexite.
 
----
+## Le vrai cout du "je gere moi-meme"
 
-## Le vrai cout de "faire soi-meme"
+Beaucoup d'equipes pensent economiser en gerant leur propre infrastructure. On comprend le reflexe. Mais le calcul est rarement en leur faveur quand on compte tout :
 
-Beaucoup d'equipes pensent economiser en gerant leur propre infrastructure. Le calcul est rarement en leur faveur :
+10 a 20 heures par mois en maintenance (mises a jour, patches de securite, debug de configs). Le risque d'erreur, parce qu'une mauvaise config Nginx peut exposer votre base de donnees. Le downtime, parce que sans monitoring proactif, vous apprenez les pannes par vos utilisateurs. Et le scaling : quand le trafic explose apres un bon post sur Twitter, scaler manuellement prend des heures.
 
-- **Temps passe** — 10-20h/mois en maintenance, c'est du temps retire au produit
-- **Risque d'erreur** — une mauvaise config Nginx peut exposer votre base de donnees
-- **Downtime** — sans monitoring proactif, vous apprenez les pannes par vos utilisateurs
-- **Scaling** — quand le trafic explose, scaler manuellement prend des heures
+Avec un PaaS, ces couts disparaissent. Vous payez un abonnement previsible et vous vous concentrez sur ce qui compte : votre produit.
 
-> **A retenir** — Avec un PaaS, ces couts disparaissent. Vous payez un abonnement previsible et vous vous concentrez sur ce qui compte : votre produit.
+## Testez sans risque
 
----
+On propose un plan gratuit avec tout ce qu'il faut pour tester : deploiement d'applications, base de donnees PostgreSQL, certificat SSL et monitoring. Pas de carte bancaire requise.
 
-## Commencez gratuitement
-
-Nubiecloud propose un plan gratuit avec tout ce qu'il faut pour tester : deploiement d'applications, base de donnees PostgreSQL, certificat SSL et monitoring.
-
-**Pas de carte bancaire requise.**
-
-**Arretez de deboguer des configs serveur. Deployez votre code.**
-
-[Creer un compte gratuitement →](https://console.nubiecloud.io/register)
+Si vous passez encore des heures a deboguer des configs serveur au lieu de coder, [essayez Nubiecloud](https://console.nubiecloud.io/register). Le pire qui puisse arriver, c'est que vous recuperiez vos soirees.

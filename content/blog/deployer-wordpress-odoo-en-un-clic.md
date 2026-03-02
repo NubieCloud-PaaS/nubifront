@@ -10,19 +10,13 @@ readingTime: 8
 
 Vous voulez deployer un site WordPress pour un client. Un Odoo pour la comptabilite de votre entreprise. Un Dolibarr pour la gestion commerciale d'une PME.
 
-Le scenario classique : louer un VPS, installer Linux, configurer Apache/Nginx, installer PHP/Python, creer la base de donnees, telecharger l'application, configurer les permissions, obtenir un certificat SSL...
+Le scenario classique, on le connait par coeur : louer un VPS, installer Linux, configurer Apache ou Nginx, installer PHP ou Python, creer la base de donnees, telecharger l'application, configurer les permissions, obtenir un certificat SSL... Comptez 3 heures minimum par installation. Et apres, il faut maintenir tout ca.
 
-**3 heures minimum. Pour chaque installation.**
+On s'est dit qu'il devait y avoir mieux.
 
-> **TL;DR** — Les templates 1-Click de Nubiecloud deploient WordPress, Odoo ou Dolibarr en 2-3 minutes, avec base de donnees, SSL et backups inclus. Zero configuration serveur.
+## Le casse-tete des installations manuelles
 
----
-
-## Le probleme des installations manuelles
-
-Installer un SaaS ou un ERP sur un serveur est fastidieux et source d'erreurs.
-
-### WordPress — le classique qui prend du temps
+### WordPress : simple en theorie, penible en pratique
 
 ```bash
 # Le workflow traditionnel...
@@ -38,163 +32,73 @@ sudo chown -R www-data:www-data /var/www/html/
 # Configurer les crons WordPress...
 ```
 
-Et apres l'installation, il faut gerer les mises a jour, les backups, la securite, le monitoring. **Chaque semaine.**
+Tout le monde dit que WordPress est facile a installer. C'est vrai, quand on l'a deja fait 50 fois. Pour les autres, chaque etape est une source d'erreurs potentielles. Et une fois installe, il faut gerer les mises a jour, les backups, la securite, le monitoring. Chaque semaine.
 
-### Odoo — encore plus complexe
+### Odoo : un autre niveau de complexite
 
-Odoo necessite Python, PostgreSQL, des dependances systeme specifiques, wkhtmltopdf pour les rapports PDF, un reverse proxy et des workers correctement dimensionnes.
+Odoo necessite Python, PostgreSQL, des dependances systeme specifiques, wkhtmltopdf pour les rapports PDF, un reverse proxy et des workers correctement dimensionnes. Une installation propre prend facilement une demi-journee. Multipliez par le nombre de clients, et vous avez un vrai probleme d'echelle.
 
-> **Note** — Une installation propre d'Odoo prend facilement une demi-journee. Multiplier par le nombre de clients, et vous avez un probleme d'echelle.
+## Les templates Nubiecloud
 
----
+On a cree des templates pre-configures pour les applications les plus demandees. L'idee est simple : vous choisissez votre app, vous remplissez 3-4 champs, vous cliquez, et c'est en production.
 
-## La solution : les templates Nubiecloud
+Chaque template inclut l'application dans sa derniere version stable, la base de donnees pre-configuree (PostgreSQL pour Odoo, MySQL pour WordPress), le certificat SSL automatique, les backups quotidiens et le monitoring.
 
-Nubiecloud propose des templates pre-configures pour les SaaS et ERP les plus populaires. Chaque template inclut :
-
-- **L'application** dans sa derniere version stable
-- **La base de donnees** pre-configuree (PostgreSQL pour Odoo, MySQL pour WordPress)
-- **Le certificat SSL** automatique (Let's Encrypt)
-- **Les backups automatiques** quotidiens
-- **Le monitoring** integre
-
-### Applications disponibles
+### Ce qui est disponible aujourd'hui
 
 | Application | Type | Base de donnees | Pret en |
 |---|---|---|---|
-| **WordPress** | CMS / Blog | MySQL | ~2 min |
-| **Odoo** | ERP / CRM | PostgreSQL | ~3 min |
-| **Dolibarr** | ERP / Gestion | MySQL | ~2 min |
-| **ERPNext** | ERP complet | MariaDB | ~3 min |
-| **ERP5** | ERP industriel | — | ~3 min |
+| WordPress | CMS / Blog | MySQL | ~2 min |
+| Odoo | ERP / CRM | PostgreSQL | ~3 min |
+| Dolibarr | ERP / Gestion | MySQL | ~2 min |
+| ERPNext | ERP complet | MariaDB | ~3 min |
+| ERP5 | ERP industriel | — | ~3 min |
 
----
+## Comment ca se passe ?
 
-## Comment ca marche ?
+C'est volontairement simple. Dans la console Nubiecloud, vous selectionnez le type "ERP/SaaS", vous choisissez votre application, vous renseignez un nom de projet, votre email admin et un mot de passe. Ensuite vous validez.
 
-### Etape 1 — Choisissez votre template
+En 2-3 minutes, votre application est accessible sur une URL HTTPS. Chaque projet est completement isole.
 
-Dans la console Nubiecloud, selectionnez le type "ERP/SaaS" puis choisissez votre application.
+## Quelques exemples concrets
 
-### Etape 2 — Configurez le minimum
+### Une agence web qui deploie 10 sites WordPress en une matinee
 
-```
-Nom du projet:     wordpress-client-abc
-Template:          WordPress 6.4
-Admin email:       admin@monsite.com
-Admin password:    ●●●●●●●●●●●●
+Avant, deployer 10 sites WordPress signifiait configurer 10 serveurs (ou un serveur partage complexe avec des virtual hosts dans tous les sens).
 
-# Ressources (preset recommande)
-CPU:               0.5 vCPU
-RAM:               512 MB
-Stockage:          5 GB
-```
+Avec les templates : a 9h00, 3 sites deployes en 10 minutes. A 9h30, les domaines personnalises configures. A 10h00, les 7 autres sites deployes. A 10h30, tout est en production avec SSL et backups. Chaque site est isole, si l'un a un probleme, les autres ne sont pas affectes.
 
-### Etape 3 — Deployez en un clic
+### Une PME qui passe sur Odoo
 
-```bash
-$ nubi deploy --template wordpress
-  [1/6] Creating environment...        → wordpress-client-abc
-  [2/6] Installing WordPress 6.4...    → + MySQL 8.0
-  [3/6] Provisioning database...       → Credentials generated
-  [4/6] Configuring SSL...             → Certificate provisioned
-  [5/6] Enabling auto-backups...       → Daily at 02:00 UTC
-  [6/6] Starting monitoring...         → Dashboard ready
+Une PME a besoin d'un ERP pour gerer sa comptabilite, ses stocks et ses ventes. Deployez Odoo en 3 minutes, connectez-vous a l'interface admin, installez les modules necessaires (comptabilite, stock, ventes, CRM), et commencez a travailler. La base PostgreSQL est geree par Nubiecloud avec backups automatiques et monitoring des performances.
 
-  ✓ WordPress ready in 1m48s
-  ✓ https://wordpress-client-abc.nubiecloud.io
-  ✓ Admin: https://wordpress-client-abc.nubiecloud.io/wp-admin
-```
+### Une association sur Dolibarr
 
-> **Astuce** — En 2-3 minutes, votre application est accessible sur une URL HTTPS. Chaque projet est completement isole.
-
----
-
-## Cas d'usage concrets
-
-### Agence web — 10 sites WordPress en une journee
-
-Avant Nubiecloud, deployer 10 sites WordPress signifiait configurer 10 serveurs (ou un serveur partage complexe).
-
-Avec les templates 1-Click :
-
-- **09h00** — 3 sites deployes en 10 minutes
-- **09h30** — Domaines personnalises configures
-- **10h00** — 7 autres sites deployes
-- **10h30** — Tous les sites en production, SSL configure, backups actifs
-
-Chaque site est isole dans son propre environnement. Si un site a un probleme, les autres ne sont pas affectes.
-
-### PME — Odoo pour la gestion complete
-
-Une PME a besoin d'un ERP pour gerer sa comptabilite, ses stocks et ses ventes :
-
-1. Deployez Odoo en 3 minutes
-2. Connectez-vous a l'interface admin
-3. Installez les modules necessaires (comptabilite, stock, ventes, CRM)
-4. Commencez a travailler
-
-> **A retenir** — La base de donnees PostgreSQL est geree par Nubiecloud : backups automatiques, monitoring des performances, scaling si necessaire.
-
-### Association — Dolibarr pour la gestion des membres
-
-Dolibarr est un excellent outil open source pour les associations. En un clic :
-
-- Interface de gestion des adherents
-- Suivi des cotisations
-- Facturation
-- Base de donnees sauvegardee automatiquement
-
----
+Dolibarr est un excellent outil open source pour les associations : gestion des adherents, suivi des cotisations, facturation. En un clic, tout est en place avec une base de donnees sauvegardee automatiquement.
 
 ## Bases de donnees managees
 
-Au-dela des templates SaaS, Nubiecloud propose des bases de donnees managees pour vos projets custom :
+Au-dela des templates, on propose aussi des bases de donnees managees pour vos projets custom :
 
-| Base de donnees | Usage | Inclus |
+| Base de donnees | Usage typique | Inclus |
 |---|---|---|
-| **PostgreSQL** | Applications modernes, API | Backups, monitoring, HA |
-| **MySQL** | WordPress, applications PHP | Backups, monitoring |
-| **MongoDB** | NoSQL, temps reel, catalogues | Backups, monitoring |
-| **Redis** | Cache, sessions, files de messages | Monitoring |
+| PostgreSQL | Applications modernes, API | Backups, monitoring, haute dispo |
+| MySQL | WordPress, applications PHP | Backups, monitoring |
+| MongoDB | NoSQL, temps reel, catalogues | Backups, monitoring |
+| Redis | Cache, sessions, files de messages | Monitoring |
 
 Chaque base est provisionnee avec des identifiants securises, des backups automatiques et un monitoring des performances.
 
----
-
 ## La securite des templates
 
-Chaque template Nubiecloud est :
+On prend la securite au serieux. Chaque template est isole dans son propre environnement, les images sont verifiees et mises a jour regulierement, le SSL/TLS est automatique, les mots de passe sont chiffres. Les identifiants de base de donnees sont generes automatiquement et stockes de maniere chiffree, jamais en clair dans les configurations.
 
-- **Isole** — chaque projet tourne dans son propre environnement securise
-- **Securise** — images verifiees, mises a jour regulieres
-- **Chiffre** — SSL/TLS automatique, mots de passe chiffres
-- **Sauvegarde** — backups automatiques configurables
+## Tarification
 
-> **Note** — Les identifiants de base de donnees sont generes automatiquement et stockes de maniere chiffree. Jamais en clair dans les configurations.
-
----
-
-## Tarification simple
-
-Les templates 1-Click sont inclus dans tous les plans, y compris le plan gratuit. Vous payez uniquement les ressources utilisees.
-
-```
-# WordPress basique (blog, site vitrine)
-CPU: 0.5 vCPU | RAM: 512 MB | Stockage: 5 GB
-→ Plan FREE
-
-# Odoo PME (20 utilisateurs, compta + stock + CRM)
-CPU: 2 vCPU | RAM: 4 GB | Stockage: 20 GB
-→ Plan STARTER
-```
-
----
+Les templates sont inclus dans tous les plans, y compris le gratuit. Vous payez uniquement les ressources utilisees. Un WordPress basique (blog, site vitrine) tient sur le plan FREE. Un Odoo pour PME avec 20 utilisateurs et les modules compta + stock + CRM tourne sur le plan STARTER.
 
 ## Arretez de configurer des serveurs
 
-Si vous passez encore des heures a installer WordPress sur des VPS ou a configurer Odoo manuellement, il est temps de changer d'approche.
+Si vous passez encore des heures a installer WordPress sur des VPS ou a configurer Odoo manuellement, on pense sincerement que ca vaut le coup de tester autre chose. Le plan gratuit est la pour ca.
 
-**Un catalogue de SaaS et ERP deployables en un clic. Base de donnees, SSL et backups inclus.**
-
-[Deployer un template maintenant →](https://console.nubiecloud.io/register)
+[Essayer les templates Nubiecloud](https://console.nubiecloud.io/register)
