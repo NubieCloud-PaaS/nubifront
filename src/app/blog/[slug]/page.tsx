@@ -111,17 +111,21 @@ export default async function PostPage({ params }: Props) {
               {/* Author & Date */}
               <div className="flex justify-center items-center gap-4 text-text-tertiary">
                 <div className="flex items-center gap-2">
-                  <img
-                    src={`https://picsum.photos/seed/${postData.author}/40/40`}
-                    alt={postData.author}
-                    className="h-8 w-8 rounded-full object-cover"
-                  />
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-sm font-bold">
+                    {postData.author.charAt(0)}
+                  </div>
                   <span>{postData.author}</span>
                 </div>
                 <span>&bull;</span>
                 <time dateTime={postData.date}>
                   {format(new Date(postData.date), 'dd MMMM yyyy', { locale: fr })}
                 </time>
+                {postData.readingTime && (
+                  <>
+                    <span>&bull;</span>
+                    <span>{postData.readingTime} min de lecture</span>
+                  </>
+                )}
               </div>
             </div>
           </header>

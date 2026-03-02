@@ -51,7 +51,7 @@ export default function BlogPage() {
 
           {/* Blog Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allPosts.map(({ slug, date, title, description, tags, author, image }) => (
+            {allPosts.map(({ slug, date, title, description, tags, author, image, readingTime }) => (
               <article key={slug} className="group flex flex-col">
                 <Link href={`/blog/${slug}`} className="block h-full">
                   <div className="bg-surface-2 border border-border-1 rounded-xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-lg hover:border-blue-500/30 transition-all duration-300 group-hover:-translate-y-1">
@@ -71,6 +71,7 @@ export default function BlogPage() {
                       {/* Author & Date */}
                       <p className="text-sm text-text-tertiary mb-2">
                         Par {author} &bull; {format(new Date(date), 'dd MMMM yyyy', { locale: fr })}
+                        {readingTime && <> &bull; {readingTime} min</>}
                       </p>
 
                       {/* Title */}

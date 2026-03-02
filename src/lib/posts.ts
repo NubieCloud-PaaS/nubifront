@@ -14,6 +14,7 @@ export type PostData = {
   tags: string[];
   description: string;
   image: string;
+  readingTime?: number;
 };
 
 export function getSortedPostsData(): PostData[] {
