@@ -22,7 +22,7 @@ const jsonLd = {
       'Plateforme cloud PaaS pour deployer applications, SaaS et bases de donnees en quelques minutes.',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'contact@nubiecloud.io',
+      email: 'contact@nubitech.io',
       contactType: 'customer service',
       availableLanguage: 'French',
     },

@@ -88,7 +88,7 @@ const plans: Plan[] = [
     price: 'Contactez-nous',
     period: 'Tarification personnalisee',
     cta: 'Contacter Nubiecloud',
-    ctaHref: 'mailto:contact@nubiecloud.io',
+    ctaHref: 'mailto:contact@nubitech.io',
     ctaStyle: 'enterprise',
     badge: 'PREMIUM',
     badgeIcon: 'trophy',
