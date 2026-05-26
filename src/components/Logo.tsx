@@ -5,31 +5,29 @@ interface LogoProps {
   className?: string;
 }
 
-const sizeClasses: Record<string, string> = {
-  small: 'h-8',
-  medium: 'h-20',
-  large: 'h-24',
-  xl: 'h-32',
+// Horizontal lockup: orange mark + "NubieCloud" wordmark (Creato Display).
+// The mark stays brand orange; the wordmark uses text-primary so it adapts
+// to dark/light. Sized by `size` so it stays legible at navbar scale.
+const conf: Record<string, { mark: string; text: string }> = {
+  small: { mark: 'h-7', text: 'text-lg' },
+  medium: { mark: 'h-9', text: 'text-2xl' },
+  large: { mark: 'h-11', text: 'text-3xl' },
+  xl: { mark: 'h-14', text: 'text-4xl' },
 };
 
 const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) => {
-  const h = sizeClasses[size];
-  // Dark-first theme switch via the `.light` class on <html> (see globals.css).
-  // Orange mark stays brand; wordmark is white on dark, dark on light.
+  const { mark, text } = conf[size] ?? conf.medium;
   return (
-    <div className={`flex flex-col items-center ${className}`}>
+    <div className={`flex items-center gap-2 ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/nubiecloud-logo-dark.png"
-        alt="NubieCloud"
-        className={`logo-dark-only ${h} w-auto object-contain`}
+        src="/nubiecloud-mark.png"
+        alt=""
+        className={`${mark} w-auto object-contain`}
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/nubiecloud-logo-light.png"
-        alt="NubieCloud"
-        className={`logo-light-only ${h} w-auto object-contain`}
-      />
+      <span className={`${text} font-bold tracking-tight text-text-primary leading-none`}>
+        NubieCloud
+      </span>
     </div>
   );
 };
