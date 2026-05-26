@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import SectionWrapper from '@/components/ui/SectionWrapper';
 import { motion } from 'framer-motion';
 import { CheckIcon } from '@heroicons/react/24/outline';
@@ -7,10 +8,13 @@ import { StarIcon, TrophyIcon } from '@heroicons/react/24/solid';
 
 const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubiecloud.io';
 
+type Region = 'afrique' | 'europe';
+
 interface Plan {
   name: string;
   subtitle: string;
-  price: string;
+  // Region-differentiated price, or null for "sur devis" (Enterprise)
+  price: Record<Region, string> | null;
   period: string;
   cta: string;
   ctaHref: string;
@@ -25,16 +29,16 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    name: 'FREE',
+    name: 'GRATUIT',
     subtitle: 'Test et POC',
-    price: '0 XOF',
+    price: { afrique: '0 FCFA', europe: '0 FCFA' },
     period: '/30 jours',
     cta: 'Essayer gratuitement',
     ctaHref: `${CONSOLE_URL}/register`,
     ctaStyle: 'default',
     features: [
-      '1 vCPU, 1 GB RAM, 10 GB SSD',
-      '1 projet, 100 GB transfert',
+      '0,5 vCPU, 1 Go RAM, 5 Go SSD',
+      '1 projet',
       '30 builds/mois',
       'Backup hebdomadaire (7j)',
       'Support communautaire',
@@ -42,27 +46,9 @@ const plans: Plan[] = [
     ],
   },
   {
-    name: 'STARTER',
-    subtitle: 'Projets personnels',
-    price: '49K XOF',
-    period: '/mois',
-    cta: 'Commencer',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'default',
-    features: [
-      '2 vCPU, 4 GB RAM, 40 GB SSD',
-      '2 projets, 500 GB transfert',
-      'Builds illimites',
-      'Deploiement < 10 min',
-      'Backup quotidien (7j)',
-      'Support email (< 24h)',
-      'SLA 99%',
-    ],
-  },
-  {
-    name: 'PROFESSIONAL',
+    name: 'PROFESSIONNEL',
     subtitle: 'Production PME',
-    price: '250K XOF',
+    price: { afrique: '145 000 FCFA', europe: '100 000 FCFA' },
     period: '/mois',
     cta: 'Choisir Pro',
     ctaHref: `${CONSOLE_URL}/register`,
@@ -73,8 +59,8 @@ const plans: Plan[] = [
     badgeGradient: 'from-accent-500 to-accent-600',
     accentBorder: 'border-accent-500',
     features: [
-      '4 vCPU, 8 GB RAM, 80 GB SSD',
-      '5 projets, 1 TB transfert',
+      '8 vCPU, 16 Go RAM, 200 Go SSD',
+      '5 projets',
       'Builds prioritaires paralleles',
       'Deploiement < 5 min (Blue/Green)',
       'Backup quotidien (30j)',
@@ -83,11 +69,29 @@ const plans: Plan[] = [
     ],
   },
   {
+    name: 'BUSINESS',
+    subtitle: 'Production intensive',
+    price: { afrique: '445 000 FCFA', europe: '305 000 FCFA' },
+    period: '/mois',
+    cta: 'Choisir Business',
+    ctaHref: `${CONSOLE_URL}/register`,
+    ctaStyle: 'default',
+    features: [
+      '24 vCPU, 48 Go RAM, 600 Go SSD',
+      'Projets illimites',
+      'Builds illimites prioritaires',
+      'Deploiement < 5 min (Blue/Green)',
+      'Backup quotidien (90j)',
+      'Support prioritaire (< 2h)',
+      'Load balancing avance, SLA 99.9%',
+    ],
+  },
+  {
     name: 'ENTERPRISE',
     subtitle: 'Sur-mesure dedie',
-    price: 'Contactez-nous',
+    price: null,
     period: 'Tarification personnalisee',
-    cta: 'Contacter Nubiecloud',
+    cta: 'Contacter NubieCloud',
     ctaHref: 'mailto:contact@nubitech.io',
     ctaStyle: 'enterprise',
     badge: 'PREMIUM',
@@ -106,9 +110,10 @@ const plans: Plan[] = [
   },
 ];
 
-function PricingCard({ plan, index }: { plan: Plan; index: number }) {
+function PricingCard({ plan, index, region }: { plan: Plan; index: number; region: Region }) {
   const isHighlighted = plan.highlighted;
   const isEnterprise = plan.ctaStyle === 'enterprise';
+  const priceLabel = plan.price ? plan.price[region] : 'Sur devis';
 
   return (
     <motion.div
@@ -136,7 +141,7 @@ function PricingCard({ plan, index }: { plan: Plan; index: number }) {
         </h3>
         <p className="text-text-tertiary text-xs mb-4 h-8 flex items-center justify-center">{plan.subtitle}</p>
         <div className="mb-4">
-          <div className={`text-3xl font-bold ${isEnterprise ? 'text-xl' : ''} text-text-primary`}>{plan.price}</div>
+          <div className={`font-bold text-text-primary ${isEnterprise ? 'text-xl' : 'text-2xl'}`}>{priceLabel}</div>
           <p className="text-text-quaternary text-xs">{plan.period}</p>
         </div>
         <a
@@ -168,10 +173,17 @@ function PricingCard({ plan, index }: { plan: Plan; index: number }) {
 }
 
 export default function PricingSection() {
+  const [region, setRegion] = useState<Region>('europe');
+
+  const regions: { id: Region; label: string }[] = [
+    { id: 'afrique', label: '🌍 Afrique' },
+    { id: 'europe', label: '🇪🇺 Europe' },
+  ];
+
   return (
     <SectionWrapper id="tarifs" className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
+        <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
             Tarification Simple et Transparente
           </h2>
@@ -183,9 +195,33 @@ export default function PricingSection() {
           </p>
         </div>
 
+        {/* Region selector — prices differ by region */}
+        <div className="flex flex-col items-center gap-2 mb-12">
+          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-surface-2 border border-border-0">
+            {regions.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setRegion(r.id)}
+                aria-pressed={region === r.id}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+                  region === r.id
+                    ? 'bg-accent-500 text-white shadow-sm'
+                    : 'text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-text-quaternary text-xs">
+            Prix selon la region de deploiement
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan, i) => (
-            <PricingCard key={plan.name} plan={plan} index={i} />
+            <PricingCard key={plan.name} plan={plan} index={i} region={region} />
           ))}
         </div>
 
