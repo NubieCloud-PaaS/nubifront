@@ -11,7 +11,7 @@ const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubi
 
 export default function CTASection() {
   return (
-    <SectionWrapper className="py-20 bg-gradient-to-b from-surface-0 to-blue-950/20 glow-blue">
+    <SectionWrapper className="py-20 bg-gradient-to-b from-surface-0 to-accent-900/20 glow-blue">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
           Pret a deployer ?
@@ -38,11 +38,11 @@ export default function CTASection() {
 
         <div className="flex flex-wrap justify-center gap-6">
           <div className="flex items-center gap-2 text-text-tertiary">
-            <ShieldCheckIcon className="w-5 h-5 text-blue-500" />
+            <ShieldCheckIcon className="w-5 h-5 text-accent-500" />
             <span className="text-sm">Securite</span>
           </div>
           <div className="flex items-center gap-2 text-text-tertiary">
-            <CloudIcon className="w-5 h-5 text-blue-500" />
+            <CloudIcon className="w-5 h-5 text-accent-500" />
             <span className="text-sm">Automatise</span>
           </div>
           <div className="flex items-center gap-2 text-text-tertiary">

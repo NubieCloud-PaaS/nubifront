@@ -96,7 +96,7 @@ export default async function PostPage({ params }: Props) {
                 {postData.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-blue-500/12 text-blue-400 text-sm rounded-lg font-medium"
+                    className="px-3 py-1 bg-accent-500/12 text-accent-400 text-sm rounded-lg font-medium"
                   >
                     {tag}
                   </span>
@@ -111,7 +111,7 @@ export default async function PostPage({ params }: Props) {
               {/* Author & Date */}
               <div className="flex justify-center items-center gap-4 text-text-tertiary">
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-sm font-bold">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center text-white text-sm font-bold">
                     {postData.author.charAt(0)}
                   </div>
                   <span>{postData.author}</span>
@@ -132,7 +132,7 @@ export default async function PostPage({ params }: Props) {
 
           {/* Content */}
           <div
-            className="prose dark:prose-invert max-w-none mx-auto prose-headings:font-bold prose-headings:text-text-primary prose-headings:tracking-tight prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:font-bold prose-img:rounded-lg prose-code:text-blue-300 prose-code:bg-surface-3 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-surface-1 prose-pre:border prose-pre:border-border-1 prose-pre:p-0 prose-hr:border-border-1"
+            className="prose dark:prose-invert max-w-none mx-auto prose-headings:font-bold prose-headings:text-text-primary prose-headings:tracking-tight prose-a:text-accent-400 hover:prose-a:text-accent-300 prose-strong:font-bold prose-img:rounded-lg prose-code:text-accent-300 prose-code:bg-surface-3 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-surface-1 prose-pre:border prose-pre:border-border-1 prose-pre:p-0 prose-hr:border-border-1"
             dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
           />
         </article>

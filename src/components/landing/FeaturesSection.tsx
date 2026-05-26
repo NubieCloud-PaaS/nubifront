@@ -14,7 +14,7 @@ function DeployIllust() {
   return (
     <div className="glass-card rounded-lg p-3 text-[10px] font-mono space-y-1.5">
       {[
-        { text: '$ nubi deploy', color: 'text-blue-400' },
+        { text: '$ nubi deploy', color: 'text-accent-400' },
         { text: '  Building... done (12s)', color: 'text-text-tertiary' },
         { text: '  ✓ Live in 18s', color: 'text-green-400' },
       ].map((l, i) => (
@@ -31,7 +31,7 @@ function SecurityIllust() {
       {[
         { label: 'SSL', value: 'Auto-provisioned', color: 'text-green-400' },
         { label: 'DDoS', value: 'Protected', color: 'text-green-400' },
-        { label: 'WAF', value: 'Active', color: 'text-blue-400' },
+        { label: 'WAF', value: 'Active', color: 'text-accent-400' },
       ].map((item, i) => (
         <motion.div key={item.label} initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
           transition={{ delay: 0.3 + i * 0.1 }}
@@ -55,13 +55,13 @@ function ScaleIllust() {
             whileInView={{ height: `${h}%` }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 + i * 0.06, duration: 0.4, ease: 'easeOut' as const }}
-            className="flex-1 rounded-sm bg-gradient-to-t from-blue-500/40 to-blue-600/40"
+            className="flex-1 rounded-sm bg-gradient-to-t from-accent-500/40 to-accent-600/40"
           />
         ))}
       </div>
       <div className="flex items-center justify-between text-text-quaternary">
         <span>Traffic</span>
-        <span className="text-blue-400">Auto-scale ✓</span>
+        <span className="text-accent-400">Auto-scale ✓</span>
       </div>
     </div>
   );
@@ -199,7 +199,7 @@ export default function FeaturesSection() {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ delay: i * 0.08, duration: 0.5, ease: 'easeOut' as const }}
               whileHover={{ y: -4, transition: { duration: 0.25 } }}
-              className="glass-card rounded-xl p-6 hover:border-blue-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-shadow duration-300"
+              className="glass-card rounded-xl p-6 hover:border-accent-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-shadow duration-300"
             >
               <h3 className="text-base font-semibold text-text-primary mb-2">{f.title}</h3>
               <p className="text-sm text-text-secondary leading-relaxed mb-4">{f.description}</p>

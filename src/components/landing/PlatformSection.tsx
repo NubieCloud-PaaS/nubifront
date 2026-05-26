@@ -35,7 +35,7 @@ function CodeIllustration() {
         <span className="text-text-quaternary text-[10px] ml-1">app.js</span>
       </div>
       {[
-        { text: 'const app = express();', color: 'text-blue-400' },
+        { text: 'const app = express();', color: 'text-accent-400' },
         { text: 'app.get("/", (req, res) => {', color: 'text-text-secondary' },
         { text: '  res.send("Hello Nubi!");', color: 'text-green-400' },
         { text: '});', color: 'text-text-secondary' },
@@ -163,7 +163,7 @@ const platforms = [
     techs: ['Node.js', 'Python', 'PHP', 'Go', 'Java', '.NET'],
     description:
       'Concentrez-vous sur votre code, pas sur l\'infrastructure. Deployez en quelques secondes avec des environnements de previsualisation.',
-    accent: 'from-blue-400 to-blue-600',
+    accent: 'from-accent-400 to-accent-600',
   },
   {
     title: 'SaaS / ERP',
@@ -220,7 +220,7 @@ export default function PlatformSection() {
                 key={p.title}
                 variants={cardVariants}
                 whileHover={{ y: -6, transition: { duration: 0.25 } }}
-                className="glass-card rounded-xl p-6 relative overflow-hidden hover:border-blue-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-shadow duration-300"
+                className="glass-card rounded-xl p-6 relative overflow-hidden hover:border-accent-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-shadow duration-300"
               >
                 <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r ${p.accent}`} />
                 <h3 className="text-lg font-semibold text-text-primary mb-1">{p.title}</h3>

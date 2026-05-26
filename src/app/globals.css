@@ -4,16 +4,19 @@
 /* ── Nubiecloud Design Tokens – Dark-First ── */
 
 @theme inline {
-  --color-nubitech-50: #f0f9ff;
-  --color-nubitech-100: #e0f2fe;
-  --color-nubitech-200: #bae6fd;
-  --color-nubitech-300: #7dd3fc;
-  --color-nubitech-400: #38bdf8;
-  --color-nubitech-500: #0ea5e9;
-  --color-nubitech-600: #0284c7;
-  --color-nubitech-700: #0369a1;
-  --color-nubitech-800: #075985;
-  --color-nubitech-900: #0c4a6e;
+  /* NubieCloud brand accent (orange #E94B23) */
+  --color-accent-50: #FDECE6;
+  --color-accent-100: #FAD4C7;
+  --color-accent-200: #F5AE96;
+  --color-accent-300: #F08664;
+  --color-accent-400: #EE6840;
+  --color-accent-500: #E94B23;
+  --color-accent-600: #CE3F19;
+  --color-accent-700: #AB3415;
+  --color-accent-800: #882913;
+  --color-accent-900: #6B2110;
+  --color-accent: #E94B23;
+  --color-accent-emphasis: var(--token-accent-emphasis);
 
   --color-surface-0: var(--token-surface-0);
   --color-surface-1: var(--token-surface-1);
@@ -30,7 +33,7 @@
   --color-text-tertiary: var(--token-text-3);
   --color-text-quaternary: var(--token-text-4);
 
-  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --font-sans: var(--font-creato), 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
   --radius-card: 12px;
@@ -39,54 +42,61 @@
   --radius-modal: 16px;
   --radius-badge: 20px;
 
-  --shadow-glow-blue: 0 0 15px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.1);
-  --shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(59, 130, 246, 0.08);
+  --shadow-glow-blue: 0 0 15px rgba(233, 75, 35, 0.18), 0 0 3px rgba(233, 75, 35, 0.12);
+  --shadow-glow-accent: 0 0 15px rgba(233, 75, 35, 0.18), 0 0 3px rgba(233, 75, 35, 0.12);
+  --shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(233, 75, 35, 0.08);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-/* Dark mode tokens (DEFAULT) */
+/* Dark mode tokens (DEFAULT) — NubieCloud neutral dark ramp */
 :root {
-  --font-main: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --font-main: var(--font-creato), 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-  /* Surfaces – Midnight Azure (nubitech-frontend) */
-  --token-surface-0: #0B1120;
-  --token-surface-1: #0F1729;
-  --token-surface-2: #151E31;
-  --token-surface-3: #1B2540;
-  --token-surface-4: #223052;
+  /* Brand accent text/icons on dark bg (brighter for legibility) */
+  --token-accent-emphasis: #F2643F;
+
+  /* Surfaces (brand near-black) */
+  --token-surface-0: #0D0D0D;
+  --token-surface-1: #161516;
+  --token-surface-2: #1B1B1B;
+  --token-surface-3: #232323;
+  --token-surface-4: #2D2D2D;
 
   /* Borders */
-  --token-border-0: #1E293B;
-  --token-border-1: #2A3A55;
-  --token-border-2: #3B4F73;
+  --token-border-0: #262626;
+  --token-border-1: #333333;
+  --token-border-2: #4A4A4A;
 
   /* Text */
-  --token-text-1: #F1F5F9;
-  --token-text-2: #CBD5E1;
-  --token-text-3: #7C8DB5;
-  --token-text-4: #4A5A7A;
+  --token-text-1: #F2F2F2;
+  --token-text-2: #DDDDDD;
+  --token-text-3: #A7A8A8;
+  --token-text-4: #6D6D6D;
 }
 
-/* Light mode tokens – Fly.io tinted bg + Vercel text + Railway borders */
+/* Light mode tokens — NubieCloud neutral greys */
 .light {
-  /* Surfaces (nubitech-frontend) */
-  --token-surface-0: #F1F5F9;
+  /* Brand accent text/icons on light bg (darker for AA contrast) */
+  --token-accent-emphasis: #C0391A;
+
+  /* Surfaces */
+  --token-surface-0: #F2F2F2;
   --token-surface-1: #FFFFFF;
   --token-surface-2: #FFFFFF;
-  --token-surface-3: #F8FAFC;
-  --token-surface-4: #EFF6FF;
+  --token-surface-3: #EFEFEF;
+  --token-surface-4: #E6E6E6;
 
-  /* Borders (nubitech-frontend) */
-  --token-border-0: #E2E8F0;
-  --token-border-1: #CBD5E1;
-  --token-border-2: #94A3B8;
+  /* Borders */
+  --token-border-0: #E4E4E4;
+  --token-border-1: #DDDDDD;
+  --token-border-2: #A7A8A8;
 
-  /* Text (nubitech-frontend) */
-  --token-text-1: #0F172A;
-  --token-text-2: #1E293B;
-  --token-text-3: #475569;
-  --token-text-4: #64748B;
+  /* Text */
+  --token-text-1: #161516;
+  --token-text-2: #262626;
+  --token-text-3: #6D6D6D;
+  --token-text-4: #8A8A8A;
 }
 
 body {
@@ -230,7 +240,7 @@ code, pre {
 
 .prose blockquote {
   border-left-width: 4px;
-  border-left-color: #38bdf8;
+  border-left-color: #E94B23;
   background: var(--token-surface-3);
   border-radius: 0 0.5rem 0.5rem 0;
   padding: 1rem 1.25rem;
@@ -244,7 +254,7 @@ code, pre {
 }
 
 .light .prose blockquote {
-  border-left-color: #0284c7;
+  border-left-color: #C0391A;
   background: var(--token-surface-4);
 }
 
@@ -269,19 +279,19 @@ code, pre {
   background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
 }
 
-/* Blue glow effect */
+/* Brand accent glow effect */
 .glow-blue {
-  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(46, 108, 230, 0.1) 0%, transparent 70%);
+  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(233, 75, 35, 0.12) 0%, transparent 70%);
 }
 .light .glow-blue {
-  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(56, 130, 246, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(233, 75, 35, 0.10) 0%, transparent 70%);
 }
 
 /* Glass card */
 .glass-card {
-  background: rgba(11, 17, 32, 0.6);
+  background: rgba(13, 13, 13, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(42, 58, 85, 0.4);
+  border: 1px solid rgba(51, 51, 51, 0.5);
 }
 .light .glass-card {
   background: rgba(255, 255, 255, 0.85);
@@ -290,26 +300,26 @@ code, pre {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-/* Primary CTA button – inverts between dark/light */
+/* Primary CTA button – brand orange (same in dark & light) */
 .btn-primary {
-  background-color: #ffffff;
-  color: #0B1120;
+  background-color: #E94B23;
+  color: #ffffff;
 }
 .btn-primary:hover {
-  background-color: #e4e5f0;
+  background-color: #CE3F19;
 }
 .light .btn-primary {
-  background-color: #0B1120;
+  background-color: #E94B23;
   color: #ffffff;
 }
 .light .btn-primary:hover {
-  background-color: #151E31;
+  background-color: #CE3F19;
 }
 
-/* Gradient text adjustment for light mode */
+/* Gradient text adjustment for light mode (darker oranges for AA contrast) */
 .light .gradient-hero {
-  --tw-gradient-from: #0284c7;
-  --tw-gradient-to: #2563eb;
+  --tw-gradient-from: #AB3415;
+  --tw-gradient-to: #CE3F19;
 }
 
 /* Illustration overflow mask (Render.com style fade) */
@@ -334,5 +344,18 @@ code, pre {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4A5A7A;
+  background: #4A4A4A;
 }
+
+/* Accent text contrast — light mode (orange #E94B23 lacks AA on white) */
+.light .text-accent-300,
+.light .text-accent-400,
+.light .text-accent-500 {
+  color: #AB3415; /* accent-700 */
+}
+
+/* Logo lockup theme switch (dark-first: default = dark, .light = light) */
+.logo-dark-only { display: block; }
+.logo-light-only { display: none; }
+.light .logo-dark-only { display: none; }
+.light .logo-light-only { display: block; }

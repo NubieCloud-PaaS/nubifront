@@ -54,7 +54,7 @@ export default function BlogPage() {
             {allPosts.map(({ slug, date, title, description, tags, author, image, readingTime }) => (
               <article key={slug} className="group flex flex-col">
                 <Link href={`/blog/${slug}`} className="block h-full">
-                  <div className="bg-surface-2 border border-border-1 rounded-xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-lg hover:border-blue-500/30 transition-all duration-300 group-hover:-translate-y-1">
+                  <div className="bg-surface-2 border border-border-1 rounded-xl overflow-hidden h-full flex flex-col shadow-sm hover:shadow-lg hover:border-accent-500/30 transition-all duration-300 group-hover:-translate-y-1">
                     {/* Cover Image */}
                     <div className="relative w-full h-48">
                       <Image
@@ -75,7 +75,7 @@ export default function BlogPage() {
                       </p>
 
                       {/* Title */}
-                      <h2 className="text-xl font-bold text-text-primary group-hover:text-blue-400 transition-colors mb-3">
+                      <h2 className="text-xl font-bold text-text-primary group-hover:text-accent-400 transition-colors mb-3">
                         {title}
                       </h2>
 
@@ -88,13 +88,13 @@ export default function BlogPage() {
                           {tags.map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-1 bg-blue-500/12 text-blue-400 text-xs rounded-lg font-medium"
+                              className="px-2 py-1 bg-accent-500/12 text-accent-400 text-xs rounded-lg font-medium"
                             >
                               {tag}
                             </span>
                           ))}
                         </div>
-                        <div className="flex items-center text-sm font-semibold text-blue-400 group-hover:text-blue-300 transition-colors whitespace-nowrap ml-2">
+                        <div className="flex items-center text-sm font-semibold text-accent-400 group-hover:text-accent-300 transition-colors whitespace-nowrap ml-2">
                           Lire la suite
                           <ArrowRightIcon className="ml-1 h-4 w-4" />
                         </div>

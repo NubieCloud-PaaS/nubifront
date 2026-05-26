@@ -70,8 +70,8 @@ const plans: Plan[] = [
     highlighted: true,
     badge: 'LE PLUS POPULAIRE',
     badgeIcon: 'star',
-    badgeGradient: 'from-blue-500 to-blue-600',
-    accentBorder: 'border-blue-500',
+    badgeGradient: 'from-accent-500 to-accent-600',
+    accentBorder: 'border-accent-500',
     features: [
       '4 vCPU, 8 GB RAM, 80 GB SSD',
       '5 projets, 1 TB transfert',
@@ -157,7 +157,7 @@ function PricingCard({ plan, index }: { plan: Plan; index: number }) {
         {plan.features.map((f) => (
           <li key={f} className="flex items-start text-text-secondary">
             <CheckIcon className={`w-4 h-4 mr-2 flex-shrink-0 mt-0.5 ${
-              isHighlighted ? 'text-blue-400' : isEnterprise ? 'text-violet-400' : 'text-blue-500/70'
+              isHighlighted ? 'text-accent-400' : isEnterprise ? 'text-violet-400' : 'text-accent-500/70'
             }`} />
             <span>{f}</span>
           </li>

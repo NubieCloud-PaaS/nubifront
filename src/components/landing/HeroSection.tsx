@@ -62,7 +62,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.4, ease: 'easeInOut' }}
                     className="inline-block"
                   >
-                    <GradientText from="from-blue-400" to="to-blue-600">
+                    <GradientText from="from-accent-400" to="to-accent-600">
                       {rotatingWords[wordIndex]}
                     </GradientText>
                   </motion.span>

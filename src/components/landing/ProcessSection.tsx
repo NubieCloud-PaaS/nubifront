@@ -24,13 +24,13 @@ function RepoIllustration() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 + i * 0.12, duration: 0.3 }}
-          className={`flex items-center justify-between p-2 rounded-md border ${i === 2 ? 'border-blue-500/40 bg-blue-500/5' : 'border-border-0 bg-surface-2'}`}
+          className={`flex items-center justify-between p-2 rounded-md border ${i === 2 ? 'border-accent-500/40 bg-accent-500/5' : 'border-border-0 bg-surface-2'}`}
         >
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${i === 2 ? 'bg-blue-400' : 'bg-text-quaternary'}`} />
+            <div className={`w-2 h-2 rounded-full ${i === 2 ? 'bg-accent-400' : 'bg-text-quaternary'}`} />
             <span className="text-text-secondary">{repo}</span>
           </div>
-          {i === 2 && <span className="text-blue-400 text-[10px]">Selectionne</span>}
+          {i === 2 && <span className="text-accent-400 text-[10px]">Selectionne</span>}
         </motion.div>
       ))}
     </div>
@@ -87,7 +87,7 @@ function PushIllustration() {
       </div>
       <div className="space-y-2">
         {[
-          { icon: '●', label: 'git push origin main', color: 'text-blue-400', delay: 0.4 },
+          { icon: '●', label: 'git push origin main', color: 'text-accent-400', delay: 0.4 },
           { icon: '◐', label: 'Building...', color: 'text-yellow-400', delay: 0.6 },
           { icon: '✓', label: 'Tests passes (12/12)', color: 'text-green-400', delay: 0.8 },
           { icon: '✓', label: 'Image built (234 MB)', color: 'text-green-400', delay: 1.0 },
@@ -112,7 +112,7 @@ function PushIllustration() {
             whileInView={{ width: '100%' }}
             viewport={{ once: true }}
             transition={{ delay: 0.6, duration: 1.5, ease: 'easeOut' as const }}
-            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-600"
+            className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-600"
           />
         </div>
       </div>
@@ -143,13 +143,13 @@ function DeployIllustration() {
           <span className="text-green-400 font-medium">Live</span>
           <span className="text-text-quaternary ml-auto">4.2s</span>
         </div>
-        <span className="text-blue-400">https://console.nubiecloud.io</span>
+        <span className="text-accent-400">https://console.nubiecloud.io</span>
       </motion.div>
       <div className="grid grid-cols-3 gap-2">
         {[
           { label: 'SSL', value: '✓', color: 'text-green-400' },
           { label: 'CDN', value: '✓', color: 'text-green-400' },
-          { label: 'Uptime', value: '99.9%', color: 'text-blue-400' },
+          { label: 'Uptime', value: '99.9%', color: 'text-accent-400' },
         ].map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -232,7 +232,7 @@ export default function ProcessSection() {
               >
                 {/* Text */}
                 <div className="flex items-start gap-3 mb-5">
-                  <span className="text-xs font-mono font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded mt-0.5">
+                  <span className="text-xs font-mono font-bold text-accent-500 bg-accent-500/10 px-2 py-1 rounded mt-0.5">
                     {step.num}
                   </span>
                   <div>

@@ -16,7 +16,7 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.5, ease: 'easeOut', delay }}
-      className={`glass-card rounded-xl p-6 hover:border-blue-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-all duration-300 ${className}`}
+      className={`glass-card rounded-xl p-6 hover:border-accent-500/30 hover:shadow-[var(--shadow-glow-blue)] transition-all duration-300 ${className}`}
     >
       {children}
     </motion.div>

@@ -34,8 +34,8 @@ const benefits = [
 ];
 
 const archLayers = [
-  { label: 'Votre Application', color: 'border-blue-500/40 bg-blue-500/5' },
-  { label: 'Load Balancer', color: 'border-blue-500/40 bg-blue-500/5' },
+  { label: 'Votre Application', color: 'border-accent-500/40 bg-accent-500/5' },
+  { label: 'Load Balancer', color: 'border-accent-500/40 bg-accent-500/5' },
   { label: 'Nodes (Auto-scaling)', color: 'border-violet-500/40 bg-violet-500/5' },
 ];
 

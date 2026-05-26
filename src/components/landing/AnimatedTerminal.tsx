@@ -16,11 +16,11 @@ const lines = [
 ];
 
 const typeColors = {
-  command: 'text-blue-400',
+  command: 'text-accent-400',
   info: 'text-text-secondary',
-  progress: 'text-blue-400',
+  progress: 'text-accent-400',
   success: 'text-green-400',
-  link: 'text-blue-300',
+  link: 'text-accent-300',
 };
 
 export default function AnimatedTerminal() {
@@ -71,7 +71,7 @@ export default function AnimatedTerminal() {
           </motion.div>
         ))}
         {visibleLines < lines.length && visibleLines > 0 && (
-          <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-1" />
+          <span className="inline-block w-2 h-4 bg-accent-400 animate-pulse ml-1" />
         )}
       </div>
     </div>
