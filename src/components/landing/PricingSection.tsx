@@ -225,6 +225,69 @@ export default function PricingSection() {
           ))}
         </div>
 
+        {/* Connect — BYO-VM add-on (tarif unique, hors grille) */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="glass-card rounded-2xl p-8 mt-10 border-2 border-accent-500/30"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Pitch + prix + CTA */}
+            <div>
+              <span className="inline-block bg-accent-500/12 text-accent-emphasis text-xs font-bold px-3 py-1 rounded-full mb-3">
+                CONNECT &middot; BYO-VM
+              </span>
+              <h3 className="text-2xl font-bold text-text-primary mb-2">
+                Votre infrastructure, notre plateforme
+              </h3>
+              <p className="text-text-secondary text-sm mb-5">
+                Vous avez deja vos serveurs (on-premise, OVH, Hetzner, AWS, Azure...) ?
+                Connectez-les a NubieCloud et profitez de toute la plateforme — sans migrer.
+              </p>
+              <div className="mb-5">
+                <span className="text-3xl font-bold text-text-primary">100 000 FCFA</span>
+                <span className="text-text-tertiary text-sm"> / VM / mois</span>
+                <p className="text-text-quaternary text-xs mt-1">
+                  En plus de votre plan (Pro ou Business) &middot; Inclus avec Enterprise
+                </p>
+              </div>
+              <a
+                href={`${CONSOLE_URL}/register`}
+                className="btn-primary inline-block py-2.5 px-6 rounded-lg text-sm font-medium"
+              >
+                Connecter mon infrastructure
+              </a>
+            </div>
+
+            {/* Inclus par VM */}
+            <div className="lg:border-l lg:border-border-0 lg:pl-8">
+              <p className="text-text-tertiary text-xs font-semibold uppercase tracking-wide mb-3">
+                Inclus pour chaque VM connectee
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {[
+                  'Deploiement via GitOps',
+                  'Builds automatises',
+                  'Monitoring et logs centralises',
+                  'Backups orchestres',
+                  'Services manages (Postgres, Redis, Mongo...)',
+                  'Console unifiee avec tout votre parc',
+                ].map((f) => (
+                  <li key={f} className="flex items-start text-text-secondary">
+                    <CheckIcon className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5 text-accent-400" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-text-quaternary text-xs mt-4">
+                Vous gardez le controle total : compute, RAM, stockage et disponibilite de la VM restent les votres.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
         <p className="text-center text-text-quaternary text-xs mt-8">
           Tous les plans incluent SSL, monitoring et support. -10% sur paiement annuel.
         </p>
