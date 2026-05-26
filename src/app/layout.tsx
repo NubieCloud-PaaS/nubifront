@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     "hebergement",
   ],
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.ico",
+    icon: "/favicon.png?v=2",
+    shortcut: "/favicon.ico?v=2",
   },
   manifest: '/manifest.json',
   appleWebApp: {
@@ -84,7 +84,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/favicon.png?v=2" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.add('light')};}catch(e){}})();`,
