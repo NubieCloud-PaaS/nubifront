@@ -86,7 +86,7 @@ export default function HeroSection() {
                 Commencer gratuitement
               </a>
               <a
-                href="mailto:demo@nubitech.io"
+                href="mailto:contact@nubitech.io"
                 className="border border-border-1 text-text-primary px-6 py-3 rounded-lg font-medium text-sm hover:bg-surface-2 inline-flex items-center justify-center transition-colors"
               >
                 Demander une demo

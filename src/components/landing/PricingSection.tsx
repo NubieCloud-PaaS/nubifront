@@ -32,7 +32,7 @@ const plans: Plan[] = [
     name: 'GRATUIT',
     subtitle: 'Test et POC',
     price: { afrique: '0 FCFA', europe: '0 FCFA' },
-    period: '/30 jours',
+    period: 'gratuit, sans limite de temps',
     cta: 'Essayer gratuitement',
     ctaHref: `${CONSOLE_URL}/register`,
     ctaStyle: 'default',

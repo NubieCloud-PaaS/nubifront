@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     question: 'Puis-je essayer gratuitement ?',
-    answer: 'Oui, le plan Free vous permet de tester Nubiecloud gratuitement pendant 30 jours sans carte bancaire. Vous pouvez deployer une application avec 1 vCPU, 1 GB RAM et 10 GB SSD.',
+    answer: 'Oui, le plan Gratuit vous permet de tester Nubiecloud gratuitement, sans limite de temps et sans carte bancaire. Vous pouvez deployer une application avec 0,5 vCPU, 1 Go RAM et 5 Go SSD.',
   },
   {
     question: 'Quel est le SLA garanti ?',

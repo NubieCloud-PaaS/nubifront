@@ -38,7 +38,7 @@ export default function Footer() {
             <h3 className="font-semibold text-text-primary text-sm mb-4">Demarrer</h3>
             <ul className="space-y-2 text-sm text-text-tertiary">
               <li><a href={`${CONSOLE_URL}/register`} className="hover:text-text-primary transition-colors">Inscription gratuite</a></li>
-              <li><a href="mailto:demo@nubitech.io" className="hover:text-text-primary transition-colors">Demander une demo</a></li>
+              <li><a href="mailto:contact@nubitech.io" className="hover:text-text-primary transition-colors">Demander une demo</a></li>
               <li><a href="mailto:sales@nubitech.io" className="hover:text-text-primary transition-colors">Sales</a></li>
             </ul>
           </div>

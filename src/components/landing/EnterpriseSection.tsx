@@ -87,7 +87,7 @@ export default function EnterpriseSection() {
                 Parler aux ventes
               </a>
               <a
-                href="mailto:demo@nubitech.io"
+                href="mailto:contact@nubitech.io"
                 className="border border-border-1 text-text-primary px-6 py-3 rounded-lg text-sm font-medium hover:bg-surface-2 transition-colors text-center"
               >
                 Demander une demo
