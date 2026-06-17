@@ -1,0 +1,49 @@
+---
+title: Suivi des builds & images
+description: Suivre un build (états, logs), l'annuler ou le relancer, lire le scan de sécurité, et gérer les images buildées.
+---
+
+Une fois un build lancé (manuel ou automatique), suivez son avancement et gérez les images produites.
+
+## États d'un build
+
+| État | Signification |
+|------|---------------|
+| `pending` | en file d'attente |
+| `running` | en cours |
+| `succeeded` | terminé avec succès — l'image est disponible |
+| `failed` | échec (voir les logs) |
+| `cancelled` | annulé |
+
+## Logs
+
+Chaque build expose ses **logs**, découpés par étape (récupération du code, build de l'image…). C'est le premier endroit où regarder en cas d'échec.
+
+> 💡 Un build qui échoue indique l'étape fautive : `Dockerfile` introuvable, mauvais **dossier source**, dépendance manquante… Corrigez puis relancez.
+
+## Annuler / relancer
+
+- **Annuler** un build en cours le passe à l'état `cancelled`.
+- **Relancer** un build reprend la même configuration (branche, tag…).
+
+## Scan de sécurité
+
+Les images buildées peuvent être **scannées** pour détecter les vulnérabilités connues (CVE). Le résultat liste les vulnérabilités trouvées dans l'image — utile avant de mettre en production.
+
+> 📸 **Capture à fournir** — `builds/03-scan.png` : le résultat du scan de sécurité d'une image (liste de CVE avec sévérité).
+
+## Images buildées
+
+Les images produites sont conservées et réutilisables :
+
+- **Lister** les images d'un projet (avec dépôt, tag, date, durée du build, statut).
+- **Réutiliser** une image au moment du [déploiement](/docs/deploiements/deployer-une-app-code) — c'est ce qui permet aussi le [rollback](/docs/deploiements/cycle-de-vie#rollback-revenir-a-une-version-precedente) vers une version antérieure.
+- **Supprimer** des images devenues inutiles (sélection multiple possible).
+
+> 💡 Adoptez des **tags lisibles et versionnés** (`v1.2.0`) plutôt que `latest` partout : vous identifierez bien plus facilement quelle image déployer ou vers laquelle revenir.
+
+## Voir aussi
+
+- [Builds — vue d'ensemble & build manuel](/docs/builds)
+- [Build automatique](/docs/builds/build-automatique)
+- [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie)

@@ -1,0 +1,94 @@
+---
+title: Déployer une application depuis du code
+description: Tout le détail du déploiement d'une app CODE — frameworks supportés, ressources, variables d'env et secrets, domaine et TLS, health check, réplicas et migrations.
+---
+
+Une application **CODE** est déployée à partir d'une **image que vous avez buildée** depuis votre dépôt (voir [Builds](/docs/builds)). Cette page détaille tous les paramètres du déploiement.
+
+## Choisir le framework
+
+Au déploiement, vous choisissez le **framework** correspondant à votre application. Ce choix applique des **valeurs par défaut adaptées** (port, ressources) que vous pouvez ajuster.
+
+| Framework | Langage | Port par défaut |
+|-----------|---------|:---------------:|
+| Django | Python | 8000 |
+| FastAPI | Python | 8000 |
+| Flask | Python | 5000 |
+| Express.js | Node.js | 3000 |
+| NestJS | Node.js | 3000 |
+| Next.js | Node.js | 3000 |
+| React | Frontend (Nginx) | 80 |
+| Vue.js | Frontend (Nginx) | 80 |
+| Spring Boot | Java | 8080 |
+| Gin | Go | 8080 |
+| Laravel | PHP | 80 |
+| .NET | .NET | 8080 |
+
+> ℹ️ Certains frameworks attendent des variables d'environnement spécifiques (par exemple `DJANGO_SETTINGS_MODULE` pour Django, `FLASK_APP` pour Flask). Renseignez-les dans les **variables d'environnement** (ci-dessous).
+
+## Ressources
+
+| Champ | Obligatoire | Défaut | Notes |
+|-------|:-----------:|--------|-------|
+| **CPU** | ✅ | — | en cœurs (ex. 0,5 ; 1) |
+| **RAM** | ✅ | — | en Go |
+| **Stockage** | ✕ | 1 Go | en Go |
+| **Réplicas** | ✕ | 1 | nombre d'instances |
+
+Les valeurs sont **libres** (pas de paliers imposés) mais plafonnées par les **quotas du projet**. Si le quota est insuffisant, le déploiement est refusé — ajustez les ressources ou le quota du projet.
+
+> 💡 Les valeurs par défaut du framework sont des **recommandations**. Une API FastAPI démarre confortablement avec peu de ressources ; un Spring Boot ou un Django en demandent davantage.
+
+## Variables d'environnement et secrets
+
+Deux catégories distinctes :
+
+| Catégorie | Pour quoi | Stockage |
+|-----------|-----------|----------|
+| **Variables publiques** | Configuration non sensible (URLs, options, `DJANGO_SETTINGS_MODULE`…) | en clair |
+| **Secrets** | Données sensibles (mots de passe, clés API, `DATABASE_URL`…) | **chiffrés** |
+
+- Ajoutez/éditez les deux types à la création **et** plus tard via la mise à jour du déploiement.
+- Les **secrets sont chiffrés** au repos et injectés à l'exécution — ils n'apparaissent ni dans les logs ni dans les réponses de l'API.
+
+> 🔒 Mettez les identifiants de base de données (la chaîne `DATABASE_URL` récupérée d'un [service managé](/docs/services-manages)) dans les **secrets**, pas dans les variables publiques.
+
+## Domaine et TLS
+
+- **Sous-domaine automatique** : sans configuration, votre application est exposée sur une URL du type `https://nom-xxxx.nubiecloud.io` (le sous-domaine intègre la région pour les régions dédiées).
+- **Domaine personnalisé** : renseignez un ou plusieurs domaines (séparés par des virgules) dans le champ **Domaine**. Le **certificat TLS** est obtenu et renouvelé automatiquement.
+
+> ℹ️ Les domaines sont déclarés individuellement (pas de wildcard pour l'instant). Voir [Domaines & TLS](/docs/domaines/domaine-custom) pour la configuration DNS.
+
+## Health check
+
+Nubiecloud surveille la santé de votre application :
+
+- **HTTP** : renseignez un **chemin de health check** (ex. `/`, `/health`, `/api/health`). L'application est considérée saine si ce chemin répond correctement.
+- **TCP** : laissez le chemin vide → seule l'ouverture du port est vérifiée.
+
+Le chemin par défaut est `/`.
+
+## Réplicas
+
+Le champ **Réplicas** fixe le nombre d'instances de votre application (défaut : 1). Augmentez-le pour répartir la charge et améliorer la disponibilité.
+
+> ℹ️ Le scaling est **manuel** (nombre d'instances fixe) ; il n'y a pas d'autoscaling automatique pour l'instant.
+
+## Migrations de base de données
+
+Pour exécuter des migrations (Django, Alembic, etc.) **avant** que l'application ne démarre :
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| **Migrations activées** | non | active une tâche de migration au déploiement |
+| **Commande de migration** | — | ex. `python manage.py migrate` |
+| **Bloquer si échec** | oui | empêche le déploiement de continuer si la migration échoue |
+
+> 💡 Laissez **Bloquer si échec** activé en production : une migration ratée ne doit pas livrer une version cassée.
+
+## Voir aussi
+
+- [Builds](/docs/builds) — produire l'image à déployer.
+- [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie) — mise à jour, rollback, pause.
+- [Services managés](/docs/services-manages) — brancher une base de données.

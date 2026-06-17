@@ -1,0 +1,93 @@
+---
+title: Déployer Odoo
+description: Déployer une instance Odoo sur Nubicloud — versions, configuration, gestion des modules custom et sauvegardes.
+---
+
+Odoo est déployable en **application SaaS / ERP** : Nubiecloud provisionne l'instance Odoo **et** sa base PostgreSQL, sans aucun build de votre part. Vous gardez la main sur la version, la langue, les comptes d'administration et l'ajout de **modules custom**.
+
+## Versions supportées
+
+| Version | Disponible |
+|---------|------------|
+| Odoo 19.0 | ✅ |
+| Odoo 18.0 | ✅ |
+| **Odoo 17.0** | ✅ (par défaut) |
+| Odoo 16.0 | ✅ |
+| Odoo 15.0 | ✅ |
+
+La version se choisit au déploiement (champ **Version Odoo**) ; **17.0** est proposée par défaut.
+
+## Configuration au déploiement
+
+| Champ | Obligatoire | Défaut | Notes |
+|-------|:-----------:|--------|-------|
+| **Nom de l'application** | ✅ | — | Minuscules, format DNS (`mon-odoo`) |
+| **CPU** | ✅ | 1 cœur | de 0,1 à 8 |
+| **RAM** | ✅ | 2 Go | de 0,5 à 16 |
+| **Stockage** | ✅ | 20 Go | base + filestore |
+| **Réplicas** | ✅ | 1 | de 1 à 10 |
+| **Email admin** | ✕ | `admin@example.com` | compte administrateur Odoo |
+| **Mot de passe admin** | ✅ | — | min. 8 caractères |
+| **Mot de passe PostgreSQL** | ✅ | — | min. 8 caractères, **sans apostrophe** |
+| **Version Odoo** | ✕ | `17.0` | 15 / 16 / 17 / 18 / 19 |
+| **Langue** | ✕ | `fr_FR` | `fr_FR`, `en_US`, `es_ES`, `de_DE`, `it_IT` |
+| **Domaine personnalisé** | ✕ | — | un ou plusieurs (séparés par des virgules) |
+
+> 🔒 **Contraintes sur les mots de passe.** Minimum 8 caractères. Les caractères `{{` et `}}` sont interdits, et le mot de passe PostgreSQL ne doit pas contenir d'apostrophe (`'`). Ces règles évitent des erreurs de configuration côté infrastructure.
+
+> 📸 **Capture à fournir** — `saas/odoo-01-config.png` : le formulaire de configuration Odoo (version, langue, email/mot de passe admin, mot de passe PostgreSQL). Masquer les mots de passe.
+
+## Gérer les modules custom
+
+Une fois Odoo déployé, vous pouvez lui ajouter des **modules** (les vôtres ou ceux de la communauté OCA). Deux sources sont possibles :
+
+### Depuis un dépôt Git (recommandé)
+
+1. Ouvrez votre déploiement Odoo → onglet **Modules**.
+2. Choisissez **Ajouter un module** → type **Git**.
+3. Renseignez :
+   - soit un **dépôt connecté** (via OAuth) + un **sous-chemin** (ex. `addons/mon_module`),
+   - soit une **URL Git publique** (ex. `https://github.com/OCA/web.git`) + une **branche** (défaut `17.0`).
+4. Indiquez le **nom du module** et, si souhaité, cochez **installation automatique**.
+
+Nubiecloud clone alors le dépôt dans le répertoire des addons de votre instance et redéploie Odoo pour qu'il prenne le module en compte.
+
+### Depuis un fichier ZIP
+
+Vous pouvez aussi **téléverser un module au format ZIP**. Limites en vigueur :
+
+| Limite | Valeur |
+|--------|--------|
+| Taille du ZIP | 10 Mo max |
+| Taille décompressée | 50 Mo max |
+| Nombre de fichiers | 500 max |
+
+> ℹ️ Les modules **Git** sont déployés automatiquement sur l'instance. Le **ZIP** est aujourd'hui stocké et préparé, le déploiement automatique étant en cours de généralisation — préférez la source **Git** quand c'est possible.
+
+### Suivre, mettre à jour, supprimer
+
+- **Lister** les modules ajoutés à un déploiement.
+- **Logs d'installation** : consultez les journaux du chargement de chaque module (utile si un module ne s'installe pas). Filtrables par période et nombre de lignes.
+- **Supprimer** un module.
+
+> 📸 **Capture à fournir** — `saas/odoo-02-modules.png` : l'onglet **Modules** d'un déploiement Odoo, avec la liste des modules et le formulaire d'ajout (Git / ZIP).
+
+## Sauvegardes
+
+Odoo s'appuie sur une base **PostgreSQL** managée : il bénéficie donc des **sauvegardes automatiques** (comme PostgreSQL). Vous pouvez activer les backups, définir la **rétention** (30 jours par défaut) et restaurer. Voir [Backups & restauration](/docs/backups/restaurer).
+
+> ℹ️ La restauration utilise un mécanisme **Blue/Green** : la copie restaurée est validée avant de devenir active, pour éviter toute coupure subie.
+
+## Ressources par défaut
+
+| Ressource | Valeur |
+|-----------|--------|
+| CPU | 1 cœur (demande 0,5) |
+| RAM | 2 Go (demande 1) |
+| Stockage | 20 Go |
+| Réplicas | 1 |
+
+## Voir aussi
+
+- [Applications SaaS / ERP](/docs/saas) — catalogue et fonctionnement.
+- [Backups & restauration](/docs/backups/restaurer).

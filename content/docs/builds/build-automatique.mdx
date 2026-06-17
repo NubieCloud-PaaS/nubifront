@@ -1,0 +1,63 @@
+---
+title: Build automatique (BuildConfiguration)
+description: Configurer le build automatique d'un dépôt — stratégie, monorepo, déclencheurs push/tag/PR, filtres de branche et de chemin, déploiement automatique.
+---
+
+Une **configuration de build** (BuildConfiguration) décrit **comment** et **quand** Nubiecloud construit une image à partir d'un dépôt. C'est ce qui transforme chaque `git push` en nouvelle image — sans intervention manuelle.
+
+> 💡 Un même dépôt peut avoir **plusieurs configurations** (par exemple `frontend` et `backend` dans un monorepo), chacune avec ses propres règles.
+
+## Paramètres de build
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| **Nom** | — | nom de la configuration (ex. `backend`) |
+| **Configuration par défaut** | non | la configuration utilisée par défaut pour ce dépôt |
+| **Stratégie** | `dockerfile` | `dockerfile` ou `buildpack` |
+| **Dossier source** | `.` | sous-dossier à builder (monorepo) |
+| **Chemin du Dockerfile** | `./Dockerfile` | emplacement du Dockerfile |
+| **Image builder** | — | image de build Buildpacks (stratégie buildpack) |
+
+## Image produite
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| **Nom d'image** | nom du dépôt | nom personnalisé de l'image |
+| **Motif de tag** | `latest` | ex. `latest`, `{branch}`, `{sha}`, `{branch}-{sha}` |
+| **Variables de build** | — | variables/arguments disponibles pendant le build |
+
+## Déclencheurs automatiques
+
+| Champ | Défaut | Déclenche un build sur… |
+|-------|:------:|--------------------------|
+| **Build automatique activé** | non | (interrupteur général) |
+| **Sur push** | oui | un `git push` |
+| **Sur tag** | non | la création d'un tag |
+| **Sur pull request** | non | l'ouverture/mise à jour d'une PR |
+
+## Filtres
+
+Pour ne builder que ce qui compte :
+
+| Filtre | Exemple | Effet |
+|--------|---------|-------|
+| **Filtre de branche** | `main,develop` ou `feature/*` | ne builder que ces branches |
+| **Filtre de chemin** | `frontend/**,shared/**` | ne builder que si ces chemins changent (idéal monorepo) |
+
+> 💡 **Monorepo** : combinez **Dossier source** (`services/api`), **Filtre de chemin** (`services/api/**`) et un **Nom d'image** dédié pour builder chaque service indépendamment.
+
+## Déploiement automatique (optionnel)
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| **Déploiement auto activé** | non | déployer automatiquement après un build réussi |
+| **Environnement cible** | — | l'environnement où déployer |
+
+Activé, un push déclenche : **build → image → déploiement** dans l'environnement choisi, sans intervention.
+
+> 📸 **Capture à fournir** — `builds/02-config.png` : le formulaire de configuration de build (stratégie, dossier source, déclencheurs, filtres) et l'option de déploiement automatique.
+
+## Voir aussi
+
+- [Builds — vue d'ensemble & build manuel](/docs/builds)
+- [Suivi des builds & images](/docs/builds/suivi)

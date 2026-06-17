@@ -1,0 +1,43 @@
+---
+title: Déployer WordPress
+description: Déployer un site WordPress sur Nubicloud avec sa base MariaDB intégrée — configuration et ressources.
+---
+
+WordPress est déployable en **application SaaS / CMS** : Nubiecloud provisionne l'instance WordPress **et** sa base **MariaDB** intégrée, sans build. Vous configurez le compte administrateur et les mots de passe de la base, et votre site est en ligne.
+
+## Version
+
+WordPress est déployé sur l'image **`6.4-apache`** (Apache + PHP). La base de données associée est **MariaDB**, incluse dans le déploiement.
+
+## Configuration au déploiement
+
+| Champ | Obligatoire | Défaut | Notes |
+|-------|:-----------:|--------|-------|
+| **Nom de l'application** | ✅ | — | Minuscules, format DNS |
+| **CPU** | ✅ | 0,5 cœur | — |
+| **RAM** | ✅ | 0,5 Go | — |
+| **Stockage** | ✅ | 20 Go | inclut MariaDB |
+| **Email admin** | ✕ | `admin@nubitech.io` | administrateur WordPress |
+| **Mot de passe WordPress** | ✅ | — | min. 8 caractères |
+| **Mot de passe root MariaDB** | ✅ | — | min. 8 caractères |
+| **Mot de passe utilisateur MariaDB** | ✅ | — | min. 8 caractères |
+| **Domaine personnalisé** | ✕ | — | un ou plusieurs |
+
+> 🔒 Les trois mots de passe (WordPress, root MariaDB, utilisateur MariaDB) sont obligatoires et doivent faire **au moins 8 caractères**. La base applicative est créée automatiquement (`wordpress`) avec un utilisateur dédié.
+
+> 📸 **Capture à fournir** — `saas/wordpress-01-config.png` : le formulaire de configuration WordPress (email/mot de passe admin, mots de passe MariaDB, ressources).
+
+## Ressources par défaut
+
+| Ressource | Valeur |
+|-----------|--------|
+| CPU | 0,5 cœur |
+| RAM | 0,5 Go |
+| Stockage | 20 Go (instance + MariaDB) |
+
+> 💡 Pour un site à trafic réel, augmentez CPU/RAM à la configuration ou plus tard via la [mise à jour du déploiement](/docs/deploiements/cycle-de-vie).
+
+## Voir aussi
+
+- [Applications SaaS / ERP](/docs/saas) — catalogue et fonctionnement.
+- [Domaines & TLS](/docs/domaines/domaine-custom).

@@ -1,0 +1,45 @@
+---
+title: Builds
+description: Transformer votre code en image déployable — connexion des dépôts, stratégies de build (Dockerfile, Buildpacks, automatique) et build manuel.
+---
+
+Un **build** transforme le code d'un dépôt Git en une **image** prête à être [déployée](/docs/deploiements). C'est l'étape qui précède le déploiement d'une application CODE.
+
+## Connecter un dépôt
+
+Avant de builder, connectez votre dépôt :
+
+- **GitHub** ou **GitLab** via **OAuth** (autorisation en quelques clics).
+- **GitLab** accepte aussi un **jeton d'accès personnel (PAT)**.
+- Vous pouvez connecter **plusieurs dépôts** et **plusieurs comptes** (un compte GitHub *et* un compte GitLab).
+
+> 🔒 Les jetons d'accès sont **chiffrés** et stockés côté serveur ; vous pouvez révoquer l'accès à tout moment depuis GitHub/GitLab.
+
+## Stratégies de build
+
+| Stratégie | Comment | Quand l'utiliser |
+|-----------|---------|------------------|
+| **Dockerfile** | Construit l'image à partir de votre `Dockerfile` | Vous maîtrisez votre image, besoins spécifiques |
+| **Buildpacks** | Détecte le langage et construit l'image automatiquement (sans Dockerfile) | Application standard, pas envie d'écrire un Dockerfile |
+| **Automatique** | Choisit Dockerfile si un `Dockerfile` est présent, sinon Buildpacks | Laisser Nubiecloud décider |
+
+## Build manuel ou automatique
+
+- **Build manuel** : vous lancez chaque build à la demande (voir ci-dessous).
+- **Build automatique** : Nubiecloud build à chaque **push**, **tag** ou **pull request**, selon vos règles. Voir [Build automatique](/docs/builds/build-automatique).
+
+## Lancer un build manuel
+
+1. Depuis **Builds**, choisissez le dépôt et **Lancer un build**.
+2. Renseignez :
+   - **Branche** (sinon la branche surveillée par défaut),
+   - **Commit** précis (sinon le dernier),
+   - **Tag d'image** (ex. `v1.0.0` ; défaut `latest`).
+3. Lancez et **suivez les logs** jusqu'au succès (voir [Suivi des builds](/docs/builds/suivi)).
+
+> 📸 **Capture à fournir** — `builds/01-manual.png` : le formulaire de build manuel (branche, tag d'image) avec les logs en cours.
+
+## Voir aussi
+
+- [Build automatique (BuildConfiguration)](/docs/builds/build-automatique)
+- [Suivi des builds & images](/docs/builds/suivi)

@@ -1,0 +1,38 @@
+---
+title: Déploiements
+description: Faire tourner une application dans un environnement — les trois voies (CODE, SaaS/ERP, service managé) et le cycle de vie commun.
+---
+
+Un **déploiement**, c'est une application qui **tourne** dans un environnement, avec ses ressources, sa configuration et son exposition réseau. À ne pas confondre avec le **build**, qui produit l'image en amont (voir [Concepts clés](/docs/concepts)).
+
+## Trois voies de déploiement
+
+| Voie | Pour quoi | Détail |
+|------|-----------|--------|
+| **CODE** | Votre application, depuis votre dépôt Git | [Déployer une app CODE](/docs/deploiements/deployer-une-app-code) |
+| **SaaS / ERP** | Une application pré-packagée (Odoo, WordPress…) | [Applications SaaS / ERP](/docs/saas) |
+| **Service managé** | Une base de données ou un middleware (PostgreSQL, Redis…) | [Services managés](/docs/services-manages) |
+
+Toutes se déploient **dans un environnement** d'un projet et partagent le même **cycle de vie** une fois en ligne.
+
+## Cycle de vie commun
+
+Quelle que soit la voie, une application déployée peut être :
+
+- **mise à jour** (ressources, variables d'environnement, image),
+- **redémarrée** ou **synchronisée**,
+- mise en **pause** puis **reprise**,
+- **ramenée à une version précédente** (rollback),
+- **supprimée**.
+
+Le détail est dans [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie).
+
+## États d'un déploiement
+
+| État | Signification |
+|------|---------------|
+| `PENDING` | En attente de prise en charge |
+| `BUILDING` | Build de l'image en cours (apps CODE) |
+| `DEPLOYED` / `RUNNING` | Déployé et en cours d'exécution |
+| `HEALTHY` | En bonne santé (health check OK) |
+| `FAILED` | En échec |

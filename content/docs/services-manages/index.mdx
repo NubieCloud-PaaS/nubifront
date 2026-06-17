@@ -1,0 +1,41 @@
+---
+title: Services managés
+description: Bases de données et middleware managés (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) — fonctionnement commun, connexion depuis vos applications.
+---
+
+Les **services managés** sont des briques d'infrastructure prêtes à l'emploi (bases de données, cache, file de messages) que vous déployez **comme une application**, dans un environnement, et que vos applications consomment via le réseau interne du projet.
+
+## Services disponibles
+
+| Service | Usage | Port | Sauvegardes | Console SQL |
+|---------|-------|:----:|:-----------:|:-----------:|
+| **PostgreSQL** | Base relationnelle (HA possible) | 5432 | ✅ | ✅ |
+| **MySQL** | Base relationnelle | 3306 | — | — |
+| **MongoDB** | Base documents | 27017 | — | — |
+| **Redis** | Cache / clé-valeur | 6379 | — | — |
+| **RabbitMQ** | File de messages (AMQP) | 5672 (UI : 15672) | — | — |
+
+> ℹ️ **PostgreSQL est le service le plus complet** : haute disponibilité Blue/Green, sauvegardes automatiques vers le stockage objet, et [console SQL intégrée](/docs/services-manages/reference#console-sql). Les autres services sont déployés en instance simple.
+
+## Fonctionnement commun
+
+- Chaque service est déployé **dans un environnement** d'un projet, au même titre qu'une application.
+- Il reçoit un **nom d'hôte interne** stable de la forme `nom-du-service-xxxx-internal`, joignable par les **autres applications du même projet/environnement**.
+- Les **identifiants** (utilisateur, mot de passe, base) sont définis au déploiement et conservés de façon chiffrée — ils ne transitent jamais en clair par l'API.
+- L'accès est **interne au cluster** (pas d'exposition publique directe d'une base).
+
+## Connecter une application à un service
+
+Le principe est toujours le même (illustré dans l'[étape 10 du Quickstart](/docs/quickstart)) :
+
+1. **Déployez le service d'abord** (ex. PostgreSQL).
+2. Sur la page du service, **récupérez la chaîne de connexion** (hôte interne, port, base).
+3. **Ajoutez-la dans les variables d'environnement** de votre application (ex. `DATABASE_URL`).
+4. (Re)démarrez l'application.
+
+> ⚠️ Le câblage est **explicite** : Nubiecloud déploie le service, mais c'est vous qui copiez la chaîne de connexion vers votre application.
+
+## Aller plus loin
+
+- **[Référence des services managés](/docs/services-manages/reference)** — versions, tailles, formats de connexion, console SQL, par service.
+- **[Backups & restauration](/docs/backups/restaurer)** — pour PostgreSQL (et Odoo).

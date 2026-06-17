@@ -1,0 +1,46 @@
+---
+title: Applications SaaS / ERP
+description: Déployer une application pré-packagée (Odoo, WordPress…) sans builder de code — catalogue, fonctionnement et différences avec une app CODE.
+---
+
+À côté du déploiement d'**applications depuis votre code** ([CODE](/docs/deploiements/deployer-une-app-code)), Nubiecloud propose un catalogue d'**applications pré-packagées** (SaaS / ERP / CMS) que vous déployez **sans builder quoi que ce soit** : vous choisissez l'application, sa version et quelques paramètres, et Nubiecloud s'occupe de l'image, de la base de données associée et de l'exposition.
+
+## Catalogue
+
+| Application | Type | Base de données incluse | Statut |
+|-------------|------|--------------------------|--------|
+| **Odoo** | ERP / Gestion | PostgreSQL (intégrée) | ✅ Disponible |
+| **WordPress** | CMS | MariaDB (intégrée) | ✅ Disponible |
+| Joomla | CMS | MySQL | 🔜 Bientôt |
+| Drupal | CMS | MySQL | 🔜 Bientôt |
+| Nextcloud | Stockage / Collaboration | MySQL | 🔜 Bientôt |
+| Matomo | Analytics web | MySQL | 🔜 Bientôt |
+
+> ℹ️ Les applications marquées **🔜 Bientôt** apparaissent dans la console mais ne sont pas encore activées. Aujourd'hui, **Odoo** et **WordPress** sont pleinement déployables.
+
+## SaaS vs CODE : qu'est-ce qui change ?
+
+| Aspect | Application CODE | Application SaaS / ERP |
+|--------|------------------|------------------------|
+| **Source** | Votre dépôt Git | Image pré-construite fournie par Nubiecloud |
+| **Build** | Oui (Dockerfile / Buildpacks) | **Aucun build** |
+| **Base de données** | À déployer séparément (service managé) et à brancher | **Intégrée** au déploiement (PostgreSQL pour Odoo, MariaDB pour WordPress) |
+| **Configuration** | Variables d'env, port, health check… | Paramètres dédiés (admin, mot de passe, version, langue…) |
+| **Exposition** | Sous-domaine auto + domaine custom | Idem |
+
+> 💡 **Pas besoin de connecter un dépôt** ni de lancer un build pour une application SaaS : le parcours est plus court (choisir l'app → la configurer → déployer).
+
+## Le parcours
+
+1. Dans un **environnement**, choisissez **Déployer une application** puis l'onglet **SaaS / ERP**.
+2. Sélectionnez l'application (ex. **Odoo**).
+3. Renseignez les **ressources** (CPU / RAM / Stockage) et les **paramètres spécifiques** (voir les pages dédiées).
+4. (Facultatif) Ajoutez un **domaine personnalisé**.
+5. Déployez. La base de données associée est provisionnée **avec** l'application.
+
+> 📸 **Capture à fournir** — `saas/01-catalogue.png` : l'onglet **SaaS / ERP** du wizard de déploiement, montrant les cartes Odoo / WordPress disponibles et les cartes « Bientôt ».
+
+## Guides dédiés
+
+- **[Déployer Odoo](/docs/saas/odoo)** — versions, configuration, modules, sauvegardes.
+- **[Déployer WordPress](/docs/saas/wordpress)** — configuration, base MariaDB, ressources.

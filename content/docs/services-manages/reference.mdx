@@ -1,0 +1,136 @@
+---
+title: Référence des services managés
+description: Détail par service — versions, tailles par défaut, ports, formats de connexion, ainsi que la console SQL et la haute disponibilité PostgreSQL.
+---
+
+Cette page détaille chaque service managé : versions, ressources par défaut, port et format de connexion. Les champs communs à tous les services sont rappelés en fin de page.
+
+## Champs communs au déploiement
+
+| Champ | Obligatoire | Défaut | Notes |
+|-------|:-----------:|--------|-------|
+| **Nom** | ✅ | — | minuscules, format DNS |
+| **CPU / RAM / Stockage** | ✅ | voir par service | dans la limite des quotas projet |
+| **Réplicas** | ✅ | 1 | de 1 à 3 |
+| **Mot de passe root / admin** | ✅ | — | min. 8 caractères, sans apostrophe |
+| **Base, Utilisateur, Mot de passe** | ✕ | `app_db` / `app_user` | utilisateur applicatif (bases relationnelles/document) |
+| **Version** | ✕ | voir par service | image du service |
+| **Activer les sauvegardes** | ✕ | non | **PostgreSQL uniquement** |
+
+---
+
+## PostgreSQL
+
+Base relationnelle, le service le plus complet de la plateforme.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version par défaut | `15-alpine` (configurable) |
+| CPU / RAM / Stockage par défaut | 0,5 cœur / 1 Go / 10 Go |
+| Port | 5432 |
+| Haute disponibilité | ✅ Blue/Green + pooler de connexions |
+| Sauvegardes | ✅ automatiques (rétention 30 j par défaut) |
+| Console SQL | ✅ |
+
+**Connexion** (affichée sur la page du service) :
+
+```
+DATABASE_URL=postgresql://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:5432/BASE
+```
+
+### Haute disponibilité (HA)
+
+PostgreSQL fonctionne en architecture **Blue/Green** : un cluster actif (`blue`) et un cluster de secours (`green`). Le nombre d'**instances actives** suit le champ **Réplicas**. Un **pooler de connexions** (PgBouncer) est placé devant la base pour stabiliser les connexions lors d'un basculement.
+
+> 💡 Augmenter **Réplicas** augmente le nombre d'instances du cluster actif. Le basculement vers le cluster de secours est utilisé notamment lors d'une restauration (Blue/Green).
+
+---
+
+## MySQL
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version par défaut | `8.0` (configurable) |
+| CPU / RAM / Stockage par défaut | 0,5 cœur / 1 Go / 10 Go |
+| Port | 3306 |
+| Sauvegardes | — (non gérées automatiquement) |
+
+**Connexion** :
+
+```
+DATABASE_URL=mysql://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:3306/BASE
+```
+
+---
+
+## MongoDB
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version par défaut | `7.0` (configurable) |
+| CPU / RAM / Stockage par défaut | 0,5 cœur / 1 Go / 10 Go |
+| Port | 27017 |
+| Sauvegardes | — |
+
+**Connexion** :
+
+```
+MONGODB_URI=mongodb://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:27017/BASE
+```
+
+---
+
+## Redis
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version par défaut | `7-alpine` (configurable) |
+| CPU / RAM / Stockage par défaut | 0,25 cœur / 0,5 Go / 2 Go |
+| Port | 6379 |
+| Persistance | activée (append-only) |
+| Sauvegardes | — |
+
+**Connexion** :
+
+```
+REDIS_URL=redis://HOTE_INTERNE:6379
+```
+
+> ℹ️ Redis est déployé **sans authentification par défaut** : l'accès est protégé par l'isolation réseau interne du projet.
+
+---
+
+## RabbitMQ
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version par défaut | `3.12-management-alpine` (configurable) |
+| CPU / RAM / Stockage par défaut | 0,5 cœur / 1 Go / 8 Go |
+| Ports | 5672 (AMQP), 15672 (interface de gestion) |
+| Sauvegardes | — |
+
+**Connexion** :
+
+```
+RABBITMQ_URL=amqp://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:5672/
+```
+
+L'**interface de gestion** RabbitMQ est disponible sur le port 15672.
+
+---
+
+## Console SQL
+
+Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.
+
+- **Disponible pour** : PostgreSQL uniquement.
+- **Comment** : ouvrez le déploiement PostgreSQL → onglet **SQL** → saisissez votre requête → exécutez. Le résultat est renvoyé dans la console.
+- **Sous le capot** : chaque requête s'exécute dans une tâche éphémère isolée, avec des identifiants injectés à l'exécution (jamais exposés).
+- **Accès** : réservé aux rôles **Développeur** et **Admin** du projet.
+
+> 📸 **Capture à fournir** — `services-manages/sql-editor.png` : l'onglet **SQL** d'un déploiement PostgreSQL, avec une requête `SELECT` et son résultat tabulaire.
+
+## Voir aussi
+
+- [Services managés — vue d'ensemble](/docs/services-manages)
+- [Backups & restauration](/docs/backups/restaurer)

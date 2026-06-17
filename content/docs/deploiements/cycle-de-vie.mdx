@@ -1,0 +1,51 @@
+---
+title: Cycle de vie d'un déploiement
+description: Gérer une application en ligne — mise à jour, redémarrage, synchronisation, pause/reprise, rollback et suppression.
+---
+
+Une fois une application déployée, vous la pilotez depuis sa **page de gestion**. Ces actions valent pour les déploiements CODE, SaaS/ERP et services managés (selon ce qui s'applique).
+
+## Mettre à jour
+
+Modifiez puis appliquez :
+
+- les **ressources** (CPU / RAM / Stockage, réplicas),
+- les **variables d'environnement** et **secrets**,
+- l'**image** déployée (nouveau tag).
+
+L'application est redéployée avec la nouvelle configuration.
+
+> 📸 **Capture à fournir** — `deploiements/gestion-update.png` : la page de gestion d'un déploiement avec l'édition des ressources et des variables d'environnement.
+
+## Redémarrer / Synchroniser
+
+- **Redémarrer** : relance les instances de l'application (utile après un changement externe).
+- **Synchroniser** : force la reprise en compte de l'état déclaré (utile si l'application et sa configuration ont divergé).
+
+## Pause et reprise
+
+- **Pause** : ramène l'application à **0 instance** — elle ne consomme plus de CPU/RAM et n'est plus joignable, mais sa configuration est conservée.
+- **Reprise** : repassez le nombre de **réplicas** à 1 (ou plus) pour la redémarrer.
+
+> 💡 La pause est pratique pour un environnement de test la nuit ou un projet en sommeil, sans tout supprimer.
+
+## Rollback (revenir à une version précédente)
+
+Si une mise à jour pose problème, revenez à une **image buildée antérieure** : sélectionnez une version précédente et **remettez-la en ligne**. L'application redéploie sur cette image.
+
+> ℹ️ Le rollback s'appuie sur les **images déjà buildées** ([images buildées](/docs/builds/suivi#images-buildees)). Gardez vos tags d'image lisibles (versionnés) pour identifier facilement la version vers laquelle revenir.
+
+## Surveiller
+
+Depuis la page de gestion, accédez aux **logs** (temps réel + historique, apps CODE) et au **monitoring** (CPU, RAM, réseau, stockage, santé). Voir l'[étape 11 du Quickstart](/docs/quickstart).
+
+## Supprimer
+
+La suppression retire l'application, sa configuration et ses ressources associées.
+
+> ⚠️ La suppression est **définitive**. Pour les bases de données, assurez-vous d'avoir une **sauvegarde** récente avant de supprimer (voir [Backups](/docs/backups/restaurer)).
+
+## Voir aussi
+
+- [Déployer une app CODE](/docs/deploiements/deployer-une-app-code)
+- [Ce que vous pouvez faire dans chaque brique](/docs/concepts/par-brique)
