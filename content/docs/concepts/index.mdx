@@ -1,0 +1,40 @@
+---
+title: Concepts clés
+description: La hiérarchie Organisation → Projet → Environnement → Application, et la distinction entre builder une image et la déployer.
+---
+
+Sur Nubiecloud, vos ressources s'organisent en **cascade**. Comprendre cette hiérarchie rend tout le reste évident.
+
+## La hiérarchie
+
+```
+Organisation        ← facturation, plan, ressources globales, membres
+└── Projet          ← un produit, une part des ressources de l'org
+    └── Environnement   ← dev / staging / preproduction / production
+        └── Application ← votre service déployé
+            └── Dépendances ← bases de données, Redis… (services managés)
+```
+
+| Brique | Rôle | Ce qui s'y rattache |
+|--------|------|---------------------|
+| **Organisation** | Conteneur de facturation et de ressources partagées | Plan, quotas globaux, membres, régions |
+| **Projet** | Regroupe les applications d'un même produit | Quotas projet, environnements, membres projet |
+| **Environnement** | Isole les étapes du cycle de vie | dev, staging, preproduction, production |
+| **Application** | Le service qui tourne | Image déployée, ressources, variables d'env, domaine |
+| **Dépendances** | Services dont l'app a besoin | PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ |
+
+> ℹ️ **Les quotas descendent en cascade.** Le **plan** de l'organisation fixe le total de CPU / RAM / Stockage. Chaque **projet** consomme une part de ce total ; chaque **application** consomme une part des ressources de son projet.
+
+## Build ≠ Déploiement
+
+Deux notions à ne pas confondre :
+
+- **Build** : produire une **image** (un artefact exécutable) à partir de votre code source. Voir [Builds](/docs/builds/build-automatique).
+- **Déploiement** : faire **tourner une image** dans un environnement, avec ses ressources, ses variables d'env et son exposition réseau. Voir [Déployer une application](/docs/deploiements/deployer-une-app-code).
+
+On builde d'abord, on déploie ensuite. Une même image peut être déployée dans plusieurs environnements.
+
+## Voir aussi
+
+- [Quickstart : de zéro à une app en ligne](/docs/quickstart)
+- [Ce que vous pouvez faire dans chaque brique](/docs/concepts/par-brique)

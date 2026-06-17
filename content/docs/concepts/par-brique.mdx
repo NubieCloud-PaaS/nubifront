@@ -1,0 +1,65 @@
+---
+title: Ce que vous pouvez faire dans chaque brique
+description: La carte des actions disponibles sur une organisation, un projet et une application — avec les liens vers chaque guide.
+---
+
+Une fois une brique créée, que pouvez-vous en faire ? Cette page répond à la question pour chaque niveau de la hiérarchie [Organisation → Projet → Application](/docs/concepts). C'est votre **carte des actions**.
+
+---
+
+## 🏢 Organisation
+
+L'organisation porte la **facturation**, le **plan** et les **ressources partagées** par votre équipe.
+
+| Action | Détails |
+|--------|---------|
+| **Inviter des membres** | Ajouter des membres par email. |
+| **Gérer les rôles** | Rôles **Owner**, **Admin**, **Member** ; gérer et révoquer les invitations. |
+| **Choisir / changer de plan** | FREE, PROFESSIONAL, BUSINESS, ENTERPRISE (sur devis). Réservé au **propriétaire**. |
+| **Suivre la consommation** | Tableau de bord de l'org : **CPU / RAM / Stockage** consommés vs disponibles (en %), avec la répartition **par projet**. |
+| **Paramètres & régions** | Réglages de l'org, régions, suppression / restauration. |
+
+> 💡 **Le plan détermine vos quotas.** Augmenter le plan augmente le total de ressources répartissables entre vos projets. Voir [Changer de plan](/docs/organisations/changer-de-plan) et [Comprendre les quotas](/docs/organisations/quotas).
+
+> 🔒 **Rôles.** Seul un **Owner** peut changer le plan ou supprimer l'organisation. Les **Admins** gèrent membres et projets ; les **Members** travaillent dans les projets auxquels ils ont accès.
+
+---
+
+## 📁 Projet
+
+Le projet regroupe les applications d'un même produit et reçoit une **part des ressources** de l'organisation.
+
+| Action | Détails |
+|--------|---------|
+| **Définir les ressources** | Quotas du projet (**CPU / RAM / Stockage**), dans la limite du plan de l'org. |
+| **Gérer les environnements** | Créer / éditer / supprimer des environnements (**dev / staging / preproduction / production**) ; promouvoir d'un environnement à l'autre. |
+| **Gérer les membres projet** | Invitations et rôles au niveau du projet. |
+| **Suivre les applications** | Vue des applications et de leur consommation, **par environnement**. |
+
+> ⚠️ **Un environnement n'est pas créé automatiquement.** Après avoir créé un projet, créez au moins un environnement avant de pouvoir y déployer une application. Voir l'[étape 5 du Quickstart](/docs/quickstart).
+
+---
+
+## 🚀 Application / Déploiement
+
+L'application est le service qui tourne dans un environnement. C'est là que se concentre l'exploitation au quotidien.
+
+| Action | Détails |
+|--------|---------|
+| **Mettre à jour** | Modifier les **ressources** (CPU/RAM/Stockage), les **variables d'environnement** et les **secrets**. |
+| **Rollback** | Repasser sur une **image antérieure** déjà buildée. |
+| **Pause / reprise** | Mettre en pause (scale à 0) ou redémarrer l'application. |
+| **Consulter les logs** | Logs en **temps réel** + historique (applications de type code). |
+| **Monitorer** | **CPU, RAM, réseau, stockage** et état de santé. |
+| **Sauvegarder** | Activer / configurer les **backups** (PostgreSQL, Odoo), backup à la demande, restauration. |
+| **Exposer** | **Domaine custom** + **TLS**. |
+| **Ajouter des dépendances** | Déployer des **services managés** (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) et **brancher leurs credentials** dans l'application. |
+
+> 💡 **Ordre des dépendances.** Si une application a besoin d'une base pour démarrer, déployez la base **d'abord**, récupérez sa chaîne de connexion, puis injectez-la dans les variables d'env de l'app. Voir l'[étape 10 du Quickstart](/docs/quickstart).
+
+---
+
+## Voir aussi
+
+- [Concepts clés (Org → Projet → Environnement → App)](/docs/concepts)
+- [Quickstart : de zéro à une app en ligne](/docs/quickstart)
