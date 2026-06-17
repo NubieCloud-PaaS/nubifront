@@ -13,6 +13,7 @@ const navLinks = [
   { label: 'Produit', href: '/#plateformes' },
   { label: 'Processus', href: '/#processus' },
   { label: 'Tarifs', href: '/#tarifs' },
+  { label: 'Docs', href: '/docs' },
   { label: 'Blog', href: '/blog' },
 ];
 
@@ -31,7 +32,7 @@ export default function Navbar() {
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) =>
-              link.href.startsWith('/blog') ? (
+              link.href.startsWith('/blog') || link.href.startsWith('/docs') ? (
                 <Link
                   key={link.label}
                   href={link.href}

@@ -5,13 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/typography": "^0.5.19",
+    "@types/mdx": "^2.0.14",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.34.3",
+    "fumadocs-core": "^16.10.4",
+    "fumadocs-mdx": "^15.0.12",
+    "fumadocs-ui": "^16.10.4",
     "gray-matter": "^4.0.3",
     "next": "16.1.6",
     "react": "19.2.3",
