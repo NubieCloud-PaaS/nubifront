@@ -1,0 +1,45 @@
+---
+title: Sécurité du compte (2FA & appareils de confiance)
+description: Activer l'authentification à deux facteurs (TOTP) et gérer les appareils de confiance.
+---
+
+Nubiecloud propose deux mécanismes complémentaires pour protéger votre compte : l'**authentification à deux facteurs (2FA)** et la **vérification des appareils**.
+
+## Authentification à deux facteurs (2FA / TOTP)
+
+La 2FA ajoute un code temporaire à votre mot de passe, généré par une application d'authentification (Google Authenticator, Authy, Microsoft Authenticator…).
+
+### Activer la 2FA
+
+1. Depuis votre **profil**, choisissez **Activer la double authentification**.
+2. Nubiecloud affiche un **QR code** (et une clé en saisie manuelle). Scannez-le avec votre application d'authentification.
+3. Saisissez le **code à 6 chiffres** généré par l'application pour confirmer.
+4. **Sauvegardez les 10 codes de secours** affichés : ils permettent de vous connecter si vous perdez votre téléphone. Ils ne sont affichés **qu'une seule fois**.
+
+### À la connexion
+
+Une fois la 2FA active, après votre mot de passe, Nubiecloud vous demande le **code de votre application** (ou un **code de secours**). Chaque code de secours n'est utilisable qu'une fois.
+
+### Désactiver la 2FA
+
+Depuis le profil, désactivez la 2FA en confirmant avec votre **mot de passe** et un **code** valide.
+
+> 🔒 Conservez vos codes de secours en lieu sûr. Si vous perdez à la fois votre téléphone **et** vos codes, il faudra contacter le support.
+
+## Appareils de confiance
+
+À la connexion depuis un **nouvel appareil**, Nubiecloud peut vous envoyer un **code à 6 chiffres par email** pour confirmer que c'est bien vous.
+
+| Détail | Valeur |
+|--------|--------|
+| Durée de confiance | **30 jours** |
+| Validité du code email | 10 minutes |
+| Renvoi du code | jusqu'à 5 fois par heure |
+
+- Cochez **Faire confiance à cet appareil** pour ne plus être redemandé pendant 30 jours sur ce navigateur.
+- Depuis votre profil → **Appareils de confiance**, vous pouvez **lister** vos appareils (navigateur, dernière activité, expiration), en **révoquer** un, ou **révoquer tous les autres** (utile si vous pensez qu'un appareil est compromis).
+
+## Voir aussi
+
+- [Créer et vérifier son compte](/docs/compte)
+- [Profil & suppression du compte](/docs/compte/profil)

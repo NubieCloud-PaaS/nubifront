@@ -1,0 +1,50 @@
+---
+title: Connecter mon infrastructure (Connect)
+description: Raccorder votre propre serveur comme région personnalisée Nubiecloud — création, script d'installation, vérification et gestion.
+---
+
+**Connect** vous permet d'utiliser **votre propre serveur** comme région Nubiecloud. Vous exécutez un script fourni par la console ; il installe et configure tout (Kubernetes léger, raccordement réseau sécurisé, composants applicatifs) et **rattache automatiquement** votre serveur à Nubiecloud.
+
+## Pré-requis
+
+- Un **serveur Linux** (VM ou machine dédiée) sur lequel vous avez un accès **root**.
+- Une connexion sortante vers Internet. **Pas besoin d'IP publique** : le raccordement réseau passe par un overlay sécurisé.
+
+## Étapes
+
+1. **Créer la région.** Dans **Paramètres de l'organisation → Régions** (ou via le sélecteur de région), cliquez **+ Ajouter une région** et donnez-lui un nom (et une description facultative).
+2. **Générer le script.** Sur la région créée, cliquez **Connecter**. La console affiche une **commande `curl`** prête à copier.
+   - Cette commande est valable **un temps limité** (≈ 1 heure) et **à usage unique**.
+3. **Exécuter sur votre serveur.** Collez la commande dans un terminal **root** de votre serveur. Le script :
+   - installe **K3s** (Kubernetes léger),
+   - raccorde le serveur au réseau Nubiecloud (overlay sécurisé),
+   - installe les composants nécessaires (Helm, ingress, certificats, isolation, monitoring),
+   - **notifie automatiquement Nubiecloud** une fois prêt,
+   - puis **s'autodétruit** (le script contient des secrets temporaires).
+4. **Vérifier.** La région passe en statut **Connectée** dans la console. Elle devient sélectionnable lors de la création de projets.
+
+> 📸 **Capture à fournir** — `regions/connect.png` : la carte d'une région personnalisée avec le bouton **Connecter** et la commande `curl` affichée, ainsi que les statuts de connexion.
+
+## Si le rattachement automatique échoue
+
+Un **mode manuel** est proposé en repli : la console vous demande de renseigner les informations de connexion de votre cluster (adresse réseau interne, jeton d'accès, certificat, secret de rappel) pour finaliser le rattachement.
+
+## Gérer une région personnalisée
+
+| Action | Effet |
+|--------|-------|
+| **Statut de connexion** | `pending` / `provisioning` / `connected` / `disconnected` / `error` |
+| **Déconnecter** | retire le rattachement réseau et les accès |
+| **Reconnecter** | régénère un script pour rétablir une région en erreur |
+| **Désactiver / Supprimer** | met de côté ou supprime définitivement la région |
+
+> 🔒 Les jetons et clés liés au rattachement sont **chiffrés** côté Nubiecloud, et les secrets injectés dans le script ont une **durée de vie courte**.
+
+## Déployer dans votre région
+
+Une fois la région **connectée**, choisissez-la au moment de **créer un projet** : toutes les applications de ce projet s'exécuteront sur **votre** infrastructure.
+
+## Voir aussi
+
+- [Régions & Connect](/docs/regions)
+- [Projets](/docs/projets)

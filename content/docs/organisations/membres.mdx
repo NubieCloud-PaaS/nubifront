@@ -1,0 +1,47 @@
+---
+title: Membres & rôles
+description: Inviter des membres dans une organisation, comprendre les rôles, et gérer les invitations.
+---
+
+## Rôles d'organisation
+
+| Rôle | Description |
+|------|-------------|
+| **Owner** (Propriétaire) | Le créateur. Un seul par organisation. Tous les droits. |
+| **Admin** | Gère les membres et les projets. |
+| **Member** (Membre) | Accède aux projets et ressources auxquels il est rattaché. |
+
+### Permissions
+
+| Action | Owner | Admin | Member |
+|--------|:-----:|:-----:|:------:|
+| Inviter un membre | ✅ | ✅ | — |
+| Modifier le rôle d'un membre | ✅ | — | — |
+| Retirer un membre | ✅ | ✅ | — |
+| Changer de plan | ✅ | — | — |
+| Supprimer l'organisation | ✅ | — | — |
+
+## Inviter un membre
+
+1. Sur **Membres**, cliquez **Inviter un membre**.
+2. Saisissez l'**email** et choisissez le **rôle** (Member ou Admin).
+3. La personne reçoit un email d'invitation.
+
+## Invitations
+
+| Détail | Valeur |
+|--------|--------|
+| Validité | **30 jours** |
+| Destinataire **déjà inscrit** | accepte et rejoint directement l'organisation |
+| Destinataire **nouveau** | crée son compte depuis l'invitation, puis valide son email |
+
+## Retirer un membre
+
+Si le membre **possède des ressources** (projets, environnements, applications), la console affiche d'abord un **aperçu du transfert** : ces ressources seront **transférées au propriétaire** de l'organisation. Confirmez pour finaliser.
+
+> ℹ️ Le retrait d'un membre ne supprime pas ses ressources : elles changent de propriétaire (vers l'Owner).
+
+## Voir aussi
+
+- [Créer une organisation & plans](/docs/organisations)
+- [Membres de projet](/docs/projets#membres-de-projet) — rôles au niveau projet (distincts des rôles d'organisation).

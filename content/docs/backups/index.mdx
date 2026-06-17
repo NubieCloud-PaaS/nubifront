@@ -1,0 +1,39 @@
+---
+title: Backups
+description: Sauvegardes automatiques et à la demande des bases PostgreSQL (et Odoo) — activation, rétention, suivi.
+---
+
+Nubiecloud sauvegarde vos **bases de données PostgreSQL** (et les instances **Odoo**, qui s'appuient sur PostgreSQL) vers un stockage objet, automatiquement ou à la demande.
+
+> ℹ️ **Périmètre.** Les sauvegardes gérées concernent **PostgreSQL** et **Odoo**. Les autres services managés (MySQL, MongoDB, Redis, RabbitMQ) ne disposent pas de sauvegarde native, et les applications CODE n'ont pas de sauvegarde applicative.
+
+## Activer les sauvegardes automatiques
+
+Sur le déploiement concerné → onglet **Backups** → configurez :
+
+| Champ | Format | Exemple |
+|-------|--------|---------|
+| **Activé** | oui / non | oui |
+| **Planification** | expression cron (5 champs) | `0 3 * * *` (tous les jours à 3 h) |
+| **Rétention** | durée | `30d` (30 jours), `7d`, `90d` |
+
+Une fois activées, les sauvegardes s'exécutent selon la planification, et les anciennes sont **purgées automatiquement** au-delà de la rétention.
+
+## Sauvegarde à la demande
+
+Lancez une sauvegarde immédiate avec **Backup à la demande**. Son statut évolue : `pending` → `running` → `completed` (ou `failed`).
+
+## Suivre les sauvegardes
+
+La liste des sauvegardes affiche, pour chacune : le **nom**, l'**horodatage** du snapshot, le **type** (planifiée / à la demande), le **statut** et la **taille**. Elle est filtrable par environnement, statut et type.
+
+> 💡 Les statuts sont synchronisés régulièrement depuis l'infrastructure — une sauvegarde fraîchement lancée peut apparaître quelques instants en `pending`/`running` avant de passer `completed`.
+
+## Restaurer
+
+La restauration suit un parcours **Blue/Green** sécurisé (validation avant bascule). Voir le guide dédié : **[Restaurer une sauvegarde](/docs/backups/restaurer)**.
+
+## Voir aussi
+
+- [Restaurer une sauvegarde](/docs/backups/restaurer)
+- [Services managés](/docs/services-manages)

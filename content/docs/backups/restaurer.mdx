@@ -1,0 +1,39 @@
+---
+title: Restaurer une sauvegarde
+description: Restauration Blue/Green d'une base PostgreSQL — initier, valider avant bascule, ou annuler.
+---
+
+Nubiecloud restaure en mode **Blue/Green** : la sauvegarde est d'abord restaurée sur un **cluster de secours**, que vous **validez** avant qu'il ne devienne actif. Vous évitez ainsi toute bascule subie sur une copie défaillante.
+
+## Le parcours
+
+1. **Initier la restauration.** Depuis la liste des sauvegardes, choisissez une sauvegarde et lancez la restauration. Nubiecloud prépare le **cluster de secours** à partir de ce snapshot.
+   - Statut : `pending` → `in_progress`.
+2. **Attendre la préparation.** Quand le cluster de secours est prêt et sain, le statut passe à **`awaiting_validation`** (en attente de votre validation).
+3. **Valider la bascule (cutover).** Vous confirmez : le trafic bascule vers le cluster restauré, qui devient actif.
+   - Statut : `completed`.
+   - ⚠️ **La validation est irréversible** : elle bascule immédiatement la production sur la copie restaurée.
+4. **Ou annuler.** Tant que la restauration est `pending` ou `in_progress`, vous pouvez **annuler** : le cluster de secours est démonté et **votre base active reste inchangée**.
+
+> 📸 **Capture à fournir** — `backups/restore-timeline.png` : la frise de restauration (Initialisation → Préparation → En attente de validation → Terminé) avec les boutons **Valider** / **Annuler**.
+
+## Sécurité du processus
+
+- La restauration ne peut partir que d'une sauvegarde issue du **cluster actif** (protection contre la perte de données).
+- En cas de problème prolongé sur le cluster de secours, Nubiecloud **nettoie automatiquement** et marque la restauration en échec — **sans toucher** à votre base active.
+
+## États possibles
+
+| État | Signification |
+|------|---------------|
+| `pending` | initialisation |
+| `in_progress` | cluster de secours en cours de préparation |
+| `awaiting_validation` | prêt — en attente de votre validation |
+| `completed` | bascule effectuée |
+| `cancelled` | annulé (base active inchangée) |
+| `failed` | échec (base active inchangée) |
+
+## Voir aussi
+
+- [Backups](/docs/backups)
+- [Services managés](/docs/services-manages)

@@ -1,0 +1,43 @@
+---
+title: Connecter un dépôt Git
+description: Relier vos dépôts GitHub/GitLab à Nubiecloud via OAuth (ou jeton), sélectionner un dépôt, gérer plusieurs comptes.
+---
+
+Pour builder une application CODE, Nubiecloud doit accéder à votre **dépôt Git**. La connexion se fait depuis la section **Builds**.
+
+## Fournisseurs supportés
+
+| Fournisseur | Connexion |
+|-------------|-----------|
+| **GitHub** | OAuth |
+| **GitLab** | OAuth ou **jeton d'accès personnel (PAT)** |
+
+## Connecter un compte (OAuth)
+
+1. Dans **Builds**, choisissez **Connecter un dépôt**.
+2. Sélectionnez le fournisseur (**GitHub** ou **GitLab**).
+3. Une fenêtre d'autorisation OAuth s'ouvre : connectez-vous et autorisez Nubiecloud.
+4. De retour dans la console, vos dépôts accessibles apparaissent.
+
+> 🔒 Les jetons d'accès sont **chiffrés** (chiffrement de type Fernet) avant stockage. Nubiecloud ne révoque pas le jeton côté GitHub/GitLab quand vous le supprimez : pour couper l'accès complètement, révoquez aussi l'autorisation dans les paramètres de votre compte Git.
+
+## Sélectionner un dépôt
+
+- La console **liste vos dépôts** (par lots de 50, avec **chargement progressif**).
+- Une **recherche** permet de filtrer par nom quand vous avez beaucoup de dépôts.
+- Vous pouvez aussi **saisir une URL** de dépôt directement (le fournisseur est détecté automatiquement).
+- Chaque dépôt affiche son propriétaire, sa visibilité (public/privé) et sa **branche par défaut**.
+
+## Plusieurs comptes, plusieurs dépôts
+
+- Vous pouvez connecter **plusieurs comptes** (par exemple un compte GitHub *et* un compte GitLab).
+- Un même compte donne accès à **tous les dépôts** auxquels il a droit chez le fournisseur.
+
+## Déconnecter
+
+Supprimez un **jeton/compte** connecté pour retirer l'accès aux dépôts associés depuis Nubiecloud.
+
+## Voir aussi
+
+- [Builds — vue d'ensemble & build manuel](/docs/builds)
+- [Build automatique](/docs/builds/build-automatique)

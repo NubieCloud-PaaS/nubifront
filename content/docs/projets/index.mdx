@@ -1,0 +1,49 @@
+---
+title: Projets
+description: Créer et gérer un projet — ressources (preset ou personnalisé), région, et membres de projet.
+---
+
+Un **projet** regroupe les applications d'un même produit et reçoit une **part des ressources** de l'organisation. C'est dans un projet que vous créez des [environnements](/docs/projets/environnements) et déployez vos applications.
+
+## Créer un projet
+
+Depuis **Projets**, cliquez **Créer un projet** et renseignez :
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **Nom** | ✅ | max. 100 caractères |
+| **Description** | ✕ | max. 500 caractères |
+| **Mode de ressources** | ✅ | **Preset** ou **Personnalisé** |
+| **Stockage** | ✅ | en Go |
+| **Région** | ✕ | région de déploiement (région par défaut sinon) — voir [Régions](/docs/regions) |
+
+### Preset ou Personnalisé
+
+- **Preset** : vous choisissez un **type d'instance** prédéfini (CPU + RAM groupés). Pratique et lisible.
+- **Personnalisé** : vous saisissez directement le **CPU** et la **RAM** souhaités.
+
+> ℹ️ Les ressources demandées doivent tenir dans ce qui **reste disponible** dans l'organisation, et le **nombre de projets** est plafonné par le plan (FREE : 1, PROFESSIONAL : 5, BUSINESS/ENTERPRISE : illimités). Voir [Quotas d'un projet](/docs/projets/quotas).
+
+## Gérer un projet
+
+Vous pouvez modifier le **nom**, la **description** et les **quotas** (CPU / RAM / Stockage), ou **supprimer** le projet. Ces actions requièrent le rôle **Admin** du projet (ou d'être Owner de l'organisation).
+
+> ⚠️ Supprimer un projet supprime aussi ses **environnements** et les **applications** associées.
+
+## Membres de projet
+
+En plus des rôles d'organisation, chaque projet a ses propres rôles :
+
+| Rôle projet | Portée |
+|-------------|--------|
+| **Admin** | gère le projet, ses membres, ses environnements |
+| **Developer** | déploie et opère les applications |
+| **User** | accès en consultation |
+
+- Invitez un membre par **email** avec un rôle de projet. S'il n'est pas encore dans l'organisation, il y est ajouté automatiquement comme **Member**.
+- Le **propriétaire de l'organisation** a automatiquement accès à tous les projets.
+
+## Voir aussi
+
+- [Environnements](/docs/projets/environnements)
+- [Quotas d'un projet](/docs/projets/quotas)

@@ -1,4 +1,4 @@
 {
   "title": "Builds",
-  "pages": ["index", "build-automatique", "suivi"]
+  "pages": ["index", "connecter-un-depot", "build-automatique", "suivi"]
 }

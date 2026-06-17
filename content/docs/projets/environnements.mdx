@@ -1,0 +1,43 @@
+---
+title: Environnements
+description: Créer et gérer les environnements d'un projet (dev, staging, preproduction, production).
+---
+
+Une application se déploie toujours **dans un environnement** d'un projet. Les environnements isolent les étapes de votre cycle de vie.
+
+## Types d'environnements
+
+| Type | Usage typique |
+|------|---------------|
+| **dev** | développement |
+| **staging** | intégration / recette |
+| **preproduction** | pré-production |
+| **prod** | production |
+
+## Créer un environnement
+
+Depuis votre projet → **Environnements** → **Créer un environnement** :
+
+- un **nom** libre (ex. « Recette », « Production EU »),
+- un **type** parmi ceux ci-dessus.
+
+> ⚠️ **Aucun environnement n'est créé automatiquement** avec le projet : créez-en au moins un avant de pouvoir déployer (cf. [étape 5 du Quickstart](/docs/quickstart)).
+
+Chaque environnement dispose de son propre **espace isolé** (namespace) : les applications d'un environnement sont cloisonnées des autres.
+
+## Combien d'environnements ?
+
+Il n'y a **pas de limite de nombre** d'environnements. En revanche, les **quotas du projet** (CPU / RAM / Stockage) sont partagés par **tous les environnements** du projet : la somme des applications de tous les environnements ne peut pas dépasser le quota du projet.
+
+## Éditer / supprimer
+
+Vous pouvez renommer un environnement ou changer son type, et le supprimer (ce qui retire ses déploiements). Ces actions requièrent le rôle **Admin** du projet.
+
+## À propos de la « promotion »
+
+> ℹ️ Il n'existe pas (encore) de fonction de **promotion automatique** d'un environnement à l'autre (copier la configuration ou l'image de `staging` vers `prod`). Pour passer en production, **déployez l'application** dans l'environnement cible en réutilisant la même [image buildée](/docs/builds/suivi#images-buildees).
+
+## Voir aussi
+
+- [Projets](/docs/projets)
+- [Déploiements](/docs/deploiements)

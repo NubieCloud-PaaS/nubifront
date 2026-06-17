@@ -1,0 +1,46 @@
+---
+title: Monitoring & logs
+description: Suivre l'état de santé, les logs et les événements de vos applications déployées.
+---
+
+Depuis la page de gestion d'un déploiement (et le tableau de bord d'état), vous suivez la **santé**, les **logs** et les **événements** de vos applications.
+
+## État & santé d'une application
+
+Pour chaque application, Nubiecloud affiche :
+
+- l'**état de synchronisation** (la configuration déployée correspond-elle à l'état déclaré ?),
+- l'**état de santé** : `Healthy`, `Degraded`, `Missing`, `Unknown`,
+- le **décompte des pods** (total / en cours / en attente / en échec) et le nombre de services.
+
+Un **score de santé** synthétise ces indicateurs.
+
+> ℹ️ Le suivi fin de la **consommation CPU / RAM / Stockage** se consulte au niveau de l'**[organisation](/docs/organisations/quotas)** (utilisé vs disponible, par projet), pas sous forme de courbes par application.
+
+## Logs
+
+- **Applications CODE** : logs disponibles en **temps réel** (flux continu) et en **historique**.
+- Filtres : **période** (ex. dernière heure, dernier jour), **nombre de lignes**, **conteneur**, et **recherche** par texte.
+- **Services managés** (PostgreSQL, MySQL, Redis…) : pas de consultation de logs depuis la console.
+
+> ℹ️ Les logs se consultent **par application**. Il n'y a pas (encore) de vue agrégée des logs au niveau d'un environnement ou d'un projet.
+
+> 📸 **Capture à fournir** — `monitoring/logs.png` : l'onglet **Logs** d'une application CODE, avec le flux temps réel et les filtres (période, recherche).
+
+## Événements
+
+La vue **Événements** liste les événements récents de l'application (mises à jour de déploiement, redémarrages de pods…), avec leur type, motif, message et horodatage — utile pour comprendre un changement d'état.
+
+## Tableau de bord d'état
+
+Le **tableau de bord d'état** offre une vue hiérarchique **Projets → Environnements → Applications**, avec pour chaque application son statut, sa santé, son nombre de pods et des liens vers le monitoring, les logs et les sauvegardes. C'est une vue de **vos** ressources (pas une vue d'infrastructure globale).
+
+## Ce qui n'est pas (encore) disponible
+
+- **Alertes configurables** (seuils, notifications) : non disponibles — la console montre l'**état courant**, pas d'alerting.
+- **Export des métriques** (CSV, intégration externe) : non disponible depuis la console.
+
+## Voir aussi
+
+- [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie)
+- [Quotas de l'organisation](/docs/organisations/quotas)
