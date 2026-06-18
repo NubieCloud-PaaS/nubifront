@@ -1,0 +1,46 @@
+---
+title: NubiImport (importer une image)
+description: Importer une image Docker depuis un registry externe (Docker Hub, GHCR, GitLab) vers Nubiecloud pour la déployer.
+---
+
+**NubiImport** permet d'amener dans Nubiecloud une **image Docker déjà construite ailleurs** (sur Docker Hub, GitHub Container Registry, GitLab…) afin de la déployer comme n'importe quelle image buildée sur la plateforme. Pratique quand votre image est produite par une chaîne CI externe.
+
+> ℹ️ La fonctionnalité est accessible depuis la section **Builds**, onglet **Import**. L'interface est en cours de finalisation ; le mécanisme d'import (et son suivi) est opérationnel.
+
+## Registres supportés
+
+| Registre | Exemple de référence |
+|----------|----------------------|
+| Docker Hub | `docker.io/library/nginx:1.25` |
+| GitHub Container Registry | `ghcr.io/org/image:tag` |
+| GitLab Container Registry | `registry.gitlab.com/groupe/image:tag` |
+
+## Identifiants de registre privé
+
+Pour un registre **privé**, fournissez des identifiants (URL du registre, utilisateur, mot de passe/token). Vous pouvez :
+
+- les saisir **au moment de l'import**, ou
+- les **enregistrer** (chiffrés) pour les réutiliser, puis les sélectionner lors des imports suivants.
+
+> 🔒 Les identifiants de registre sont **chiffrés** avant stockage et validés avant d'être enregistrés.
+
+## Importer une image
+
+1. Dans **Builds → Import**, renseignez :
+   - **Image source** : la référence complète (ex. `docker.io/library/nginx:1.25`),
+   - **Nom cible** : le nom sous lequel l'image sera connue dans Nubiecloud,
+   - **Tag cible** : le tag (par défaut `latest`),
+   - éventuellement les **identifiants** du registre source.
+2. Lancez l'import. Son **statut** évolue : `pending` → `importing` → `succeeded` (ou `failed`).
+3. Suivez la **progression** et les **logs** ; vous pouvez **annuler** un import en cours.
+
+> 📸 **Capture à fournir** — `nubimport/01-import.png` : le formulaire d'import (image source, nom/tag cible) et la fenêtre de progression avec les logs.
+
+## Déployer une image importée
+
+Une fois l'import **réussi**, l'image est disponible dans le registre interne de Nubiecloud : sélectionnez-la au moment de [déployer une application](/docs/deploiements/deployer-une-app-code), comme une image buildée par NubiBuild.
+
+## Voir aussi
+
+- [Builds](/docs/builds)
+- [Déployer une application](/docs/deploiements/deployer-une-app-code)

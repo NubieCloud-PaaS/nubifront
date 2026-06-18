@@ -1,0 +1,39 @@
+---
+title: Un build échoue — checklist
+description: Diagnostiquer et corriger un build qui échoue sur Nubiecloud.
+---
+
+Quand un build passe en `failed`, la cause est presque toujours dans les **logs du build** (découpés par étape). Voici les vérifications les plus utiles.
+
+## 1. Lire les logs
+
+Ouvrez le build → **logs**, et repérez l'**étape** qui échoue (récupération du code, construction de l'image…). Le message d'erreur y est explicite.
+
+## 2. Causes fréquentes
+
+| Symptôme dans les logs | Cause probable | Correctif |
+|------------------------|----------------|-----------|
+| `Dockerfile not found` | mauvais **chemin du Dockerfile** ou mauvais **dossier source** | corrigez le **chemin du Dockerfile** / le **dossier source** (monorepo) dans la configuration de build |
+| Échec d'installation de dépendances | dépendance manquante ou version incompatible | corrigez le fichier de dépendances dans votre dépôt |
+| Branche / commit introuvable | la **branche** indiquée n'existe pas | vérifiez la branche au lancement du build |
+| Accès refusé au dépôt | jeton expiré ou révoqué | reconnectez le dépôt (voir [Connecter un dépôt](/docs/builds/connecter-un-depot)) |
+| Stratégie inadaptée | Buildpacks ne détecte pas le langage, ou Dockerfile attendu | choisissez la bonne **stratégie** (Dockerfile vs Buildpacks) |
+
+## 3. Vérifier la configuration de build
+
+- **Stratégie** : `Dockerfile` si vous fournissez un Dockerfile ; `Buildpacks` sinon.
+- **Dossier source** : pour un **monorepo**, pointez le bon sous-dossier (ex. `services/api`).
+- **Chemin du Dockerfile** : relatif au dossier source.
+- **Variables de build** : présentes si votre build en a besoin.
+
+Voir [Build automatique (configuration)](/docs/builds/build-automatique).
+
+## 4. Relancer
+
+Après correction (dans le dépôt **ou** dans la configuration), **relancez** le build. Suivez à nouveau les logs.
+
+## Voir aussi
+
+- [Builds](/docs/builds)
+- [Suivi des builds & images](/docs/builds/suivi)
+- [Dépannage & FAQ](/docs/depannage)

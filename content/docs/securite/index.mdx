@@ -1,0 +1,23 @@
+---
+title: Sécurité & gouvernance
+description: Modèle de sécurité de Nubiecloud — isolation, secrets, traçabilité et bonnes pratiques.
+---
+
+Nubiecloud applique plusieurs couches de sécurité pour protéger vos applications et vos données.
+
+## En bref
+
+| Domaine | Ce que fait Nubiecloud |
+|---------|------------------------|
+| **Isolation** | chaque environnement tourne dans un **espace cloisonné** (namespace) ; chaque projet a son tenant dédié |
+| **Rôles** | accès gérés par rôles au niveau [organisation](/docs/organisations/membres) (Owner/Admin/Member) et [projet](/docs/projets) (Admin/Developer/User) |
+| **Secrets** | les variables sensibles sont **chiffrées** et jamais réaffichées — voir [Secrets](/docs/securite/secrets) |
+| **Traçabilité** | les actions sont enregistrées dans les [journaux d'audit](/docs/securite/audit-logs) |
+| **Compte** | [2FA (TOTP)](/docs/compte/securite) et appareils de confiance |
+| **Réseau** | applications exposées en HTTPS uniquement, certificats TLS automatiques |
+
+## Dans cette section
+
+- [Gérer les secrets d'application](/docs/securite/secrets)
+- [Journaux d'audit](/docs/securite/audit-logs)
+- [Bonnes pratiques](/docs/securite/bonnes-pratiques)

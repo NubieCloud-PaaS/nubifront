@@ -1,0 +1,46 @@
+---
+title: Journaux d'audit
+description: Consulter l'historique des actions réalisées dans votre organisation et vos projets.
+---
+
+Les **journaux d'audit** enregistrent les actions importantes effectuées sur la plateforme : qui a fait quoi, quand, et avec quel résultat. Utile pour la traçabilité, la sécurité et le diagnostic.
+
+## Ce qui est tracé
+
+Les actions **qui modifient l'état** sont enregistrées, notamment :
+
+- **Authentification** : connexion, échec de connexion, déconnexion, réinitialisation de mot de passe, 2FA, appareils de confiance.
+- **Organisation** : création/mise à jour, ajout/retrait de membre, changement de rôle, changement de plan.
+- **Projets & environnements** : création, mise à jour, suppression, gestion des membres.
+- **Déploiements** : création, mise à jour, suppression, redémarrage, synchronisation.
+- **Builds & images** : lancement, annulation, suppression, **imports** d'images.
+- **Backups** : configuration, déclenchement, restauration, suppression.
+- **NubiS3** : création/suppression de bucket, création/révocation de clé.
+- **Dépôts Git** : connexion / déconnexion.
+- **Console SQL** : exécution de requête.
+
+## Consulter les journaux
+
+Depuis la page **Audit** :
+
+- **Tous les journaux** : les actions sur les projets auxquels vous avez accès, plus les événements au niveau organisation.
+- **Mes actions** : uniquement vos propres actions.
+
+### Filtres
+
+| Filtre | Détail |
+|--------|--------|
+| **Projet** | restreindre à un projet |
+| **Action** | par type d'action (motifs comme `deployment.*`) |
+| **Type de ressource** | déploiement, build, projet, environnement, backup, etc. |
+| **Statut** | succès / échec |
+| **Période** | dates de début et de fin |
+
+Chaque entrée indique : la **date**, l'**auteur** (email + nom), l'**action**, la **ressource** concernée, le **statut** et l'**adresse IP**.
+
+> ℹ️ Il n'y a pas (encore) d'**export** des journaux (CSV) : la consultation se fait dans la console, par pages.
+
+## Voir aussi
+
+- [Sécurité & gouvernance](/docs/securite)
+- [Membres & rôles](/docs/organisations/membres)

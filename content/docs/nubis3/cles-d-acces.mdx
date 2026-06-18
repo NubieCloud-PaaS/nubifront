@@ -1,0 +1,54 @@
+---
+title: Clés d'accès NubiS3 & usage
+description: Générer des clés d'accès S3 (avec permissions) et utiliser un bucket depuis une application.
+---
+
+Pour accéder à un bucket NubiS3 depuis une application (ou un client S3), vous générez une **clé d'accès** propre au bucket.
+
+## Générer une clé d'accès
+
+Sur un bucket → onglet **Clés d'accès** → **Créer une clé** :
+
+1. Donnez un **nom** à la clé.
+2. Choisissez les **permissions** :
+
+| Préréglage | Permissions |
+|------------|-------------|
+| **Lecture seule** | lister et lire les fichiers |
+| **Lecture / écriture** | lecture seule + écrire et supprimer des fichiers |
+| **Complet** | toutes les permissions autorisées |
+
+3. Validez : Nubiecloud affiche **une seule fois** la clé complète.
+
+> 🔒 **Important.** Le **secret** (clé secrète) n'est affiché **qu'à la création** et n'est jamais récupérable ensuite. Copiez-le immédiatement dans un endroit sûr. Si vous le perdez, **révoquez** la clé et créez-en une nouvelle.
+
+La réponse contient tout ce qu'il faut pour se connecter : **identifiant de clé**, **clé secrète**, **endpoint**, **région** et **nom du bucket**.
+
+## Révoquer une clé
+
+Depuis l'onglet **Clés d'accès**, supprimez une clé pour révoquer immédiatement son accès (côté stockage et dans Nubiecloud).
+
+## Utiliser le bucket depuis une application
+
+NubiS3 est compatible S3 : utilisez n'importe quel SDK S3 en renseignant l'endpoint et la région fournis. Exemple en Python (`boto3`) :
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url=NUBIS3_ENDPOINT,        # endpoint fourni à la création de la clé
+    aws_access_key_id=NUBIS3_KEY_ID,     # identifiant de clé
+    aws_secret_access_key=NUBIS3_SECRET, # clé secrète (affichée une seule fois)
+    region_name=NUBIS3_REGION,           # région fournie
+)
+
+s3.upload_file("rapport.pdf", NUBIS3_BUCKET, "rapports/rapport.pdf")
+```
+
+> 💡 Mettez l'**identifiant** et surtout le **secret** dans les [variables sensibles (secrets)](/docs/securite/secrets) de votre déploiement, pas dans les variables publiques.
+
+## Voir aussi
+
+- [NubiS3 — buckets & fichiers](/docs/nubis3)
+- [Gérer les secrets d'application](/docs/securite/secrets)

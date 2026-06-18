@@ -1,0 +1,35 @@
+---
+title: Bonnes pratiques de sécurité
+description: Recommandations pour sécuriser votre compte, votre organisation et vos applications sur Nubiecloud.
+---
+
+Quelques règles simples pour garder vos projets sûrs.
+
+## Compte
+
+- Activez la **[double authentification (2FA)](/docs/compte/securite)** et conservez vos **codes de secours** hors ligne.
+- Gardez la **vérification des appareils** active ; révoquez les appareils que vous ne reconnaissez pas.
+
+## Organisation & accès
+
+- Appliquez le **moindre privilège** : n'attribuez **Admin** qu'aux personnes qui en ont besoin ; le reste en **Member**.
+- Au niveau projet, réservez le rôle **Admin** aux responsables ; **Developer** pour ceux qui déploient ; **User** pour la consultation.
+- Retirez sans tarder les membres qui quittent l'équipe.
+- Consultez régulièrement les **[journaux d'audit](/docs/securite/audit-logs)**.
+
+## Secrets & configuration
+
+- Placez toute donnée sensible dans les **[secrets](/docs/securite/secrets)**, jamais dans les variables publiques ni dans le code source.
+- Utilisez des secrets **distincts par environnement** (dev / staging / prod).
+- En cas de fuite suspectée, **régénérez** la valeur à la source puis **mettez à jour** le secret.
+
+## Applications & exposition
+
+- Exposez vos applications via **HTTPS** uniquement (c'est le défaut ; le [TLS](/docs/domaines) est automatique).
+- Définissez un **health check** pertinent pour que les instances défaillantes soient détectées.
+- Avant de supprimer une base, assurez-vous d'avoir une **[sauvegarde](/docs/backups)** récente.
+
+## Voir aussi
+
+- [Sécurité & gouvernance](/docs/securite)
+- [Gérer les secrets](/docs/securite/secrets)

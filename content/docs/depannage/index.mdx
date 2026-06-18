@@ -1,0 +1,49 @@
+---
+title: Dépannage & FAQ
+description: Réponses aux problèmes les plus fréquents sur Nubiecloud.
+---
+
+Cette page regroupe les situations les plus courantes. Pour les builds, voir aussi la [checklist dédiée](/docs/depannage/build-echoue).
+
+## Je n'ai pas reçu le code de validation
+
+- Vérifiez vos **spams**. Le code est valable **24 h**.
+- Utilisez **Renvoyer le code** (limité à quelques envois par minute).
+- Vérifiez que l'adresse email saisie est correcte.
+
+## Je ne peux pas déployer : « aucun environnement »
+
+Un projet n'a **pas d'environnement par défaut**. Créez-en un (dev/staging/prod) avant de déployer — voir [Environnements](/docs/projets/environnements).
+
+## Mon déploiement ne démarre pas
+
+- Consultez les **[logs](/docs/monitoring)** de l'application : l'erreur de démarrage y apparaît.
+- Causes fréquentes : **variable d'environnement manquante**, **base non câblée** (chaîne de connexion absente — voir [étape 10 du Quickstart](/docs/quickstart)), **port** de l'application différent du port attendu par le framework.
+- Vérifiez le **health check** : un chemin qui répond en erreur fait passer l'app en « non saine ».
+
+## Domaine qui ne résout pas
+
+- Vérifiez l'enregistrement **CNAME** vers le sous-domaine Nubiecloud de l'application (voir [Domaine personnalisé](/docs/domaines/domaine-custom)).
+- Attendez la **propagation DNS** (quelques minutes à quelques heures).
+- Le **certificat TLS** n'est émis **qu'après** que le DNS résout correctement.
+
+## Quota dépassé
+
+La création est **bloquée** quand une ressource atteint sa limite. Solutions : libérer des ressources (supprimer/mettre en pause des apps), ou [changer de plan](/docs/organisations/changer-de-plan). Voir [Quotas](/docs/organisations/quotas).
+
+## Ma base de données n'est pas sauvegardée
+
+Les sauvegardes gérées concernent **PostgreSQL** et **Odoo**. Pour les autres services (MySQL, MongoDB, Redis, RabbitMQ), il n'y a pas de sauvegarde native — voir [Backups](/docs/backups).
+
+## Une région personnalisée reste « déconnectée »
+
+- Vérifiez que le **script d'installation** a bien été exécuté en **root** sur le serveur, **avant son expiration** (~1 h).
+- Régénérez le script via **Reconnecter** si besoin, ou utilisez le **mode manuel**. Voir [Connecter mon infrastructure](/docs/regions/connecter-mon-infra).
+
+## Contacter le support
+
+Si le problème persiste, rassemblez les **logs** concernés et l'**identifiant** de la ressource, puis contactez le support.
+
+## Voir aussi
+
+- [Un build échoue : checklist](/docs/depannage/build-echoue)

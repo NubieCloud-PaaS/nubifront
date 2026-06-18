@@ -1,0 +1,38 @@
+---
+title: Domaine personnalisé & DNS
+description: Brancher votre propre nom de domaine sur une application Nubiecloud et obtenir un certificat TLS.
+---
+
+Vous pouvez exposer votre application sur **votre propre domaine** (ex. `app.monentreprise.com`) en plus du sous-domaine automatique.
+
+## 1. Déclarer le domaine dans Nubiecloud
+
+Au déploiement (ou via la mise à jour du déploiement), renseignez le champ **Domaine personnalisé**.
+
+- Un ou plusieurs domaines, **séparés par des virgules** : `app.monentreprise.com, www.monentreprise.com`.
+- Caractères autorisés : lettres, chiffres, tirets et points. **Pas de wildcard** (`*.monentreprise.com` n'est pas accepté).
+
+## 2. Configurer le DNS
+
+Chez votre fournisseur de domaine, créez un enregistrement **CNAME** qui pointe votre domaine vers le **sous-domaine Nubiecloud** de votre application (l'instruction exacte est rappelée dans la console).
+
+```
+app.monentreprise.com.  CNAME  nom-de-l-app-xxxx.<domaine-apps-nubiecloud>.
+```
+
+> ⚠️ Le certificat TLS ne peut être émis **qu'une fois la résolution DNS active**. Comptez le temps de propagation DNS (de quelques minutes à quelques heures selon votre fournisseur).
+
+## 3. TLS automatique
+
+Dès que le domaine pointe correctement, Nubiecloud **émet automatiquement** le certificat TLS (Let's Encrypt) et le **renouvelle** sans intervention. Votre domaine personnalisé répond alors en HTTPS.
+
+## Vérifier
+
+Ouvrez votre domaine dans un navigateur : il doit afficher votre application en HTTPS avec un certificat valide.
+
+> ℹ️ La console n'affiche pas (encore) d'indicateur détaillé de l'état du certificat ou de la résolution DNS. Si le domaine ne répond pas après propagation, vérifiez votre enregistrement CNAME, puis consultez le [dépannage « Domaine qui ne résout pas »](/docs/depannage#domaine-qui-ne-resout-pas).
+
+## Voir aussi
+
+- [Domaines & TLS](/docs/domaines)
+- [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie)

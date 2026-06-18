@@ -1,0 +1,50 @@
+---
+title: NubiS3 (stockage objet)
+description: Créer et gérer des buckets de stockage objet compatibles S3 — fichiers, quotas par plan.
+---
+
+**NubiS3** est le service de **stockage objet compatible S3** de Nubiecloud. Vous y créez des **buckets** pour stocker des fichiers (médias, sauvegardes applicatives, exports…), accessibles depuis vos applications via n'importe quel client S3.
+
+## Disponibilité par plan
+
+| Plan | Buckets inclus |
+|------|:--------------:|
+| FREE | 0 (NubiS3 non disponible) |
+| PROFESSIONAL | 10 |
+| BUSINESS | 25 |
+| ENTERPRISE | illimité |
+
+> ℹ️ NubiS3 n'est **pas disponible sur le plan FREE**. À partir de **PROFESSIONAL**, vous disposez de buckets ; toute tentative de création au-delà du quota du plan est refusée.
+
+## Créer un bucket
+
+Depuis la page **NubiS3** → **Créer un bucket** :
+
+| Champ | Règles |
+|-------|--------|
+| **Nom** | 3 à 63 caractères, minuscules, chiffres et tirets (commence/finit par un caractère alphanumérique) |
+| **Description** | facultatif, max 500 caractères |
+| **Quota** | facultatif — limite de taille du bucket (sinon sans limite) |
+
+> 📸 **Capture à fournir** — `nubis3/01-create-bucket.png` : la modale de création de bucket (nom, description, quota).
+
+## Gérer les fichiers
+
+Chaque bucket dispose d'un **explorateur de fichiers** dans la console :
+
+- **Téléverser** des fichiers (directement depuis le navigateur),
+- **Télécharger** des fichiers,
+- **Lister** les objets (avec navigation par préfixe et pagination),
+- **Supprimer** des objets,
+- **Supprimer** le bucket.
+
+> 📸 **Capture à fournir** — `nubis3/02-objects.png` : l'explorateur d'objets d'un bucket (liste de fichiers, boutons téléverser / télécharger / supprimer).
+
+## Accéder au bucket depuis une application
+
+Pour lire/écrire dans un bucket depuis votre code, créez une **clé d'accès** et utilisez un client S3 standard. Voir **[Clés d'accès & usage](/docs/nubis3/cles-d-acces)**.
+
+## Voir aussi
+
+- [Clés d'accès & usage depuis une app](/docs/nubis3/cles-d-acces)
+- [Plans & coûts](/docs/facturation)
