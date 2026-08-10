@@ -59,6 +59,22 @@ L'application est le service qui tourne dans un environnement. C'est là que se 
 
 ---
 
+## 🧩 Stack
+
+Quand votre produit n'est pas une application isolée mais un **ensemble de services** (API, front, worker, cron, bases), vous pouvez le décrire d'un seul tenant avec [**NubiStack**](/docs/nubistack).
+
+| Action | Détails |
+|--------|---------|
+| **Décrire la stack** | Un fichier `nubicloud.yaml` liste les services, les bases et le câblage entre eux. |
+| **Générer le manifeste** | Détection automatique depuis un dépôt Git ou un `docker-compose.yml` existant. |
+| **Prévisualiser** | Un **plan** montre ce qui sera créé, les ressources totales et le respect du quota — avant toute création. |
+| **Suivre le déploiement** | Chaque brique avance seule, dans l'ordre de ses dépendances. |
+| **Mettre à jour** | Éditer le manifeste et ré-appliquer, ou laisser un `git push` rebuilder et redéployer tout seul. |
+
+> 💡 **La différence avec le déploiement classique** : ici vous ne recopiez plus les identifiants d'une base dans les variables de l'app — vous les **référencez**, et la plateforme les injecte.
+
+---
+
 ## Voir aussi
 
 - [Concepts clés (Org → Projet → Environnement → App)](/docs/concepts)

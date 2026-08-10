@@ -1,0 +1,117 @@
+---
+title: Détecter depuis un repo
+description: Générer automatiquement un nubicloud.yaml à partir d'un dépôt Git ou d'un docker-compose.yml existant, et comprendre ce que la détection décide à votre place.
+---
+
+Vous n'avez pas besoin d'écrire votre manifeste à la main. Depuis l'**Éditeur** de NubiStack, le bloc **Détecter depuis un repo** analyse un dépôt et produit un `nubicloud.yaml` prêt à relire.
+
+## Lancer une détection
+
+1. Ouvrez **NubiStack** → étape **Éditeur**.
+2. Dans **Détecter depuis un repo**, choisissez la source :
+   - **Dépôt connecté** — un dépôt lié à votre compte, privé ou public (voir [Connecter un dépôt](/docs/builds/connecter-un-depot)) ;
+   - **URL d'un dépôt public** — collez l'adresse (`https://github.com/vous/votre-repo`).
+3. Cliquez sur **Détecter**.
+
+Le manifeste généré remplit l'éditeur, accompagné de **Notes de détection** qui expliquent chaque décision prise.
+
+> ⚠️ **C'est une proposition, pas un résultat final.** Relisez toujours le YAML avant de planifier : ressources, domaine, secrets et frameworks méritent souvent un ajustement.
+
+## Cas 1 — le dépôt contient un `docker-compose.yml`
+
+C'est le cas le plus riche : votre compose est **converti** en stack Nubiecloud.
+
+### Les bases de données deviennent des services managés
+
+Un service compose dont l'image est une base reconnue **n'est pas déployé tel quel** : il devient une base managée de la plateforme, avec ses identifiants générés.
+
+| Image dans votre compose | Devient |
+|--------------------------|---------|
+| `postgres`, `postgresql` | Base managée **PostgreSQL** |
+| `redis`, `valkey` | **Redis** managé |
+| `mysql`, `mariadb` | **MySQL** managé |
+| `mongo`, `mongodb` | **MongoDB** managé |
+| `rabbitmq` | **RabbitMQ** managé |
+| `postgis`, `pgvector` | PostgreSQL managé + l'**extension** correspondante |
+| `minio`, `garage` | Rien à déployer — utilisez un bucket [**NubiS3**](/docs/nubis3) |
+
+Les bases **hors catalogue** (`timescaledb`, `clickhouse`, `cassandra`, `memcached`, `percona`…) sont conservées comme services **privés** : elles tournent, mais sans les identifiants générés ni les sauvegardes d'un service managé.
+
+### Les URL de connexion sont recâblées
+
+Une variable qui pointait vers un service compose est réécrite en référence :
+
+```yaml
+# Dans votre docker-compose.yml
+DATABASE_URL: postgres://user:pass@db:5432/app
+
+# Dans le manifeste généré
+DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+```
+
+Le mot de passe en clair disparaît : c'est la plateforme qui injecte le sien à l'exécution. Le **pilote** est détecté au passage (par exemple `postgresql+asyncpg` si votre projet utilise SQLAlchemy en asynchrone).
+
+### Le reste des conventions
+
+| Élément du compose | Traduction |
+|--------------------|------------|
+| `build:` (avec `context`) | Service buildé, `rootDir` = le contexte, framework détecté dans ce dossier |
+| `image:` | Service déployé depuis cette image |
+| `ports:` | Port du service + exposition publique |
+| **Aucun port publié** | Le service est classé **worker** (tâche de fond) |
+| `command:` | Repris comme commande de démarrage |
+| `depends_on:` | Repris en `dependsOn` |
+| `${VAR:-valeur}` | Résolu vers sa valeur par défaut, si la variable n'est pas sensible |
+| `volumes:` | **Ignorés** — signalés dans les notes |
+
+## Cas 2 — le dépôt n'a pas de compose
+
+La détection analyse alors le code lui-même :
+
+- **le framework** et son **port** habituel (`Framework détecté : python-fastapi (port 8000).`) ;
+- la présence d'un **besoin de base de données** — une base PostgreSQL est proposée et `DATABASE_URL` câblée automatiquement ;
+- le **pilote** de base utilisé, pour choisir le bon format d'URL ;
+- les **secrets**.
+
+## Comment les secrets sont classés
+
+C'est le point à vérifier en priorité. La détection sépare deux familles :
+
+| Famille | Exemples de noms | Forme générée | Effet |
+|---------|------------------|---------------|-------|
+| **Secrets internes** | `SECRET_KEY`, `JWT_SECRET`, `NEXTAUTH_SECRET` | `generateValue: true` | La plateforme génère une valeur, stable dans le temps. Vous n'avez rien à faire. |
+| **Secrets de tiers** | `API_KEY`, `ACCESS_TOKEN`, `CLIENT_SECRET`, `ADMIN_PASSWORD` | `sync: false` | La valeur vous est **demandée au premier déploiement**. Elle apparaît dans **Secrets à fournir** sur l'écran de plan. |
+
+> 🔒 Une clé d'API tierce ne peut pas être devinée : elle est donc toujours demandée, jamais générée ni écrasée par une mise à jour ultérieure.
+
+## Lire les notes de détection
+
+Chaque décision est tracée. Quelques exemples typiques :
+
+```
+'db' → base managée postgres (image postgres:15-alpine substituée).
+'api' buildé (context ./api) — framework détecté : python-fastapi.
+'worker' sans port publié → détecté comme worker (tâche de fond).
+'api' : DATABASE_URL auto-câblé → fromDatabase(db).
+'api' : à fournir au 1er déploiement (sync:false) : STRIPE_API_KEY.
+'db' : volumes ignorés.
+⚠️ Proposition à valider : ajustez ressources, domaine et secrets avant d'appliquer.
+```
+
+## Ce qu'il faut relire avant de planifier
+
+| À vérifier | Pourquoi |
+|------------|----------|
+| **Ressources** | Les valeurs générées sont volontairement petites (0,25 cœur / 0,5 Go). Ajustez-les à votre charge réelle. |
+| **`framework`** | S'il n'a pas pu être détecté, une valeur générique est mise ; précisez-la pour obtenir les bons réglages. |
+| **`exposePublic`** | Vérifiez que seuls vos services destinés à Internet sont exposés. |
+| **`domain`** | À ajouter si vous voulez un domaine personnalisé dès le départ. |
+| **Bases hors catalogue** | Passées en service privé ; envisagez de les remplacer par une base managée. |
+| **Volumes** | Ignorés : si un service a besoin de stockage persistant, revoyez son fonctionnement. |
+
+Une fois le YAML relu, cliquez sur **Planifier** et poursuivez sur [le parcours normal](/docs/nubistack).
+
+## Voir aussi
+
+- [Le manifeste `nubicloud.yaml`](/docs/nubistack/manifeste) — pour corriger ce qui a été généré.
+- [NubiStack — vue d'ensemble](/docs/nubistack)

@@ -30,10 +30,6 @@ Rendez-vous sur **console.nubiecloud.io** et cliquez sur **Créer un compte**.
 
 > 💡 **Astuce.** Choisissez un mot de passe d'au moins 8 caractères mêlant majuscules, chiffres et symboles. Vous pourrez le réinitialiser à tout moment via « Mot de passe oublié ».
 
-![Écran d'inscription de la console Nubiecloud](/img/docs/quickstart/01-register.png)
-
-> 📸 **Capture à fournir** — `quickstart/01-register.png` : le formulaire d'inscription (`/register`), avec les champs **email** et **mot de passe** remplis avec des données démo, et le bouton **Créer un compte** mis en avant. Masquer toute donnée réelle.
-
 ---
 
 ## Étape 2 — Valider votre compte avec le code
@@ -44,10 +40,6 @@ Après l'inscription, Nubiecloud vous envoie un **code de validation à 6 chiffr
 2. Saisissez-le dans le champ de vérification, puis validez.
 
 > ⚠️ **Attention.** C'est bien un **code à saisir**, pas un lien à cliquer. Si vous ne recevez rien après une minute, vérifiez vos spams puis utilisez le bouton **Renvoyer le code**. Le code expire après un court délai.
-
-![Écran de saisie du code de validation à 6 chiffres](/img/docs/quickstart/02-verify-code.png)
-
-> 📸 **Capture à fournir** — `quickstart/02-verify-code.png` : l'écran de validation (`/verify-account`) avec le champ du **code à 6 chiffres** (partiellement rempli, ex. `12••••`) et le bouton **Valider** mis en avant. Montrer aussi le lien **Renvoyer le code**.
 
 ---
 
@@ -64,10 +56,6 @@ L'**organisation** est le conteneur de facturation et de ressources partagées p
 
 > ℹ️ **Le plan fixe vos quotas.** Le plan de l'organisation détermine le total de CPU / RAM / Stockage que vous pourrez répartir entre vos projets. Voir [Comprendre les quotas](/docs/organisations/quotas).
 
-![Modale de création d'organisation avec sélection du plan](/img/docs/quickstart/03-create-org.png)
-
-> 📸 **Capture à fournir** — `quickstart/03-create-org.png` : la modale de création d'organisation (`/organisations`) avec le champ **nom** rempli et le sélecteur de **plan** ouvert montrant FREE / PROFESSIONAL / BUSINESS. Mettre en avant le choix **FREE**.
-
 ---
 
 ## Étape 4 — Créer un projet et définir ses ressources
@@ -81,10 +69,6 @@ Un **projet** regroupe vos applications autour d'un même produit et reçoit une
 
 > ℹ️ **Preset ou personnalisé.** Vous pouvez partir d'un gabarit de ressources prédéfini ou ajuster chaque valeur. Les maximums affichés correspondent à ce que votre plan autorise — voir [Configurer les quotas d'un projet](/docs/projets/quotas).
 
-![Écran de création de projet avec curseurs CPU / RAM / Stockage](/img/docs/quickstart/04-create-project.png)
-
-> 📸 **Capture à fournir** — `quickstart/04-create-project.png` : l'écran de création/détail projet avec le **nom** et les réglages **CPU / RAM / Stockage**, en montrant les maximums imposés par le plan de l'org. Bouton **Créer** mis en avant.
-
 ---
 
 ## Étape 5 — Créer un environnement
@@ -97,10 +81,6 @@ Une application se déploie toujours **dans un environnement** (par exemple `dev
 4. Validez.
 
 > ⚠️ **Étape obligatoire, souvent oubliée.** Aucun environnement n'est créé automatiquement avec le projet. **Sans environnement, vous ne pourrez pas déployer** à l'étape 9. Créez-en au moins un maintenant.
-
-![Liste des environnements d'un projet avec le bouton de création](/img/docs/quickstart/05-create-env.png)
-
-> 📸 **Capture à fournir** — `quickstart/05-create-env.png` : la page des environnements d'un projet (`/environments/:projectId`) avec la modale de création ouverte (sélecteur de type dev/staging/preprod/prod) et un environnement **production** en cours de création.
 
 ---
 
@@ -117,10 +97,6 @@ Pour builder votre application, Nubiecloud doit accéder à votre code source.
 
 > 🔒 **Sécurité.** Nubiecloud ne stocke jamais vos identifiants Git en clair : la connexion repose sur un jeton OAuth chiffré. Vous pouvez révoquer l'accès à tout moment côté GitHub/GitLab.
 
-![Sélection du fournisseur Git et autorisation OAuth](/img/docs/quickstart/06-connect-repo.png)
-
-> 📸 **Capture à fournir** — `quickstart/06-connect-repo.png` : l'écran de connexion de dépôt (`/builds`, composant de connexion), montrant le choix **GitHub / GitLab** et, si possible, la liste des dépôts connectés. Masquer les noms d'organisation réels.
-
 ---
 
 ## Étape 7 — Choisir votre mode de build
@@ -133,10 +109,6 @@ Vous décidez **quand** Nubiecloud construit l'image de votre application.
 Pour ce Quickstart, restez en **manuel** : nous lancerons le build à la main à l'étape suivante.
 
 > 💡 **Pour la suite.** Une fois à l'aise, activez le build automatique pour transformer chaque `git push` en nouvelle image. Voir [Configurer le build automatique](/docs/builds/build-automatique).
-
-![Choix entre build manuel et configuration de build automatique](/img/docs/quickstart/07-build-config.png)
-
-> 📸 **Capture à fournir** — `quickstart/07-build-config.png` : l'écran de configuration de build montrant l'option **build manuel** vs la **BuildConfiguration** (règles automatiques sur push/tag/PR).
 
 ---
 
@@ -154,10 +126,6 @@ Pour ce Quickstart, restez en **manuel** : nous lancerons le build à la main à
 
 À la fin, votre **image est disponible** et prête à être déployée.
 
-![Formulaire de lancement de build avec branche et tag, et logs en cours](/img/docs/quickstart/08-run-build.png)
-
-> 📸 **Capture à fournir** — `quickstart/08-run-build.png` : le formulaire de lancement de build (champs **branche**, **tag d'image**, **sous-dossier**) et, en dessous, les **logs du build** affichant un statut **Succès**.
-
 ---
 
 ## Étape 9 — Déployer votre application via son template
@@ -173,10 +141,6 @@ Maintenant que l'image existe, déployez-la dans votre environnement.
 **Templates de code disponibles :** Django, FastAPI, Flask, Express, NestJS, React, Next.js, Vue.js, Spring Boot, Gin, Laravel, .NET.
 
 > ℹ️ **Le détail de chaque champ** (variables publiques vs secrets, domaine custom + TLS, health check TCP vs HTTP, réplicas) est documenté dans [Déployer une application depuis du code](/docs/deploiements/deployer-une-app-code).
-
-![Choix du template d'application et sélection de l'image à déployer](/img/docs/quickstart/09-deploy-template.png)
-
-> 📸 **Capture à fournir** — `quickstart/09-deploy-template.png` : l'écran de déploiement (`/deployments/:envId`) montrant la **grille des templates** (FastAPI, Express, Next.js…) et la sélection de l'**image buildée**.
 
 ---
 
@@ -195,10 +159,6 @@ Notre application a besoin d'une **base PostgreSQL** pour démarrer. L'ordre com
 
 > 💡 **Plusieurs dépendances ?** Répétez l'opération (ex. déployer **Redis**, récupérer `REDIS_URL`, l'injecter dans l'app). Déployez chaque dépendance **avant** l'application qui en a besoin.
 
-![Page de gestion d'un service PostgreSQL affichant l'hôte interne et la DATABASE_URL](/img/docs/quickstart/10-managed-db-credentials.png)
-
-> 📸 **Capture à fournir** — `quickstart/10-managed-db-credentials.png` : la page de gestion d'un déploiement **PostgreSQL** montrant le **bloc de connexion** (hôte interne, `DATABASE_URL`), et, en vis-à-vis, l'éditeur de **variables d'environnement** de l'application avec `DATABASE_URL` ajouté. **Masquer le mot de passe réel.**
-
 ---
 
 ## Étape 11 — Surveiller les logs et le monitoring
@@ -211,10 +171,6 @@ Votre application tourne : vérifiez sa santé.
 
 > 💡 Si l'application ne démarre pas, les **logs** sont votre premier réflexe — l'erreur de connexion à la base (étape 10 mal câblée) y apparaît clairement.
 
-![Onglets Logs et Monitoring d'une application déployée](/img/docs/quickstart/11-logs-monitoring.png)
-
-> 📸 **Capture à fournir** — `quickstart/11-logs-monitoring.png` : la page de gestion d'un déploiement (`/deployment/:depId`) montrant l'onglet **Logs** (lignes de log en temps réel) puis l'onglet **Monitoring** (santé, pods, événements).
-
 ---
 
 ## Étape 12 — Activer les backups de la base
@@ -225,10 +181,6 @@ Dernière étape : protégez vos données.
 2. **Activez les backups automatiques** et choisissez la **rétention**, ou lancez un **backup à la demande**.
 
 > ℹ️ **Périmètre.** Les backups gérés couvrent **PostgreSQL** et **Odoo**. La restauration se fait en mode **Blue/Green** (validation avant bascule) — voir [Restaurer depuis un backup](/docs/backups/restaurer).
-
-![Onglet Backups d'une base avec activation des sauvegardes automatiques](/img/docs/quickstart/12-backups.png)
-
-> 📸 **Capture à fournir** — `quickstart/12-backups.png` : l'onglet **Backups** (`/deployments/:depId/backups`) montrant l'activation des **backups automatiques**, le réglage de **rétention** et le bouton **Backup à la demande**.
 
 ---
 
@@ -241,10 +193,6 @@ Vous avez maintenant :
 - ✅ Une **application déployée** depuis votre code, **accessible sur son URL**.
 - ✅ Une **base PostgreSQL** managée, **branchée** à l'application.
 - ✅ Des **logs** et un **monitoring** visibles, et des **backups** activés.
-
-![Application en ligne avec son URL, sa base connectée et son monitoring](/img/docs/quickstart/13-result.png)
-
-> 📸 **Capture à fournir** — `quickstart/13-result.png` : vue de synthèse du déploiement **en ligne** (statut « Running », URL cliquable) avec, idéalement, la base liée visible. Montrer l'URL ouverte dans un onglet voisin.
 
 ---
 

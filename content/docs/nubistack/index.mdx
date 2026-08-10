@@ -1,0 +1,121 @@
+---
+title: NubiStack
+description: Décrire toute votre stack (services + bases de données + câblage) dans un fichier nubicloud.yaml, prévisualiser le plan, appliquer, puis suivre son déploiement.
+---
+
+**NubiStack** déploie une **application entière en une fois** : plusieurs services, leurs bases de données et le câblage entre eux, décrits dans un seul fichier `nubicloud.yaml`.
+
+Là où [NubiDeploy](/docs/deploiements) déploie **un** service à la fois (et où vous recopiez à la main la chaîne de connexion de votre base dans les variables de l'app), NubiStack fait le tour complet :
+
+1. il **provisionne** les bases de données déclarées,
+2. il **builde** les services qui viennent de votre dépôt,
+3. il **câble** automatiquement les variables d'environnement (`DATABASE_URL`, URL d'un service voisin, secrets générés),
+4. il **déploie dans le bon ordre**, en attendant que chaque dépendance soit en ligne.
+
+## Quand utiliser NubiStack plutôt que NubiDeploy ?
+
+| Votre besoin | Utilisez |
+|--------------|----------|
+| Une seule application, éventuellement avec une base créée à part | [NubiDeploy](/docs/deploiements) |
+| Plusieurs services qui se parlent (API + front + worker + cron) | **NubiStack** |
+| Un monorepo dont chaque dossier devient un service | **NubiStack** |
+| Un projet existant décrit par un `docker-compose.yml` | **NubiStack** ([détection auto](/docs/nubistack/detecter-depuis-un-repo)) |
+| Vous voulez que `git push` rebuilde **et** redéploie toute la stack | **NubiStack** |
+
+> ℹ️ Les deux cohabitent : une stack NubiStack se déploie dans un **environnement** d'un projet, exactement comme un déploiement classique, et ses services apparaissent ensuite dans NubiDeploy.
+
+## Avant de commencer
+
+- Un **projet** et au moins un **environnement** (voir [Projets](/docs/projets/environnements)).
+- Un **dépôt connecté** si vos services sont buildés depuis un repo privé (voir [Connecter un dépôt](/docs/builds/connecter-un-depot)). Un dépôt public peut être utilisé sans connexion.
+- Des **quotas** suffisants sur le projet : le plan additionne les ressources de **toutes** les briques avant d'appliquer.
+
+## Le parcours en trois étapes
+
+Ouvrez **NubiStack** dans le menu latéral de la console.
+
+### 1. Éditeur
+
+Choisissez le **projet** et l'**environnement** cibles, puis fournissez votre manifeste. Trois façons :
+
+- **Charger un exemple** — un `nubicloud.yaml` commenté que vous adaptez.
+- **Détecter depuis un repo** — la plateforme analyse votre dépôt (ou son `docker-compose.yml`) et génère le manifeste. Voir [Détecter depuis un repo](/docs/nubistack/detecter-depuis-un-repo).
+- **Coller votre manifeste** directement.
+
+Les **stacks existantes** de l'environnement sont listées au-dessus de l'éditeur : cliquez sur l'une d'elles pour rouvrir son suivi.
+
+Cliquez sur **Planifier**.
+
+### 2. Plan
+
+Le plan est une **simulation** : rien n'est créé. Vous y voyez, brique par brique :
+
+| Colonne | Ce qu'elle indique |
+|---------|--------------------|
+| **Brique** | Le nom du service ou de la base |
+| **Type** | `Build` (buildé depuis votre repo), `Image` (image déjà prête), `Base managée` |
+| **Action** | Ce qui sera fait (création, mise à jour…) |
+| **Exposé** | `Public` (URL Internet) ou `Privé` (accessible seulement dans l'environnement) |
+| **Ressources** | CPU / mémoire / stockage demandés |
+| **Dépendances** | Les briques qui doivent être en ligne avant celle-ci |
+
+Le plan affiche aussi :
+
+- les **variables d'environnement câblées** — avec la mention **Câblage automatique** pour celles résolues par la plateforme, et **Valeur sensible (masquée)** pour les secrets ;
+- les **totaux** CPU / mémoire / stockage, confrontés au **quota** du projet (**Quota OK** ou **Quota dépassé**) ;
+- les **avertissements** ;
+- les **secrets à fournir** — les variables déclarées `sync: false`, qui vous seront demandées au premier déploiement.
+
+> ⚠️ **Quota dépassé** bloque l'application de la stack. Réduisez les ressources d'une brique, ou augmentez le quota du projet ([Quotas projet](/docs/projets/quotas)).
+
+Si tout est correct, cliquez sur **Appliquer**. Sinon, **Retour** pour corriger le manifeste.
+
+### 3. Stack
+
+Vous basculez sur le **suivi de la stack**. Chaque brique progresse par états (`Déclaré` → `Build en cours` → `Déploiement` → `En ligne`), automatiquement, toutes les ~30 secondes. La vue se rafraîchit seule.
+
+Le détail des états et des actions (relancer, éditer, supprimer) est sur [Cycle de vie d'une stack](/docs/nubistack/cycle-de-vie).
+
+## Un exemple minimal
+
+```yaml
+name: demo-shop
+
+databases:
+  - name: db
+    type: postgres
+    resources: { cpu: 0.5, memory: 1, storage: 2 }
+
+services:
+  - name: api
+    type: web
+    framework: python-fastapi
+    build:
+      repo: https://github.com/vous/votre-repo
+      branch: main
+    port: 8000
+    exposePublic: true
+    resources: { cpu: 0.25, memory: 0.5 }
+    env:
+      DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+      SECRET_KEY: { generateValue: true }
+      LOG_LEVEL: info
+
+  - name: worker
+    type: worker
+    framework: python-fastapi
+    build:
+      repo: https://github.com/vous/votre-repo
+      branch: main
+    command: ["celery", "-A", "app", "worker"]
+    env:
+      DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+```
+
+Ce manifeste crée une base PostgreSQL, builde deux fois votre dépôt (un service web exposé publiquement, un worker de fond), et injecte dans les deux la chaîne de connexion de la base — **sans que vous ayez à copier un mot de passe**.
+
+## Voir aussi
+
+- [Le manifeste `nubicloud.yaml`](/docs/nubistack/manifeste) — la référence complète des champs.
+- [Détecter depuis un repo](/docs/nubistack/detecter-depuis-un-repo) — générer le manifeste automatiquement.
+- [Cycle de vie d'une stack](/docs/nubistack/cycle-de-vie) — états, relance, édition, suppression, mise à jour sur `git push`.

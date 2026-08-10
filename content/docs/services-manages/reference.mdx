@@ -16,6 +16,8 @@ Cette page détaille chaque service managé : versions, ressources par défaut, 
 | **Base, Utilisateur, Mot de passe** | ✕ | `app_db` / `app_user` | utilisateur applicatif (bases relationnelles/document) |
 | **Version** | ✕ | voir par service | image du service |
 | **Activer les sauvegardes** | ✕ | non | **PostgreSQL uniquement** |
+| **Extensions** | ✕ | aucune | **PostgreSQL uniquement** |
+| **Bases additionnelles** | ✕ | aucune | **PostgreSQL uniquement** |
 
 ---
 
@@ -43,6 +45,35 @@ DATABASE_URL=postgresql://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:5432/BASE
 PostgreSQL fonctionne en architecture **Blue/Green** : un cluster actif (`blue`) et un cluster de secours (`green`). Le nombre d'**instances actives** suit le champ **Réplicas**. Un **pooler de connexions** (PgBouncer) est placé devant la base pour stabiliser les connexions lors d'un basculement.
 
 > 💡 Augmenter **Réplicas** augmente le nombre d'instances du cluster actif. Le basculement vers le cluster de secours est utilisé notamment lors d'une restauration (Blue/Green).
+
+### Extensions PostgreSQL
+
+Deux extensions peuvent être activées **au déploiement**, dans la section **Extensions PostgreSQL** :
+
+| Extension | Pour quoi |
+|-----------|-----------|
+| **PostGIS** | Données géospatiales : géométries, géographies, index spatiaux |
+| **pgvector** | Vecteurs et *embeddings* pour l'IA : recherche par similarité |
+
+L'extension est créée au démarrage du cluster — vous n'avez pas de `CREATE EXTENSION` à jouer vous-même.
+
+> ℹ️ **PostGIS bascule l'image du service** sur une variante spécialisée. Prévoyez ce choix dès le déploiement plutôt qu'après coup.
+
+### Bases de données additionnelles
+
+Un cluster PostgreSQL peut héberger **plusieurs bases**, en plus de la base principale créée automatiquement. C'est utile pour regrouper plusieurs applications sur un même cluster tout en gardant leurs données séparées.
+
+Dans la section **Bases de données additionnelles**, ajoutez autant d'entrées que nécessaire :
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **Nom de la base** | ✅ | minuscules, chiffres et `_`, commençant par une lettre ou `_` (ex. `analytics_db`) |
+| **Utilisateur** | ✕ | utilisateur dédié à cette base — laissez vide pour utiliser le propriétaire du cluster |
+| **Mot de passe** | ✕ | requis si vous définissez un utilisateur ; 8 caractères minimum |
+
+> 💡 **Donnez un utilisateur dédié à chaque base** pour les isoler réellement : chaque application n'accède alors qu'à la sienne.
+
+**Sur un cluster déjà déployé** : ouvrez le déploiement, ajoutez les bases dans la modale d'édition, **Enregistrer**, puis cliquez sur **Synchroniser les bases additionnelles** pour les créer réellement sur le cluster.
 
 ---
 
@@ -93,10 +124,15 @@ MONGODB_URI=mongodb://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:27017/BASE
 **Connexion** :
 
 ```
-REDIS_URL=redis://HOTE_INTERNE:6379
+REDIS_URL=redis://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:6379
 ```
 
-> ℹ️ Redis est déployé **sans authentification par défaut** : l'accès est protégé par l'isolation réseau interne du projet.
+Redis est déployé **avec authentification**. Renseignez au déploiement un **nom d'utilisateur** et un **mot de passe** :
+
+- utilisateur `default` → l'utilisateur par défaut de Redis est protégé par votre mot de passe ;
+- utilisateur personnalisé → un utilisateur dédié est créé et l'utilisateur `default` est désactivé.
+
+> 🔒 L'accès reste par ailleurs limité au **réseau interne de votre environnement** : Redis n'est jamais exposé sur Internet.
 
 ---
 
@@ -115,6 +151,8 @@ REDIS_URL=redis://HOTE_INTERNE:6379
 RABBITMQ_URL=amqp://UTILISATEUR:MOT_DE_PASSE@HOTE_INTERNE:5672/
 ```
 
+Le **nom d'utilisateur** et le **mot de passe** se renseignent au déploiement, dans les champs prévus à cet effet.
+
 L'**interface de gestion** RabbitMQ est disponible sur le port 15672.
 
 ---
@@ -125,10 +163,11 @@ Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'in
 
 - **Disponible pour** : PostgreSQL uniquement.
 - **Comment** : ouvrez le déploiement PostgreSQL → onglet **SQL** → saisissez votre requête → exécutez. Le résultat est renvoyé dans la console.
+- **Choix de la base** : si le cluster héberge des [bases additionnelles](#bases-de-données-additionnelles), un sélecteur **Base de données** permet de choisir celle sur laquelle la requête s'exécute. La base ciblée est rappelée au-dessus de l'éditeur.
 - **Sous le capot** : chaque requête s'exécute dans une tâche éphémère isolée, avec des identifiants injectés à l'exécution (jamais exposés).
 - **Accès** : réservé aux rôles **Développeur** et **Admin** du projet.
 
-> 📸 **Capture à fournir** — `services-manages/sql-editor.png` : l'onglet **SQL** d'un déploiement PostgreSQL, avec une requête `SELECT` et son résultat tabulaire.
+> ⚠️ **Vous êtes responsable des requêtes exécutées.** Les modifications (`INSERT`, `UPDATE`, `DELETE`, `DROP`…) sont **irréversibles** — la console n'a pas de bouton d'annulation.
 
 ## Voir aussi
 

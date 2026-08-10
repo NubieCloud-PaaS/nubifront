@@ -1,0 +1,94 @@
+---
+title: Cycle de vie d'une stack
+description: Suivre l'avancement d'une stack brique par brique, la relancer après un échec, modifier son manifeste, la mettre à jour sur git push et la supprimer.
+---
+
+Une fois la stack appliquée, vous arrivez sur l'écran **État de la stack**. Chaque **brique** (service ou base) y avance à son rythme, et la vue se rafraîchit toute seule.
+
+> ℹ️ **La stack progresse automatiquement**, environ toutes les 30 secondes. Dans le cas normal, vous n'avez rien à cliquer : regardez les briques passer en **En ligne**.
+
+## Les états d'une brique
+
+| État | Ce qui se passe |
+|------|-----------------|
+| **Déclaré** | La brique est enregistrée, rien n'a encore démarré |
+| **Build en file** | Le build attend son tour |
+| **Build en cours** | L'image est en cours de construction depuis votre dépôt |
+| **Buildé** | L'image est prête, le déploiement va suivre |
+| **Déploiement bloqué** | La brique attend qu'une dépendance soit en ligne — le nom de l'attendu est affiché |
+| **Déploiement** | La brique est en cours de mise en ligne |
+| **En ligne** | La brique tourne ✅ |
+| **Échec build** | La construction de l'image a échoué |
+| **Échec déploiement** | La mise en ligne a échoué |
+| **Ignoré** | La brique n'avait rien à faire à ce tour |
+
+Chaque brique affiche aussi ses **dépendances** (« Dépend de ») et, en cas de problème, sa **dernière erreur**.
+
+## L'état global de la stack
+
+| État | Signification |
+|------|---------------|
+| **Planification** | Le plan est en cours de calcul |
+| **Application** | Les briques sont en train d'être créées et déployées |
+| **Synchronisé** | Toutes les briques sont en ligne ✅ |
+| **Partiel** | Une partie des briques est en ligne, une autre non |
+| **Échec** | La stack n'a pas pu converger |
+
+## Les actions disponibles
+
+### Avancer maintenant
+
+Force un tour d'avancement immédiat au lieu d'attendre le prochain cycle automatique.
+
+> 💡 **Normalement inutile.** Ne l'utilisez que si rien ne bouge depuis plusieurs minutes.
+
+### Relancer
+
+Réinitialise et redéploie les briques qui **ne sont pas en ligne** (bloquées ou en échec). **Les briques déjà en ligne ne bougent pas** — votre production n'est pas interrompue.
+
+C'est l'action à utiliser après avoir corrigé la cause d'un échec (un `Dockerfile` réparé, un quota augmenté, un secret corrigé).
+
+### Éditer le manifeste
+
+Recharge le YAML de la stack dans l'**Éditeur** pour le modifier, puis le re-planifier et le ré-appliquer. Utile pour changer une commande de migration, ajouter un service, ajuster des ressources.
+
+Un bandeau **« Édition du stack … »** rappelle que vous modifiez une stack existante ; **Annuler l'édition** vous en fait sortir.
+
+> ℹ️ **La ré-application se fait en place** : les briques concernées sont mises à jour sans être détruites, sans coupure de service.
+
+### Supprimer
+
+Supprime la stack **et toutes ses ressources** — applications déployées comme bases de données managées. Une confirmation vous demande le nom de la stack.
+
+> ⚠️ **Irréversible.** Les données des bases managées de la stack sont perdues. Si elles comptent, faites une [sauvegarde](/docs/backups) d'abord.
+
+### Mode simulation
+
+Le **Mode simulation (dry)** fait tourner un cycle d'avancement **sans créer aucune ressource réelle**. Pratique pour vérifier ce que la plateforme s'apprête à faire.
+
+## Mise à jour automatique sur `git push`
+
+Si un service de votre stack est buildé depuis un dépôt (`build:`), un **push sur la branche déclarée** déclenche tout seul :
+
+1. la reconstruction de l'image à partir du dernier commit,
+2. la mise à jour de la brique **en place**, sans coupure de service.
+
+Seules les briques concernées par ce dépôt et cette branche sont reconstruites ; les autres restent en ligne. Un même commit n'est jamais traité deux fois.
+
+> 💡 Pour limiter les rebuilds inutiles dans un monorepo, utilisez `buildFilter` dans le manifeste — par exemple `['apps/web/**']` pour ne rebuilder le front que quand il change. Voir [le manifeste](/docs/nubistack/manifeste#build).
+
+## Que faire quand une brique échoue ?
+
+| Symptôme | Piste |
+|----------|-------|
+| **Échec build** | Ouvrez les logs du build correspondant dans [NubiBuild](/docs/builds/suivi). Cause fréquente : `Dockerfile` absent au chemin indiqué, ou mauvais `rootDir`. |
+| **Échec déploiement** | Regardez la **dernière erreur** de la brique, puis les [logs de l'application](/docs/monitoring). Cause fréquente : image qui exige les droits root, port erroné, ou commande de démarrage manquante. |
+| **Déploiement bloqué** durablement | La dépendance attendue n'arrive pas à passer **En ligne** : corrigez-la d'abord, la brique bloquée démarrera ensuite d'elle-même. |
+| **Quota dépassé** au plan | Réduisez les ressources d'une brique ou augmentez le [quota du projet](/docs/projets/quotas). |
+| Rien ne bouge depuis longtemps | **Avancer maintenant**, puis **Relancer** si l'état ne change toujours pas. |
+
+## Voir aussi
+
+- [NubiStack — vue d'ensemble](/docs/nubistack)
+- [Le manifeste `nubicloud.yaml`](/docs/nubistack/manifeste)
+- [Dépannage — un build échoue](/docs/depannage/build-echoue)

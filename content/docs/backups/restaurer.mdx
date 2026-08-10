@@ -15,8 +15,6 @@ Nubiecloud restaure en mode **Blue/Green** : la sauvegarde est d'abord restauré
    - ⚠️ **La validation est irréversible** : elle bascule immédiatement la production sur la copie restaurée.
 4. **Ou annuler.** Tant que la restauration est `pending` ou `in_progress`, vous pouvez **annuler** : le cluster de secours est démonté et **votre base active reste inchangée**.
 
-> 📸 **Capture à fournir** — `backups/restore-timeline.png` : la frise de restauration (Initialisation → Préparation → En attente de validation → Terminé) avec les boutons **Valider** / **Annuler**.
-
 ## Sécurité du processus
 
 - La restauration ne peut partir que d'une sauvegarde issue du **cluster actif** (protection contre la perte de données).

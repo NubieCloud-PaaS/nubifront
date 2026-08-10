@@ -1,0 +1,291 @@
+---
+title: Le manifeste nubicloud.yaml
+description: Référence complète du fichier qui décrit une stack — services, bases de données, ressources, et les cinq formes de variables d'environnement.
+---
+
+Le `nubicloud.yaml` décrit **ce que vous voulez**, pas comment le faire. Vous listez vos services et vos bases ; la plateforme se charge du build, du provisionnement, du câblage et de l'ordre de déploiement.
+
+## Structure générale
+
+```yaml
+version: "1"          # version du format (actuellement "1")
+name: mon-app         # nom de la stack (optionnel)
+
+databases:            # bases de données managées (optionnel)
+  - name: db
+    type: postgres
+
+services:             # au moins un service (obligatoire)
+  - name: api
+    type: web
+    image: mon-registry/api:1.0
+    port: 8000
+
+envGroups:            # variables partagées entre services (optionnel)
+  commun:
+    LOG_LEVEL: info
+```
+
+> ℹ️ **Les noms** (services, bases, groupes) doivent être en **minuscules**, composés de lettres, chiffres et tirets, et commencer par une lettre (40 caractères max). Services et bases **partagent le même espace de noms** : deux briques ne peuvent pas porter le même nom.
+
+---
+
+## `services[]`
+
+Un service = une application qui tourne.
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| `name` | — | **Obligatoire.** Nom unique, référencé par `fromService` et `dependsOn`. |
+| `type` | `web` | `web`, `private`, `worker` ou `cron` (voir ci-dessous). |
+| `build` | — | Le service est **buildé** depuis un dépôt (voir [`build`](#build)). |
+| `image` | — | Le service utilise une **image déjà construite**. |
+| `framework` | générique | Le framework de l'app (`python-fastapi`, `nodejs-express`, `nextjs`, `react`…). |
+| `port` | — | Port d'écoute du service. |
+| `replicas` | `1` | Nombre d'instances. |
+| `command` | — | Commande de démarrage, si l'image n'en définit pas. Liste (`["celery", "worker"]`) ou chaîne. |
+| `exposePublic` | `false` | Crée une URL publique HTTPS. **Type `web` uniquement.** |
+| `domain` | — | Domaine personnalisé (implique `exposePublic: true`). |
+| `healthCheckPath` | — | Chemin HTTP de contrôle de santé (`/health`). Vide = simple vérification du port. |
+| `preDeployCommand` | — | Commande de migration jouée **avant** le démarrage. Ex. `["alembic", "upgrade", "head"]`. |
+| `dependsOn` | `[]` | Briques (services ou bases) qui doivent être en ligne avant celle-ci. |
+| `resources` | défauts plateforme | `{ cpu, memory, storage }` (voir [Ressources](#ressources)). |
+| `schedule` | — | Expression cron. **Type `cron` uniquement, et obligatoire pour lui.** |
+| `env` | `{}` | Variables d'environnement (voir [`env`](#env--les-cinq-formes)). |
+
+> ⚠️ **`build` ou `image`, jamais les deux, jamais aucun des deux.** C'est ce choix qui détermine si la brique passe par une phase de build.
+
+### Les quatre types de service
+
+| Type | Sert du HTTP | Exposable publiquement | Pour quoi |
+|------|:------------:|:----------------------:|-----------|
+| `web` | ✅ | ✅ | API, site, front — le cas courant |
+| `private` | ✅ | ✕ | Service interne, joignable seulement par les autres briques de l'environnement |
+| `worker` | ✕ | ✕ | Tâche de fond permanente (consommateur de file, worker Celery…) |
+| `cron` | ✕ | ✕ | Exécution planifiée ; nécessite `schedule` |
+
+```yaml
+- name: nettoyage
+  type: cron
+  schedule: "0 2 * * *"        # tous les jours à 2 h
+  image: mon-registry/tools:1.0
+  command: ["python", "cleanup.py"]
+```
+
+### `build`
+
+À utiliser quand la plateforme doit construire l'image depuis votre dépôt.
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| `repo` | dépôt connecté de la stack | URL du dépôt |
+| `branch` | `main` | Branche à builder |
+| `rootDir` | `.` | Sous-dossier source (monorepo) |
+| `dockerfile` | `Dockerfile` | Chemin du Dockerfile, relatif à `rootDir` |
+| `method` | `auto` | `dockerfile`, `buildpack` ou `auto` |
+| `buildFilter` | — | Chemins qui déclenchent un rebuild. Ex. `['api/**', 'shared/**']` |
+| `builderImage` | — | Image de build (méthode `buildpack`) |
+| `buildArgs` | `{}` | Arguments figés **dans l'image** (≠ variables d'exécution) |
+
+```yaml
+- name: front
+  type: web
+  framework: nextjs
+  build:
+    repo: https://github.com/vous/votre-repo
+    branch: main
+    rootDir: apps/web
+    buildFilter: ['apps/web/**', 'packages/ui/**']
+  port: 3000
+  exposePublic: true
+```
+
+> 💡 **Monorepo** : déclarez plusieurs services avec des `rootDir` différents. Chacun devient une brique indépendante avec son propre build.
+
+### `image`
+
+À utiliser pour une image déjà publiée (registre public ou privé).
+
+```yaml
+- name: cache-proxy
+  type: private
+  image: nginxinc/nginx-unprivileged:stable-alpine
+  port: 8080
+```
+
+> ⚠️ **L'image doit tourner sans privilèges root.** Beaucoup d'images officielles ont une variante prévue pour ça (par exemple `nginx-unprivileged` au lieu de `nginx`). Une image qui exige root ne démarrera pas.
+
+---
+
+## `databases[]`
+
+Une base ou un courtier de messages **managé** : la plateforme le provisionne, génère les identifiants et les garde secrets.
+
+| Champ | Défaut | Rôle |
+|-------|--------|------|
+| `name` | — | **Obligatoire.** Nom unique, référencé par `fromDatabase`. |
+| `type` | — | **Obligatoire.** `postgres`, `redis`, `mysql`, `mongodb` ou `rabbitmq`. |
+| `version` | version par défaut du type | Version à déployer |
+| `resources` | défauts plateforme | `{ cpu, memory, storage }` |
+| `enableBackups` | `false` | Sauvegardes automatiques |
+| `additionalDatabases` | — | **PostgreSQL uniquement.** Bases supplémentaires (`{ name, user }`) |
+| `extensions` | — | **PostgreSQL uniquement.** Ex. `[postgis, pgvector]` |
+
+```yaml
+databases:
+  - name: db
+    type: postgres
+    extensions: [pgvector]
+    enableBackups: true
+    additionalDatabases:
+      - name: analytics
+        user: analytics_user
+    resources: { cpu: 0.5, memory: 1, storage: 5 }
+
+  - name: cache
+    type: redis
+    resources: { cpu: 0.25, memory: 0.5 }
+```
+
+> ℹ️ **Vous n'écrivez jamais les identifiants.** Ils sont générés au provisionnement et injectés dans vos services via `fromDatabase`. Voir [Services managés](/docs/services-manages/reference).
+
+---
+
+## Ressources
+
+`resources` s'exprime toujours de la même façon, pour un service comme pour une base :
+
+| Clé | Unité | Exemple |
+|-----|-------|---------|
+| `cpu` | cœurs | `0.5` |
+| `memory` | Go | `1` |
+| `storage` | Go | `10` |
+
+Omettre `resources` applique les **valeurs par défaut de la plateforme**. Le total de la stack est confronté au quota du projet lors du **plan**.
+
+---
+
+## `env` — les cinq formes
+
+C'est le cœur de NubiStack : les variables d'environnement ne se recopient pas, elles se **référencent**. Chaque variable utilise **exactement une** forme.
+
+### 1. Valeur littérale
+
+```yaml
+env:
+  LOG_LEVEL: info                              # forme courte
+  API_TOKEN: { value: "abc123", secret: true } # chiffrée au repos
+```
+
+`secret: true` n'est valide qu'avec `value`.
+
+### 2. Depuis une base — `fromDatabase`
+
+```yaml
+env:
+  DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+  DB_HOST:      { fromDatabase: { name: db, property: host } }
+```
+
+| `property` | Valeur injectée |
+|------------|-----------------|
+| `connectionString` *(défaut)* | L'URL de connexion complète, mot de passe inclus |
+| `host` / `port` | Adresse interne et port |
+| `user` / `password` | Identifiants |
+| `database` | Nom de la base |
+
+Option `scheme` : force le préfixe de l'URL selon votre pilote (par exemple `postgresql+asyncpg` pour SQLAlchemy asynchrone).
+
+```yaml
+DATABASE_URL: { fromDatabase: { name: db, property: connectionString, scheme: postgresql+asyncpg } }
+```
+
+### 3. Depuis un service voisin — `fromService`
+
+```yaml
+env:
+  API_URL: { fromService: { name: api, property: url } }
+```
+
+| `property` | Valeur injectée |
+|------------|-----------------|
+| `url` *(défaut)* | `http://hôte-interne:port` |
+| `host` / `port` | Adresse interne du service et son port |
+
+Référencer un service crée automatiquement une **dépendance de déploiement** : le service référencé sera déployé d'abord.
+
+### 4. Générée par la plateforme — `generateValue`
+
+```yaml
+env:
+  SECRET_KEY: { generateValue: true }
+  JWT_SECRET: { generateValue: { length: 64, charset: hex } }
+```
+
+La valeur est générée une fois, puis **reste stable** entre les mises à jour. `charset` accepte `alnum` (défaut), `hex` ou `base64` ; `length` va de 8 à 256.
+
+### 5. Demandée au premier déploiement — `sync: false`
+
+```yaml
+env:
+  STRIPE_KEY: { sync: false }
+```
+
+La variable vous est demandée **une seule fois**, lors de l'application de la stack (section **Secrets à fournir** du plan), et n'est **jamais écrasée** ensuite. C'est la forme à utiliser pour les clés d'API tierces, qu'on ne veut pas écrire dans un fichier versionné.
+
+### Bonus — héritée d'un groupe : `fromGroup`
+
+```yaml
+envGroups:
+  commun:
+    LOG_LEVEL: info
+    REGION: eu-west
+
+services:
+  - name: api
+    # ...
+    env:
+      LOG_LEVEL: { fromGroup: commun }
+```
+
+---
+
+## Ordre de déploiement et dépendances
+
+La plateforme calcule l'ordre toute seule à partir de :
+
+- les `dependsOn` que vous déclarez explicitement,
+- les références `fromService` (dépendance implicite),
+- les bases de données, toujours provisionnées **avant** les services qui les utilisent.
+
+```yaml
+- name: front
+  dependsOn: [api]
+```
+
+Une brique en attente affiche **Déploiement bloqué** avec le nom de ce qu'elle attend, puis démarre d'elle-même dès que la dépendance est en ligne.
+
+> ⚠️ **Les dépendances circulaires sont refusées** au moment du plan (`api` dépend de `front` qui dépend de `api`). Le message d'erreur indique le cycle.
+
+---
+
+## Erreurs de validation fréquentes
+
+Le **plan** valide le manifeste avant toute création. Les refus les plus courants :
+
+| Message | Cause |
+|---------|-------|
+| `renseigner exactement un de build ou image` | Le service n'a aucune source, ou les deux |
+| `seul un service web peut être exposé` | `exposePublic` ou `domain` sur un `worker`, `cron` ou `private` |
+| `service cron : schedule requis` | Type `cron` sans `schedule` |
+| `fromDatabase 'x' n'existe pas dans databases[]` | Référence vers une base non déclarée |
+| `nom dupliqué dans le manifeste` | Deux briques (services **ou** bases) avec le même nom |
+| `env var ambiguë : formes multiples` | Deux formes dans la même variable (ex. `value` **et** `generateValue`) |
+| `cycle de dépendances détecté` | Boucle dans `dependsOn` / `fromService` |
+| `extensions n'est valide que pour postgres` | `extensions` ou `additionalDatabases` sur une base non PostgreSQL |
+
+## Voir aussi
+
+- [NubiStack — vue d'ensemble](/docs/nubistack)
+- [Détecter depuis un repo](/docs/nubistack/detecter-depuis-un-repo) — laisser la plateforme écrire ce fichier pour vous.
+- [Cycle de vie d'une stack](/docs/nubistack/cycle-de-vie)

@@ -23,8 +23,14 @@ Une **configuration de build** (BuildConfiguration) décrit **comment** et **qua
 | Champ | Défaut | Rôle |
 |-------|--------|------|
 | **Nom d'image** | nom du dépôt | nom personnalisé de l'image |
-| **Motif de tag** | `latest` | ex. `latest`, `{branch}`, `{sha}`, `{branch}-{sha}` |
+| **Motif de tag** | `latest` | ex. `latest`, `{branch}`, `{sha}`, `{branch}-{date}-{sha}` |
 | **Variables de build** | — | variables/arguments disponibles pendant le build |
+
+Les variables disponibles dans le motif de tag sont `{branch}`, `{sha}`, `{date}` et `{name}` (le nom de la configuration de build).
+
+> ⚠️ **Avec le build automatique activé, le motif doit contenir `{sha}` et `{date}`.** Sans ça, la configuration est refusée. La raison : un tag réutilisé (`latest`) est ambigu — impossible de savoir quelle version tourne réellement, ni de revenir à la précédente. Un tag **immuable** comme `{branch}-{date}-{sha}` identifie sans équivoque un commit et rend le rollback fiable.
+
+> 💡 **Monorepo** : ajoutez `{name}` au motif pour distinguer les images de chaque configuration (ex. `{name}-{branch}-{date}-{sha}`).
 
 ## Déclencheurs automatiques
 
@@ -54,8 +60,6 @@ Pour ne builder que ce qui compte :
 | **Environnement cible** | — | l'environnement où déployer |
 
 Activé, un push déclenche : **build → image → déploiement** dans l'environnement choisi, sans intervention.
-
-> 📸 **Capture à fournir** — `builds/02-config.png` : le formulaire de configuration de build (stratégie, dossier source, déclencheurs, filtres) et l'option de déploiement automatique.
 
 ## Voir aussi
 

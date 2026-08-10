@@ -23,8 +23,44 @@ Au déploiement, vous choisissez le **framework** correspondant à votre applica
 | Gin | Go | 8080 |
 | Laravel | PHP | 80 |
 | .NET | .NET | 8080 |
+| HTML statique | Site statique (Nginx) | 80 |
 
 > ℹ️ Certains frameworks attendent des variables d'environnement spécifiques (par exemple `DJANGO_SETTINGS_MODULE` pour Django, `FLASK_APP` pour Flask). Renseignez-les dans les **variables d'environnement** (ci-dessous).
+
+### Sites HTML statiques
+
+Le template **HTML statique** sert un site de fichiers (HTML, CSS, JS) via Nginx, sans serveur applicatif. C'est le bon choix pour une landing page, une documentation générée ou un export de site.
+
+## Type de charge : web, worker ou cron
+
+Toutes les applications ne servent pas du HTTP. Le champ **Type de charge** décrit comment la vôtre tourne :
+
+| Type | Comportement |
+|------|--------------|
+| **Web** | Service HTTP : port exposé, URL, health check. Le cas courant. |
+| **Worker** | Tâche de fond permanente (consommateur de file, worker de traitement). Aucun port, aucune URL. |
+| **Cron** | Exécution planifiée, à intervalle régulier. Aucun port, aucune URL. |
+
+> ℹ️ **Worker et cron ne servent pas de HTTP** : ni port, ni exposition publique, ni health check HTTP. Ces champs disparaissent du formulaire quand vous choisissez l'un de ces types.
+
+Pour un **cron**, renseignez la **planification** au format cron standard :
+
+| Expression | Exécution |
+|------------|-----------|
+| `*/15 * * * *` | toutes les 15 minutes |
+| `0 2 * * *` | tous les jours à 2 h |
+| `0 8 * * 1` | tous les lundis à 8 h |
+
+## Port de l'application
+
+Le **port** est pré-rempli selon le framework choisi. Modifiez-le si votre application écoute ailleurs.
+
+| Technologie | Port habituel |
+|-------------|:-------------:|
+| Python (Django, FastAPI) | 8000 |
+| Flask | 5000 |
+| Node.js, React | 3000 |
+| Java, Go | 8080 |
 
 ## Ressources
 
@@ -69,6 +105,20 @@ Nubiecloud surveille la santé de votre application :
 
 Le chemin par défaut est `/`.
 
+> 💡 Laisser le champ **vide** (contrôle TCP) est le réglage recommandé au démarrage : il vérifie simplement que votre application écoute. Renseignez un chemin quand vous voulez qu'une application qui répond mal soit détectée comme dégradée.
+
+## Configuration Nginx personnalisée
+
+Pour les applications servies par Nginx (**HTML statique**, **React**, **Vue.js**, **Next.js**), la plateforme génère automatiquement une configuration adaptée — repli sur `index.html` pour les applications d'une seule page, redirection vers l'application pour Next.js.
+
+Le champ **Configuration nginx.conf personnalisée** permet de la remplacer par la vôtre. Utile pour :
+
+- des **redirections** spécifiques,
+- des **en-têtes HTTP** personnalisés,
+- une **authentification basique**.
+
+> ℹ️ Laissez le champ **vide** pour conserver la configuration automatique. Depuis la page de gestion d'un déploiement, vider le champ puis enregistrer **remet la configuration par défaut**.
+
 ## Réplicas
 
 Le champ **Réplicas** fixe le nombre d'instances de votre application (défaut : 1). Augmentez-le pour répartir la charge et améliorer la disponibilité.
@@ -87,8 +137,22 @@ Pour exécuter des migrations (Django, Alembic, etc.) **avant** que l'applicatio
 
 > 💡 Laissez **Bloquer si échec** activé en production : une migration ratée ne doit pas livrer une version cassée.
 
+Une fois activée, la migration s'exécute **automatiquement avant chaque déploiement**. Ses logs sont consultables dans l'onglet **Logs** du déploiement, section **Migration**.
+
+### Utiliser une autre image pour la migration
+
+Par défaut, la migration tourne avec l'**image de votre application**. Cochez **Utiliser une image différente pour la migration** si vos outils de migration vivent ailleurs (une image plus complète, un conteneur d'outillage dédié).
+
+| Champ | Rôle |
+|-------|------|
+| **Source de l'image de migration** | Une image NubiBuild, ou l'URL d'une image externe |
+| **Tag de l'image de migration** | La version à utiliser |
+
+Laisser ces champs vides revient à utiliser l'image principale de l'application.
+
 ## Voir aussi
 
 - [Builds](/docs/builds) — produire l'image à déployer.
 - [Cycle de vie d'un déploiement](/docs/deploiements/cycle-de-vie) — mise à jour, rollback, pause.
 - [Services managés](/docs/services-manages) — brancher une base de données.
+- [NubiStack](/docs/nubistack) — déployer plusieurs services et leurs bases en une seule fois.
