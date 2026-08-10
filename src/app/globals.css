@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Le variant `dark:` par défaut de Tailwind suit la préférence système, alors que
+   le thème du site est piloté par une classe (dark-first : `.light` = clair).
+   Sans ça, `dark:prose-invert` (blog) suivait l'OS et non le thème choisi —
+   d'où du texte foncé sur fond noir, ou clair sur fond clair. */
+@custom-variant dark (&:where(html:not(.light) *));
+
 /* ── Nubiecloud Design Tokens – Dark-First ── */
 
 @theme inline {
