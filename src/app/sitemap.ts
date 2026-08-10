@@ -14,13 +14,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // Toutes les pages de la doc Fumadocs (/docs et ses sous-pages).
-  const docsEntries: MetadataRoute.Sitemap = source.getPages().map((page) => ({
-    url: `${BASE_URL}${page.url}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: page.url === '/docs' ? 0.9 : 0.7,
-  }));
+  // Toutes les pages de la doc Fumadocs, dans les deux langues.
+  // page.url vaut déjà /docs/... (fr) ou /en/docs/... (en).
+  const docsEntries: MetadataRoute.Sitemap = source
+    .getLanguages()
+    .flatMap(({ pages }) =>
+      pages.map((page) => ({
+        url: `${BASE_URL}${page.url}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: page.url === '/docs' || page.url === '/en/docs' ? 0.9 : 0.7,
+      })),
+    );
 
   return [
     {

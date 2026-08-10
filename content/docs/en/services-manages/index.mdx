@@ -1,0 +1,41 @@
+---
+title: Managed services
+description: Managed databases and middleware (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) — how they work, and how to connect from your applications.
+---
+
+**Managed services** are ready-to-use infrastructure blocks (databases, cache, message queue) that you deploy **like an application**, in an environment, and that your applications consume through the project's internal network.
+
+## Available services
+
+| Service | Use | Port | Backups | SQL console |
+|---------|-------|:----:|:-------:|:-----------:|
+| **PostgreSQL** | Relational database (HA possible) | 5432 | ✅ | ✅ |
+| **MySQL** | Relational database | 3306 | — | — |
+| **MongoDB** | Document database | 27017 | — | — |
+| **Redis** | Cache / key-value | 6379 | — | — |
+| **RabbitMQ** | Message queue (AMQP) | 5672 (UI: 15672) | — | — |
+
+> ℹ️ **PostgreSQL is the most complete service**: Blue/Green high availability, automatic backups to object storage, and a [built-in SQL console](/en/docs/services-manages/reference#sql-console). The other services are deployed as single instances.
+
+## How they work
+
+- Each service is deployed **into an environment** of a project, just like an application.
+- It gets a stable **internal hostname** of the form `service-name-xxxx-internal`, reachable by the **other applications of the same project/environment**.
+- The **credentials** (user, password, database) are set at deployment time and kept encrypted — they never travel in clear text through the API.
+- Access is **internal to the cluster** (no direct public exposure of a database).
+
+## Connecting an application to a service
+
+The principle is always the same (illustrated in [step 10 of the Quickstart](/en/docs/quickstart)):
+
+1. **Deploy the service first** (e.g. PostgreSQL).
+2. On the service's page, **collect the connection string** (internal host, port, database).
+3. **Add it to your application's environment variables** (e.g. `DATABASE_URL`).
+4. (Re)start the application.
+
+> ⚠️ The wiring is **explicit**: Nubiecloud deploys the service, but you are the one copying the connection string over to your application.
+
+## Going further
+
+- **[Managed services reference](/en/docs/services-manages/reference)** — versions, sizes, connection formats, SQL console, per service.
+- **[Backups & restore](/en/docs/backups/restaurer)** — for PostgreSQL (and Odoo).

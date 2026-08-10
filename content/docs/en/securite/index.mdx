@@ -1,0 +1,23 @@
+---
+title: Security & governance
+description: Nubiecloud's security model — isolation, secrets, traceability and best practices.
+---
+
+Nubiecloud applies several layers of security to protect your applications and your data.
+
+## In short
+
+| Area | What Nubiecloud does |
+|---------|------------------------|
+| **Isolation** | each environment runs in a **partitioned space** (namespace); each project has its own dedicated tenant |
+| **Roles** | access managed by roles at the [organization](/en/docs/organisations/membres) (Owner/Admin/Member) and [project](/en/docs/projets) (Admin/Developer/User) level |
+| **Secrets** | sensitive variables are **encrypted** and never shown again — see [Secrets](/en/docs/securite/secrets) |
+| **Traceability** | actions are recorded in the [audit logs](/en/docs/securite/audit-logs) |
+| **Account** | [2FA (TOTP)](/en/docs/compte/securite) and trusted devices |
+| **Network** | applications exposed over HTTPS only, automatic TLS certificates |
+
+## In this section
+
+- [Managing application secrets](/en/docs/securite/secrets)
+- [Audit logs](/en/docs/securite/audit-logs)
+- [Best practices](/en/docs/securite/bonnes-pratiques)

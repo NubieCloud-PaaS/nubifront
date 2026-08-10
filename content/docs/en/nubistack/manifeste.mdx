@@ -1,0 +1,291 @@
+---
+title: The nubicloud.yaml manifest
+description: Full reference of the file describing a stack — services, databases, resources, and the five forms of environment variables.
+---
+
+The `nubicloud.yaml` describes **what you want**, not how to do it. You list your services and your databases; the platform takes care of the build, the provisioning, the wiring and the deployment order.
+
+## General structure
+
+```yaml
+version: "1"          # format version (currently "1")
+name: my-app          # stack name (optional)
+
+databases:            # managed databases (optional)
+  - name: db
+    type: postgres
+
+services:             # at least one service (required)
+  - name: api
+    type: web
+    image: my-registry/api:1.0
+    port: 8000
+
+envGroups:            # variables shared between services (optional)
+  common:
+    LOG_LEVEL: info
+```
+
+> ℹ️ **Names** (services, databases, groups) must be **lowercase**, made of letters, digits and dashes, and start with a letter (40 characters max). Services and databases **share the same namespace**: two blocks cannot have the same name.
+
+---
+
+## `services[]`
+
+A service = an application that runs.
+
+| Field | Default | Role |
+|-------|--------|------|
+| `name` | — | **Required.** Unique name, referenced by `fromService` and `dependsOn`. |
+| `type` | `web` | `web`, `private`, `worker` or `cron` (see below). |
+| `build` | — | The service is **built** from a repository (see [`build`](#build)). |
+| `image` | — | The service uses an **already built image**. |
+| `framework` | generic | The app's framework (`python-fastapi`, `nodejs-express`, `nextjs`, `react`…). |
+| `port` | — | Port the service listens on. |
+| `replicas` | `1` | Number of instances. |
+| `command` | — | Start command, if the image does not define one. List (`["celery", "worker"]`) or string. |
+| `exposePublic` | `false` | Creates a public HTTPS URL. **Type `web` only.** |
+| `domain` | — | Custom domain (implies `exposePublic: true`). |
+| `healthCheckPath` | — | HTTP health check path (`/health`). Empty = simple port check. |
+| `preDeployCommand` | — | Migration command run **before** startup. E.g. `["alembic", "upgrade", "head"]`. |
+| `dependsOn` | `[]` | Blocks (services or databases) that must be online before this one. |
+| `resources` | platform defaults | `{ cpu, memory, storage }` (see [Resources](#resources)). |
+| `schedule` | — | Cron expression. **Type `cron` only, and required for it.** |
+| `env` | `{}` | Environment variables (see [`env`](#env--the-five-forms)). |
+
+> ⚠️ **`build` or `image`, never both, never neither.** That choice determines whether the block goes through a build phase.
+
+### The four service types
+
+| Type | Serves HTTP | Can be exposed publicly | What for |
+|------|:-----------:|:----------------------:|-----------|
+| `web` | ✅ | ✅ | API, site, front end — the common case |
+| `private` | ✅ | ✕ | Internal service, reachable only by the other blocks of the environment |
+| `worker` | ✕ | ✕ | Permanent background task (queue consumer, Celery worker…) |
+| `cron` | ✕ | ✕ | Scheduled execution; requires `schedule` |
+
+```yaml
+- name: cleanup
+  type: cron
+  schedule: "0 2 * * *"        # every day at 2 am
+  image: my-registry/tools:1.0
+  command: ["python", "cleanup.py"]
+```
+
+### `build`
+
+To use when the platform must build the image from your repository.
+
+| Field | Default | Role |
+|-------|--------|------|
+| `repo` | the stack's connected repository | Repository URL |
+| `branch` | `main` | Branch to build |
+| `rootDir` | `.` | Source subfolder (monorepo) |
+| `dockerfile` | `Dockerfile` | Dockerfile path, relative to `rootDir` |
+| `method` | `auto` | `dockerfile`, `buildpack` or `auto` |
+| `buildFilter` | — | Paths that trigger a rebuild. E.g. `['api/**', 'shared/**']` |
+| `builderImage` | — | Build image (`buildpack` method) |
+| `buildArgs` | `{}` | Arguments frozen **into the image** (≠ runtime variables) |
+
+```yaml
+- name: front
+  type: web
+  framework: nextjs
+  build:
+    repo: https://github.com/you/your-repo
+    branch: main
+    rootDir: apps/web
+    buildFilter: ['apps/web/**', 'packages/ui/**']
+  port: 3000
+  exposePublic: true
+```
+
+> 💡 **Monorepo**: declare several services with different `rootDir` values. Each becomes an independent block with its own build.
+
+### `image`
+
+To use for an already published image (public or private registry).
+
+```yaml
+- name: cache-proxy
+  type: private
+  image: nginxinc/nginx-unprivileged:stable-alpine
+  port: 8080
+```
+
+> ⚠️ **The image must run without root privileges.** Many official images have a variant meant for that (for example `nginx-unprivileged` instead of `nginx`). An image that requires root will not start.
+
+---
+
+## `databases[]`
+
+A **managed** database or message broker: the platform provisions it, generates the credentials and keeps them secret.
+
+| Field | Default | Role |
+|-------|--------|------|
+| `name` | — | **Required.** Unique name, referenced by `fromDatabase`. |
+| `type` | — | **Required.** `postgres`, `redis`, `mysql`, `mongodb` or `rabbitmq`. |
+| `version` | the type's default version | Version to deploy |
+| `resources` | platform defaults | `{ cpu, memory, storage }` |
+| `enableBackups` | `false` | Automatic backups |
+| `additionalDatabases` | — | **PostgreSQL only.** Extra databases (`{ name, user }`) |
+| `extensions` | — | **PostgreSQL only.** E.g. `[postgis, pgvector]` |
+
+```yaml
+databases:
+  - name: db
+    type: postgres
+    extensions: [pgvector]
+    enableBackups: true
+    additionalDatabases:
+      - name: analytics
+        user: analytics_user
+    resources: { cpu: 0.5, memory: 1, storage: 5 }
+
+  - name: cache
+    type: redis
+    resources: { cpu: 0.25, memory: 0.5 }
+```
+
+> ℹ️ **You never write the credentials.** They are generated at provisioning time and injected into your services through `fromDatabase`. See [Managed services](/en/docs/services-manages/reference).
+
+---
+
+## Resources
+
+`resources` is always expressed the same way, for a service as for a database:
+
+| Key | Unit | Example |
+|-----|-------|---------|
+| `cpu` | cores | `0.5` |
+| `memory` | GB | `1` |
+| `storage` | GB | `10` |
+
+Omitting `resources` applies the **platform defaults**. The stack's total is checked against the project's quota during the **plan**.
+
+---
+
+## `env` — the five forms
+
+This is the heart of NubiStack: environment variables are not copied over, they are **referenced**. Each variable uses **exactly one** form.
+
+### 1. Literal value
+
+```yaml
+env:
+  LOG_LEVEL: info                              # short form
+  API_TOKEN: { value: "abc123", secret: true } # encrypted at rest
+```
+
+`secret: true` is only valid together with `value`.
+
+### 2. From a database — `fromDatabase`
+
+```yaml
+env:
+  DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+  DB_HOST:      { fromDatabase: { name: db, property: host } }
+```
+
+| `property` | Value injected |
+|------------|-----------------|
+| `connectionString` *(default)* | The full connection URL, password included |
+| `host` / `port` | Internal address and port |
+| `user` / `password` | Credentials |
+| `database` | Database name |
+
+`scheme` option: forces the URL prefix to match your driver (for example `postgresql+asyncpg` for async SQLAlchemy).
+
+```yaml
+DATABASE_URL: { fromDatabase: { name: db, property: connectionString, scheme: postgresql+asyncpg } }
+```
+
+### 3. From a neighboring service — `fromService`
+
+```yaml
+env:
+  API_URL: { fromService: { name: api, property: url } }
+```
+
+| `property` | Value injected |
+|------------|-----------------|
+| `url` *(default)* | `http://internal-host:port` |
+| `host` / `port` | The service's internal address and its port |
+
+Referencing a service automatically creates a **deployment dependency**: the referenced service will be deployed first.
+
+### 4. Generated by the platform — `generateValue`
+
+```yaml
+env:
+  SECRET_KEY: { generateValue: true }
+  JWT_SECRET: { generateValue: { length: 64, charset: hex } }
+```
+
+The value is generated once, then **stays stable** across updates. `charset` accepts `alnum` (default), `hex` or `base64`; `length` ranges from 8 to 256.
+
+### 5. Asked for at the first deployment — `sync: false`
+
+```yaml
+env:
+  STRIPE_KEY: { sync: false }
+```
+
+The variable is asked of you **once only**, when the stack is applied (**Secrets to provide** section of the plan), and is **never overwritten** afterwards. This is the form to use for third-party API keys, which you do not want to write into a versioned file.
+
+### Bonus — inherited from a group: `fromGroup`
+
+```yaml
+envGroups:
+  common:
+    LOG_LEVEL: info
+    REGION: eu-west
+
+services:
+  - name: api
+    # ...
+    env:
+      LOG_LEVEL: { fromGroup: common }
+```
+
+---
+
+## Deployment order and dependencies
+
+The platform works out the order by itself, from:
+
+- the `dependsOn` you declare explicitly,
+- the `fromService` references (implicit dependency),
+- the databases, always provisioned **before** the services that use them.
+
+```yaml
+- name: front
+  dependsOn: [api]
+```
+
+A waiting block shows **Deployment blocked** with the name of what it is waiting for, then starts by itself as soon as the dependency is online.
+
+> ⚠️ **Circular dependencies are refused** at plan time (`api` depends on `front` which depends on `api`). The error message shows the cycle.
+
+---
+
+## Common validation errors
+
+The **plan** validates the manifest before anything is created. The most frequent rejections:
+
+| Message | Cause |
+|---------|-------|
+| `provide exactly one of build or image` | The service has no source, or both |
+| `only a web service can be exposed` | `exposePublic` or `domain` on a `worker`, `cron` or `private` |
+| `cron service: schedule required` | Type `cron` without `schedule` |
+| `fromDatabase 'x' does not exist in databases[]` | Reference to an undeclared database |
+| `duplicate name in the manifest` | Two blocks (services **or** databases) with the same name |
+| `ambiguous env var: multiple forms` | Two forms in the same variable (e.g. `value` **and** `generateValue`) |
+| `dependency cycle detected` | Loop in `dependsOn` / `fromService` |
+| `extensions is only valid for postgres` | `extensions` or `additionalDatabases` on a non-PostgreSQL database |
+
+## See also
+
+- [NubiStack — overview](/en/docs/nubistack)
+- [Detecting from a repo](/en/docs/nubistack/detecter-depuis-un-repo) — let the platform write this file for you.
+- [Stack lifecycle](/en/docs/nubistack/cycle-de-vie)

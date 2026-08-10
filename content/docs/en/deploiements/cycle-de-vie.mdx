@@ -1,0 +1,49 @@
+---
+title: Deployment lifecycle
+description: Managing a live application — update, restart, synchronize, pause/resume, rollback and deletion.
+---
+
+Once an application is deployed, you drive it from its **management page**. These actions apply to CODE, SaaS/ERP and managed-service deployments (as relevant).
+
+## Update
+
+Change then apply:
+
+- the **resources** (CPU / RAM / Storage, replicas),
+- the **environment variables** and **secrets**,
+- the deployed **image** (new tag).
+
+The application is redeployed with the new configuration.
+
+## Restart / Synchronize
+
+- **Restart**: restarts the application's instances (useful after an external change).
+- **Synchronize**: forces the declared state to be applied again (useful if the application and its configuration have drifted apart).
+
+## Pause and resume
+
+- **Pause**: brings the application down to **0 instances** — it no longer consumes CPU/RAM and is no longer reachable, but its configuration is kept.
+- **Resume**: set the number of **replicas** back to 1 (or more) to start it again.
+
+> 💡 Pausing is handy for a test environment overnight or a dormant project, without deleting everything.
+
+## Rollback (going back to a previous version)
+
+If an update causes trouble, go back to an **earlier built image**: select a previous version and **put it back online**. The application redeploys on that image.
+
+> ℹ️ Rollback relies on the **images already built** ([built images](/en/docs/builds/suivi#built-images)). Keep your image tags readable (versioned) so you can easily identify the version to go back to.
+
+## Monitor
+
+From the management page, reach the **logs** (real time + history, CODE apps) and the **monitoring** (health, pod status, events). See [Monitoring & logs](/en/docs/monitoring).
+
+## Delete
+
+Deletion removes the application, its configuration and its associated resources.
+
+> ⚠️ Deletion is **permanent**. For databases, make sure you have a recent **backup** before deleting (see [Backups](/en/docs/backups/restaurer)).
+
+## See also
+
+- [Deploying a CODE app](/en/docs/deploiements/deployer-une-app-code)
+- [What you can do in each building block](/en/docs/concepts/par-brique)

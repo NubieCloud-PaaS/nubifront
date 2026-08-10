@@ -1,0 +1,35 @@
+---
+title: Security best practices
+description: Recommendations to secure your account, your organization and your applications on Nubiecloud.
+---
+
+A few simple rules to keep your projects safe.
+
+## Account
+
+- Enable **[two-factor authentication (2FA)](/en/docs/compte/securite)** and keep your **backup codes** offline.
+- Keep **device verification** on; revoke the devices you do not recognize.
+
+## Organization & access
+
+- Apply **least privilege**: grant **Admin** only to the people who need it; everyone else as **Member**.
+- At the project level, keep the **Admin** role for the leads; **Developer** for those who deploy; **User** for read access.
+- Remove members who leave the team without delay.
+- Review the **[audit logs](/en/docs/securite/audit-logs)** regularly.
+
+## Secrets & configuration
+
+- Put any sensitive data in the **[secrets](/en/docs/securite/secrets)**, never in the public variables nor in the source code.
+- Use **distinct secrets per environment** (dev / staging / prod).
+- On a suspected leak, **regenerate** the value at the source then **update** the secret.
+
+## Applications & exposure
+
+- Expose your applications over **HTTPS** only (that is the default; [TLS](/en/docs/domaines) is automatic).
+- Set a meaningful **health check** so failing instances are detected.
+- Before deleting a database, make sure you have a recent **[backup](/en/docs/backups)**.
+
+## See also
+
+- [Security & governance](/en/docs/securite)
+- [Managing secrets](/en/docs/securite/secrets)

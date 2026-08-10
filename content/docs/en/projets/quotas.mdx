@@ -1,0 +1,28 @@
+---
+title: Project quotas
+description: How a project's resources are allocated and capped by the organization's plan.
+---
+
+Each project reserves a share of the organization's resources: a **CPU quota**, a **RAM quota** and a **Storage quota**.
+
+## Allocation
+
+- Quotas are set when the **project is created** (preset or custom mode) and can be changed afterwards in the project settings.
+- The sum of the quotas of **all your projects** cannot exceed the **organization's total** (set by the plan).
+- The **number of projects** is also capped by the plan: FREE → 1, PROFESSIONAL → 5, BUSINESS / ENTERPRISE → unlimited.
+
+## If the quota is not enough
+
+If you ask for more than what is still available, the creation (or update) is **refused**, with the details of the overrun (resource concerned, limit, current usage, requested). Two ways out:
+
+1. **reduce** the requested resources, or
+2. **upgrade the plan** to increase the organization's total (see [Changing plan](/en/docs/organisations/changer-de-plan)).
+
+## Consumption shared across environments
+
+A project's quota is **shared by all its environments**: the applications in `dev`, `staging` and `prod` draw from the same pot. Size accordingly.
+
+## See also
+
+- [Organization quotas](/en/docs/organisations/quotas)
+- [Environments](/en/docs/projets/environnements)

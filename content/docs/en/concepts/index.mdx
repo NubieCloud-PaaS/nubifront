@@ -1,0 +1,40 @@
+---
+title: Key concepts
+description: The Organization → Project → Environment → Application hierarchy, and the difference between building an image and deploying it.
+---
+
+On Nubiecloud, your resources are organized in a **cascade**. Understanding this hierarchy makes everything else obvious.
+
+## The hierarchy
+
+```
+Organization        ← billing, plan, global resources, members
+└── Project         ← one product, a share of the org's resources
+    └── Environment     ← dev / staging / preproduction / production
+        └── Application ← your deployed service
+            └── Dependencies ← databases, Redis… (managed services)
+```
+
+| Building block | Role | What attaches to it |
+|--------|------|---------------------|
+| **Organization** | Container for billing and shared resources | Plan, global quotas, members, regions |
+| **Project** | Groups the applications of a single product | Project quotas, environments, project members |
+| **Environment** | Isolates the stages of the lifecycle | dev, staging, preproduction, production |
+| **Application** | The running service | Deployed image, resources, env variables, domain |
+| **Dependencies** | Services the app needs | PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ |
+
+> ℹ️ **Quotas cascade downwards.** The organization's **plan** sets the total CPU / RAM / Storage. Each **project** consumes a share of that total; each **application** consumes a share of its project's resources.
+
+## Build ≠ Deployment
+
+Two notions not to confuse:
+
+- **Build**: producing an **image** (an executable artifact) from your source code. See [Builds](/en/docs/builds/build-automatique).
+- **Deployment**: **running an image** in an environment, with its resources, its env variables and its network exposure. See [Deploying an application](/en/docs/deploiements/deployer-une-app-code).
+
+You build first, then you deploy. The same image can be deployed in several environments.
+
+## See also
+
+- [Quickstart: from zero to a live app](/en/docs/quickstart)
+- [What you can do in each building block](/en/docs/concepts/par-brique)

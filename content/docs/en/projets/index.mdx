@@ -1,0 +1,49 @@
+---
+title: Projects
+description: Create and manage a project — resources (preset or custom), region, and project members.
+---
+
+A **project** groups the applications of a single product and receives a **share of the organization's resources**. It is inside a project that you create [environments](/en/docs/projets/environnements) and deploy your applications.
+
+## Create a project
+
+From **Projects**, click **Create a project** and fill in:
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Name** | ✅ | max. 100 characters |
+| **Description** | ✕ | max. 500 characters |
+| **Resource mode** | ✅ | **Preset** or **Custom** |
+| **Storage** | ✅ | in GB |
+| **Region** | ✕ | deployment region (default region otherwise) — see [Regions](/en/docs/regions) |
+
+### Preset or Custom
+
+- **Preset**: you pick a predefined **instance type** (CPU + RAM bundled). Convenient and easy to read.
+- **Custom**: you enter the **CPU** and **RAM** you want directly.
+
+> ℹ️ The requested resources must fit within what is **still available** in the organization, and the **number of projects** is capped by the plan (FREE: 1, PROFESSIONAL: 5, BUSINESS/ENTERPRISE: unlimited). See [Project quotas](/en/docs/projets/quotas).
+
+## Manage a project
+
+You can change the **name**, the **description** and the **quotas** (CPU / RAM / Storage), or **delete** the project. These actions require the project's **Admin** role (or being the organization's Owner).
+
+> ⚠️ Deleting a project also deletes its **environments** and the associated **applications**.
+
+## Project members
+
+On top of the organization roles, each project has its own roles:
+
+| Project role | Scope |
+|-------------|--------|
+| **Admin** | manages the project, its members, its environments |
+| **Developer** | deploys and operates the applications |
+| **User** | read-only access |
+
+- Invite a member by **email** with a project role. If they are not in the organization yet, they are added automatically as a **Member**.
+- The **organization's owner** automatically has access to every project.
+
+## See also
+
+- [Environments](/en/docs/projets/environnements)
+- [Project quotas](/en/docs/projets/quotas)

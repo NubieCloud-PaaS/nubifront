@@ -1,0 +1,37 @@
+---
+title: Understanding quotas
+description: Track the consumption and availability of the organization's resources, globally and per project.
+---
+
+Your organization's **plan** sets a total of **CPU**, **RAM** and **Storage**. The **Quotas** page shows you how that total is being consumed.
+
+## Global view
+
+For each resource (CPU, RAM, Storage), the page shows:
+
+- the amount **used** and the **total** (e.g. `2.5 / 8 vCPU`),
+- the **percentage** used,
+- the amount **still available**.
+
+A **progress bar** changes color depending on the level (green, then orange beyond ~75 %, red close to the limit).
+
+> 💡 From **75 %** usage on a resource, the console suggests [changing plan](/en/docs/organisations/changer-de-plan).
+
+## Breakdown per project
+
+A table details the CPU, RAM and storage allocated **per project**. It is the sum of all your projects' allocations that is compared against the organization's total.
+
+## How it fits together
+
+```
+Organization plan  →  total CPU / RAM / Storage
+        └── shared out across Projects (project quotas)
+                └── consumed by the Applications of each environment
+```
+
+> ℹ️ A project cannot reserve more than what is **still available** in the organization. See [Project quotas](/en/docs/projets/quotas).
+
+## See also
+
+- [Plans & pricing](/en/docs/organisations)
+- [Changing plan](/en/docs/organisations/changer-de-plan)

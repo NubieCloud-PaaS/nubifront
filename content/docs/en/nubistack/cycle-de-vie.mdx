@@ -1,0 +1,94 @@
+---
+title: Stack lifecycle
+description: Follow a stack's progress block by block, restart it after a failure, edit its manifest, update it on git push and delete it.
+---
+
+Once the stack has been applied, you land on the **Stack state** screen. Each **block** (service or database) moves at its own pace, and the view refreshes on its own.
+
+> ℹ️ **The stack progresses automatically**, roughly every 30 seconds. In the normal case you have nothing to click: watch the blocks turn **Online**.
+
+## The states of a block
+
+| State | What is happening |
+|------|-----------------|
+| **Declared** | The block is registered, nothing has started yet |
+| **Build queued** | The build is waiting its turn |
+| **Building** | The image is being built from your repository |
+| **Built** | The image is ready, the deployment will follow |
+| **Deployment blocked** | The block is waiting for a dependency to come online — the name of what it waits for is shown |
+| **Deploying** | The block is being brought online |
+| **Online** | The block is running ✅ |
+| **Build failed** | Building the image failed |
+| **Deployment failed** | Bringing it online failed |
+| **Skipped** | The block had nothing to do this round |
+
+Each block also shows its **dependencies** ("Depends on") and, when something goes wrong, its **last error**.
+
+## The stack's global state
+
+| State | Meaning |
+|------|---------------|
+| **Planning** | The plan is being computed |
+| **Applying** | The blocks are being created and deployed |
+| **Synced** | Every block is online ✅ |
+| **Partial** | Some blocks are online, others are not |
+| **Failed** | The stack could not converge |
+
+## The available actions
+
+### Advance now
+
+Forces an immediate progress round instead of waiting for the next automatic cycle.
+
+> 💡 **Normally unnecessary.** Only use it if nothing has moved for several minutes.
+
+### Restart
+
+Resets and redeploys the blocks that are **not online** (blocked or failed). **Blocks that are already online do not move** — your production is not interrupted.
+
+This is the action to use after fixing the cause of a failure (a repaired `Dockerfile`, an increased quota, a corrected secret).
+
+### Edit the manifest
+
+Reloads the stack's YAML into the **Editor** so you can change it, then plan and apply it again. Useful to change a migration command, add a service, adjust resources.
+
+A banner **"Editing stack …"** reminds you that you are modifying an existing stack; **Cancel editing** takes you out of it.
+
+> ℹ️ **Re-applying happens in place**: the affected blocks are updated without being destroyed, with no service interruption.
+
+### Delete
+
+Deletes the stack **and all its resources** — deployed applications as well as managed databases. A confirmation asks you for the stack's name.
+
+> ⚠️ **Irreversible.** The data of the stack's managed databases is lost. If it matters, take a [backup](/en/docs/backups) first.
+
+### Simulation mode
+
+**Simulation mode (dry)** runs a progress cycle **without creating any real resource**. Handy to check what the platform is about to do.
+
+## Automatic update on `git push`
+
+If a service of your stack is built from a repository (`build:`), a **push on the declared branch** triggers by itself:
+
+1. the rebuild of the image from the latest commit,
+2. the update of the block **in place**, with no service interruption.
+
+Only the blocks concerned by that repository and that branch are rebuilt; the others stay online. The same commit is never processed twice.
+
+> 💡 To limit useless rebuilds in a monorepo, use `buildFilter` in the manifest — for example `['apps/web/**']` to rebuild the front end only when it changes. See [the manifest](/en/docs/nubistack/manifeste#build).
+
+## What to do when a block fails?
+
+| Symptom | Where to look |
+|----------|-------|
+| **Build failed** | Open the corresponding build's logs in [NubiBuild](/en/docs/builds/suivi). Frequent cause: `Dockerfile` missing at the given path, or wrong `rootDir`. |
+| **Deployment failed** | Look at the block's **last error**, then at the [application logs](/en/docs/monitoring). Frequent cause: an image requiring root privileges, a wrong port, or a missing start command. |
+| **Deployment blocked** for a long time | The expected dependency cannot reach **Online**: fix it first, the blocked block will then start by itself. |
+| **Quota exceeded** at plan time | Reduce a block's resources or increase the [project's quota](/en/docs/projets/quotas). |
+| Nothing has moved for a long time | **Advance now**, then **Restart** if the state still does not change. |
+
+## See also
+
+- [NubiStack — overview](/en/docs/nubistack)
+- [The `nubicloud.yaml` manifest](/en/docs/nubistack/manifeste)
+- [Troubleshooting — a build fails](/en/docs/depannage/build-echoue)

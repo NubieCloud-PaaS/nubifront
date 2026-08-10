@@ -1,0 +1,43 @@
+---
+title: Environments
+description: Create and manage a project's environments (dev, staging, preproduction, production).
+---
+
+An application is always deployed **into an environment** of a project. Environments isolate the stages of your lifecycle.
+
+## Environment types
+
+| Type | Typical use |
+|------|---------------|
+| **dev** | development |
+| **staging** | integration / QA |
+| **preproduction** | pre-production |
+| **prod** | production |
+
+## Create an environment
+
+From your project → **Environments** → **Create an environment**:
+
+- a free-form **name** (e.g. "QA", "Production EU"),
+- a **type** among those above.
+
+> ⚠️ **No environment is created automatically** with the project: create at least one before you can deploy (see [step 5 of the Quickstart](/en/docs/quickstart)).
+
+Each environment has its own **isolated space** (namespace): the applications of one environment are partitioned off from the others.
+
+## How many environments?
+
+There is **no limit on the number** of environments. However, the **project quotas** (CPU / RAM / Storage) are shared by **all the environments** of the project: the sum of the applications across every environment cannot exceed the project's quota.
+
+## Edit / delete
+
+You can rename an environment or change its type, and delete it (which removes its deployments). These actions require the project's **Admin** role.
+
+## About "promotion"
+
+> ℹ️ There is no (yet) **automatic promotion** feature from one environment to another (copying the configuration or the image from `staging` to `prod`). To go to production, **deploy the application** in the target environment reusing the same [built image](/en/docs/builds/suivi#built-images).
+
+## See also
+
+- [Projects](/en/docs/projets)
+- [Deployments](/en/docs/deploiements)

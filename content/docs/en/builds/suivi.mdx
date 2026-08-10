@@ -1,0 +1,47 @@
+---
+title: Tracking builds & images
+description: Follow a build (states, logs), cancel or restart it, read the security scan, and manage the built images.
+---
+
+Once a build has started (manual or automatic), follow its progress and manage the images it produces.
+
+## Build states
+
+| State | Meaning |
+|------|---------------|
+| `pending` | queued |
+| `running` | in progress |
+| `succeeded` | finished successfully — the image is available |
+| `failed` | failed (check the logs) |
+| `cancelled` | cancelled |
+
+## Logs
+
+Every build exposes its **logs**, split by step (fetching the code, building the image…). This is the first place to look when something fails.
+
+> 💡 A failing build points at the guilty step: `Dockerfile` not found, wrong **source folder**, missing dependency… Fix it and restart.
+
+## Cancel / restart
+
+- **Cancelling** a running build moves it to the `cancelled` state.
+- **Restarting** a build reuses the same configuration (branch, tag…).
+
+## Security scan
+
+Built images can be **scanned** to detect known vulnerabilities (CVEs). The result lists the vulnerabilities found in the image — useful before going to production.
+
+## Built images
+
+The images produced are kept and reusable:
+
+- **List** a project's images (with repository, tag, date, build duration, status).
+- **Reuse** an image at [deployment](/en/docs/deploiements/deployer-une-app-code) time — this is also what makes [rollback](/en/docs/deploiements/cycle-de-vie#rollback-going-back-to-a-previous-version) to an earlier version possible.
+- **Delete** images that are no longer needed (multi-selection available).
+
+> 💡 Adopt **readable, versioned tags** (`v1.2.0`) rather than `latest` everywhere: it becomes far easier to tell which image to deploy or roll back to.
+
+## See also
+
+- [Builds — overview & manual build](/en/docs/builds)
+- [Automatic builds](/en/docs/builds/build-automatique)
+- [Deployment lifecycle](/en/docs/deploiements/cycle-de-vie)

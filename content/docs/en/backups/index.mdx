@@ -1,0 +1,39 @@
+---
+title: Backups
+description: Automatic and on-demand backups of PostgreSQL databases (and Odoo) — enabling, retention, tracking.
+---
+
+Nubiecloud backs up your **PostgreSQL databases** (and **Odoo** instances, which rely on PostgreSQL) to object storage, automatically or on demand.
+
+> ℹ️ **Scope.** Managed backups cover **PostgreSQL** and **Odoo**. The other managed services (MySQL, MongoDB, Redis, RabbitMQ) have no native backup, and CODE applications have no application-level backup.
+
+## Enable automatic backups
+
+On the relevant deployment → **Backups** tab → configure:
+
+| Field | Format | Example |
+|-------|--------|---------|
+| **Enabled** | yes / no | yes |
+| **Schedule** | cron expression (5 fields) | `0 3 * * *` (every day at 3 am) |
+| **Retention** | duration | `30d` (30 days), `7d`, `90d` |
+
+Once enabled, backups run according to the schedule, and older ones are **purged automatically** beyond the retention.
+
+## On-demand backup
+
+Trigger an immediate backup with **Backup on demand**. Its status progresses: `pending` → `running` → `completed` (or `failed`).
+
+## Track the backups
+
+The backup list shows, for each one: the **name**, the snapshot's **timestamp**, the **type** (scheduled / on demand), the **status** and the **size**. It can be filtered by environment, status and type.
+
+> 💡 Statuses are synchronized regularly from the infrastructure — a freshly triggered backup may appear as `pending`/`running` for a moment before turning `completed`.
+
+## Restore
+
+Restoring follows a secure **Blue/Green** journey (validation before switching over). See the dedicated guide: **[Restoring a backup](/en/docs/backups/restaurer)**.
+
+## See also
+
+- [Restoring a backup](/en/docs/backups/restaurer)
+- [Managed services](/en/docs/services-manages)

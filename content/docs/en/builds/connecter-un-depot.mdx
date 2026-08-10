@@ -1,0 +1,43 @@
+---
+title: Connecting a Git repository
+description: Link your GitHub/GitLab repositories to Nubiecloud via OAuth (or a token), select a repository, manage several accounts.
+---
+
+To build a CODE application, Nubiecloud needs access to your **Git repository**. The connection is made from the **Builds** section.
+
+## Supported providers
+
+| Provider | Connection |
+|-------------|-----------|
+| **GitHub** | OAuth |
+| **GitLab** | OAuth or **personal access token (PAT)** |
+
+## Connect an account (OAuth)
+
+1. In **Builds**, choose **Connect a repository**.
+2. Select the provider (**GitHub** or **GitLab**).
+3. An OAuth authorization window opens: sign in and authorize Nubiecloud.
+4. Back in the console, the repositories you have access to appear.
+
+> 🔒 Access tokens are **encrypted** (Fernet-style encryption) before storage. Nubiecloud does not revoke the token on the GitHub/GitLab side when you delete it: to cut access entirely, also revoke the authorization in your Git account settings.
+
+## Select a repository
+
+- The console **lists your repositories** (in batches of 50, with **progressive loading**).
+- A **search box** filters by name when you have many repositories.
+- You can also **enter a repository URL** directly (the provider is detected automatically).
+- Each repository shows its owner, its visibility (public/private) and its **default branch**.
+
+## Several accounts, several repositories
+
+- You can connect **several accounts** (for example a GitHub account *and* a GitLab account).
+- A single account gives access to **all the repositories** it is entitled to at the provider.
+
+## Disconnect
+
+Delete a connected **token/account** to remove Nubiecloud's access to the associated repositories.
+
+## See also
+
+- [Builds — overview & manual build](/en/docs/builds)
+- [Automatic builds](/en/docs/builds/build-automatique)

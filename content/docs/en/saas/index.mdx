@@ -1,0 +1,44 @@
+---
+title: SaaS / ERP applications
+description: Deploy a pre-packaged application (Odoo, WordPress…) with no code to build — catalog, how it works and differences with a CODE app.
+---
+
+Alongside deploying **applications from your code** ([CODE](/en/docs/deploiements/deployer-une-app-code)), Nubiecloud offers a catalog of **pre-packaged applications** (SaaS / ERP / CMS) that you deploy **without building anything**: you choose the application, its version and a few parameters, and Nubiecloud takes care of the image, the associated database and the exposure.
+
+## Catalog
+
+| Application | Type | Database included | Status |
+|-------------|------|--------------------------|--------|
+| **Odoo** | ERP / Business management | PostgreSQL (built in) | ✅ Available |
+| **WordPress** | CMS | MariaDB (built in) | ✅ Available |
+| Joomla | CMS | MySQL | 🔜 Coming soon |
+| Drupal | CMS | MySQL | 🔜 Coming soon |
+| Nextcloud | Storage / Collaboration | MySQL | 🔜 Coming soon |
+| Matomo | Web analytics | MySQL | 🔜 Coming soon |
+
+> ℹ️ The applications marked **🔜 Coming soon** appear in the console but are not enabled yet. Today, **Odoo** and **WordPress** are fully deployable.
+
+## SaaS vs CODE: what changes?
+
+| Aspect | CODE application | SaaS / ERP application |
+|--------|------------------|------------------------|
+| **Source** | Your Git repository | Pre-built image provided by Nubiecloud |
+| **Build** | Yes (Dockerfile / Buildpacks) | **No build** |
+| **Database** | To be deployed separately (managed service) and wired | **Built into** the deployment (PostgreSQL for Odoo, MariaDB for WordPress) |
+| **Configuration** | Env variables, port, health check… | Dedicated parameters (admin, password, version, language…) |
+| **Exposure** | Automatic subdomain + custom domain | Same |
+
+> 💡 **No need to connect a repository** nor to run a build for a SaaS application: the journey is shorter (choose the app → configure it → deploy).
+
+## The journey
+
+1. In an **environment**, choose **Deploy an application** then the **SaaS / ERP** tab.
+2. Select the application (e.g. **Odoo**).
+3. Fill in the **resources** (CPU / RAM / Storage) and the **specific parameters** (see the dedicated pages).
+4. (Optional) Add a **custom domain**.
+5. Deploy. The associated database is provisioned **together with** the application.
+
+## Dedicated guides
+
+- **[Deploying Odoo](/en/docs/saas/odoo)** — versions, configuration, modules, backups.
+- **[Deploying WordPress](/en/docs/saas/wordpress)** — configuration, MariaDB database, resources.

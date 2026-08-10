@@ -1,0 +1,117 @@
+---
+title: Detecting from a repo
+description: Automatically generate a nubicloud.yaml from a Git repository or an existing docker-compose.yml, and understand what the detection decides on your behalf.
+---
+
+You do not need to write your manifest by hand. From NubiStack's **Editor**, the **Detect from a repo** block analyzes a repository and produces a `nubicloud.yaml` ready to review.
+
+## Running a detection
+
+1. Open **NubiStack** → **Editor** step.
+2. In **Detect from a repo**, choose the source:
+   - **Connected repository** — a repository linked to your account, private or public (see [Connecting a repository](/en/docs/builds/connecter-un-depot));
+   - **URL of a public repository** — paste the address (`https://github.com/you/your-repo`).
+3. Click **Detect**.
+
+The generated manifest fills the editor, together with **Detection notes** explaining every decision taken.
+
+> ⚠️ **This is a proposal, not a final result.** Always review the YAML before planning: resources, domain, secrets and frameworks often deserve an adjustment.
+
+## Case 1 — the repository contains a `docker-compose.yml`
+
+This is the richest case: your compose file is **converted** into a Nubiecloud stack.
+
+### Databases become managed services
+
+A compose service whose image is a recognized database **is not deployed as-is**: it becomes a managed database of the platform, with generated credentials.
+
+| Image in your compose | Becomes |
+|--------------------------|---------|
+| `postgres`, `postgresql` | Managed **PostgreSQL** database |
+| `redis`, `valkey` | Managed **Redis** |
+| `mysql`, `mariadb` | Managed **MySQL** |
+| `mongo`, `mongodb` | Managed **MongoDB** |
+| `rabbitmq` | Managed **RabbitMQ** |
+| `postgis`, `pgvector` | Managed PostgreSQL + the matching **extension** |
+| `minio`, `garage` | Nothing to deploy — use a [**NubiS3**](/en/docs/nubis3) bucket |
+
+Databases **outside the catalog** (`timescaledb`, `clickhouse`, `cassandra`, `memcached`, `percona`…) are kept as **private** services: they run, but without the generated credentials or the backups of a managed service.
+
+### Connection URLs are rewired
+
+A variable that pointed at a compose service is rewritten as a reference:
+
+```yaml
+# In your docker-compose.yml
+DATABASE_URL: postgres://user:pass@db:5432/app
+
+# In the generated manifest
+DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+```
+
+The clear-text password disappears: the platform injects its own at runtime. The **driver** is detected along the way (for example `postgresql+asyncpg` if your project uses SQLAlchemy in async mode).
+
+### The rest of the conventions
+
+| Compose element | Translation |
+|--------------------|------------|
+| `build:` (with `context`) | Built service, `rootDir` = the context, framework detected in that folder |
+| `image:` | Service deployed from that image |
+| `ports:` | Service port + public exposure |
+| **No published port** | The service is classified as a **worker** (background task) |
+| `command:` | Carried over as the start command |
+| `depends_on:` | Carried over as `dependsOn` |
+| `${VAR:-value}` | Resolved to its default value, if the variable is not sensitive |
+| `volumes:` | **Ignored** — reported in the notes |
+
+## Case 2 — the repository has no compose file
+
+The detection then analyzes the code itself:
+
+- **the framework** and its usual **port** (`Framework detected: python-fastapi (port 8000).`);
+- whether there is a **need for a database** — a PostgreSQL database is proposed and `DATABASE_URL` wired automatically;
+- the database **driver** in use, to pick the right URL format;
+- the **secrets**.
+
+## How secrets are classified
+
+This is the point to check first. The detection separates two families:
+
+| Family | Example names | Generated form | Effect |
+|---------|------------------|---------------|-------|
+| **Internal secrets** | `SECRET_KEY`, `JWT_SECRET`, `NEXTAUTH_SECRET` | `generateValue: true` | The platform generates a value, stable over time. Nothing for you to do. |
+| **Third-party secrets** | `API_KEY`, `ACCESS_TOKEN`, `CLIENT_SECRET`, `ADMIN_PASSWORD` | `sync: false` | The value is **asked of you at the first deployment**. It appears under **Secrets to provide** on the plan screen. |
+
+> 🔒 A third-party API key cannot be guessed: it is therefore always asked for, never generated nor overwritten by a later update.
+
+## Reading the detection notes
+
+Every decision is traced. A few typical examples:
+
+```
+'db' → managed postgres database (image postgres:15-alpine substituted).
+'api' built (context ./api) — framework detected: python-fastapi.
+'worker' with no published port → detected as a worker (background task).
+'api': DATABASE_URL auto-wired → fromDatabase(db).
+'api': to provide at 1st deployment (sync:false): STRIPE_API_KEY.
+'db': volumes ignored.
+⚠️ Proposal to validate: adjust resources, domain and secrets before applying.
+```
+
+## What to review before planning
+
+| To check | Why |
+|------------|-----|
+| **Resources** | The generated values are deliberately small (0.25 core / 0.5 GB). Adjust them to your real load. |
+| **`framework`** | If it could not be detected, a generic value is used; make it explicit to get the right settings. |
+| **`exposePublic`** | Check that only the services meant for the Internet are exposed. |
+| **`domain`** | To be added if you want a custom domain from the start. |
+| **Databases outside the catalog** | Turned into private services; consider replacing them with a managed database. |
+| **Volumes** | Ignored: if a service needs persistent storage, revisit how it works. |
+
+Once the YAML has been reviewed, click **Plan** and continue with [the normal journey](/en/docs/nubistack).
+
+## See also
+
+- [The `nubicloud.yaml` manifest](/en/docs/nubistack/manifeste) — to fix what has been generated.
+- [NubiStack — overview](/en/docs/nubistack)

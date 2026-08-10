@@ -1,0 +1,121 @@
+---
+title: NubiStack
+description: Describe your whole stack (services + databases + wiring) in a nubicloud.yaml file, preview the plan, apply, then follow its deployment.
+---
+
+**NubiStack** deploys an **entire application in one go**: several services, their databases and the wiring between them, described in a single `nubicloud.yaml` file.
+
+Where [NubiDeploy](/en/docs/deploiements) deploys **one** service at a time (and where you copy your database's connection string into the app's variables by hand), NubiStack does the whole round trip:
+
+1. it **provisions** the declared databases,
+2. it **builds** the services that come from your repository,
+3. it **wires** the environment variables automatically (`DATABASE_URL`, the URL of a neighboring service, generated secrets),
+4. it **deploys in the right order**, waiting for each dependency to come online.
+
+## When to use NubiStack rather than NubiDeploy?
+
+| Your need | Use |
+|--------------|----------|
+| A single application, possibly with a database created separately | [NubiDeploy](/en/docs/deploiements) |
+| Several services talking to each other (API + front end + worker + cron) | **NubiStack** |
+| A monorepo where each folder becomes a service | **NubiStack** |
+| An existing project described by a `docker-compose.yml` | **NubiStack** ([auto-detection](/en/docs/nubistack/detecter-depuis-un-repo)) |
+| You want `git push` to rebuild **and** redeploy the whole stack | **NubiStack** |
+
+> ℹ️ The two coexist: a NubiStack stack is deployed into an **environment** of a project, exactly like a classic deployment, and its services then show up in NubiDeploy.
+
+## Before you start
+
+- A **project** and at least one **environment** (see [Projects](/en/docs/projets/environnements)).
+- A **connected repository** if your services are built from a private repo (see [Connecting a repository](/en/docs/builds/connecter-un-depot)). A public repository can be used without connecting anything.
+- Sufficient **quotas** on the project: the plan adds up the resources of **all** the blocks before applying.
+
+## The journey in three steps
+
+Open **NubiStack** in the console's side menu.
+
+### 1. Editor
+
+Choose the target **project** and **environment**, then provide your manifest. Three ways:
+
+- **Load an example** — a commented `nubicloud.yaml` that you adapt.
+- **Detect from a repo** — the platform analyzes your repository (or its `docker-compose.yml`) and generates the manifest. See [Detecting from a repo](/en/docs/nubistack/detecter-depuis-un-repo).
+- **Paste your manifest** directly.
+
+The environment's **existing stacks** are listed above the editor: click one of them to reopen its tracking view.
+
+Click **Plan**.
+
+### 2. Plan
+
+The plan is a **simulation**: nothing is created. Block by block, you see:
+
+| Column | What it tells you |
+|---------|--------------------|
+| **Block** | The name of the service or the database |
+| **Type** | `Build` (built from your repo), `Image` (image already available), `Managed database` |
+| **Action** | What will be done (creation, update…) |
+| **Exposure** | `Public` (Internet URL) or `Private` (reachable only within the environment) |
+| **Resources** | CPU / memory / storage requested |
+| **Dependencies** | The blocks that must be online before this one |
+
+The plan also shows:
+
+- the **wired environment variables** — flagged **Automatic wiring** for those resolved by the platform, and **Sensitive value (hidden)** for secrets;
+- the CPU / memory / storage **totals**, checked against the project's **quota** (**Quota OK** or **Quota exceeded**);
+- the **warnings**;
+- the **secrets to provide** — the variables declared `sync: false`, which will be asked of you at the first deployment.
+
+> ⚠️ **Quota exceeded** blocks the application of the stack. Reduce a block's resources, or increase the project's quota ([Project quotas](/en/docs/projets/quotas)).
+
+If everything looks right, click **Apply**. Otherwise, **Back** to fix the manifest.
+
+### 3. Stack
+
+You switch to the **stack tracking** view. Each block progresses through states (`Declared` → `Building` → `Deploying` → `Online`), automatically, every ~30 seconds. The view refreshes on its own.
+
+The details of the states and the actions (restart, edit, delete) are on [Stack lifecycle](/en/docs/nubistack/cycle-de-vie).
+
+## A minimal example
+
+```yaml
+name: demo-shop
+
+databases:
+  - name: db
+    type: postgres
+    resources: { cpu: 0.5, memory: 1, storage: 2 }
+
+services:
+  - name: api
+    type: web
+    framework: python-fastapi
+    build:
+      repo: https://github.com/you/your-repo
+      branch: main
+    port: 8000
+    exposePublic: true
+    resources: { cpu: 0.25, memory: 0.5 }
+    env:
+      DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+      SECRET_KEY: { generateValue: true }
+      LOG_LEVEL: info
+
+  - name: worker
+    type: worker
+    framework: python-fastapi
+    build:
+      repo: https://github.com/you/your-repo
+      branch: main
+    command: ["celery", "-A", "app", "worker"]
+    env:
+      DATABASE_URL: { fromDatabase: { name: db, property: connectionString } }
+```
+
+This manifest creates a PostgreSQL database, builds your repository twice (a publicly exposed web service, a background worker), and injects the database's connection string into both — **without you having to copy a password**.
+
+## See also
+
+- [The `nubicloud.yaml` manifest](/en/docs/nubistack/manifeste) — the full field reference.
+- [Detecting from a repo](/en/docs/nubistack/detecter-depuis-un-repo) — generate the manifest automatically.
+- [Stack lifecycle](/en/docs/nubistack/cycle-de-vie) — states, restart, editing, deletion, update on `git push`.

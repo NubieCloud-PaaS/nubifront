@@ -1,0 +1,38 @@
+---
+title: Custom domain & DNS
+description: Point your own domain name at a Nubiecloud application and get a TLS certificate.
+---
+
+You can expose your application on **your own domain** (e.g. `app.mycompany.com`) on top of the automatic subdomain.
+
+## 1. Declare the domain in Nubiecloud
+
+At deployment time (or through the deployment update), fill in the **Custom domain** field.
+
+- One or several domains, **comma-separated**: `app.mycompany.com, www.mycompany.com`.
+- Allowed characters: letters, digits, dashes and dots. **No wildcard** (`*.mycompany.com` is not accepted).
+
+## 2. Configure the DNS
+
+At your domain provider, create a **CNAME** record pointing your domain at your application's **Nubiecloud subdomain** (the exact instruction is recalled in the console).
+
+```
+app.mycompany.com.  CNAME  app-name-xxxx.<nubiecloud-apps-domain>.
+```
+
+> ⚠️ The TLS certificate can only be issued **once DNS resolution is live**. Allow for DNS propagation time (from a few minutes to a few hours depending on your provider).
+
+## 3. Automatic TLS
+
+As soon as the domain points correctly, Nubiecloud **automatically issues** the TLS certificate (Let's Encrypt) and **renews** it with no intervention. Your custom domain then answers over HTTPS.
+
+## Verify
+
+Open your domain in a browser: it should show your application over HTTPS with a valid certificate.
+
+> ℹ️ The console does not (yet) show a detailed indicator of the certificate's or the DNS resolution's status. If the domain does not answer after propagation, check your CNAME record, then see the ["Domain that does not resolve" troubleshooting](/en/docs/depannage#domain-that-does-not-resolve).
+
+## See also
+
+- [Domains & TLS](/en/docs/domaines)
+- [Deployment lifecycle](/en/docs/deploiements/cycle-de-vie)

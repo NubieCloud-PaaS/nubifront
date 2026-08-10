@@ -1,0 +1,89 @@
+---
+title: Deploying Odoo
+description: Deploy an Odoo instance on Nubiecloud — versions, configuration, custom module management and backups.
+---
+
+Odoo can be deployed as a **SaaS / ERP application**: Nubiecloud provisions the Odoo instance **and** its PostgreSQL database, with no build on your side. You keep control of the version, the language, the administration accounts and the addition of **custom modules**.
+
+## Supported versions
+
+| Version | Available |
+|---------|------------|
+| Odoo 19.0 | ✅ |
+| Odoo 18.0 | ✅ |
+| **Odoo 17.0** | ✅ (default) |
+| Odoo 16.0 | ✅ |
+| Odoo 15.0 | ✅ |
+
+The version is chosen at deployment time (**Odoo version** field); **17.0** is offered by default.
+
+## Configuration at deployment
+
+| Field | Required | Default | Notes |
+|-------|:--------:|--------|-------|
+| **Application name** | ✅ | — | Lowercase, DNS format (`my-odoo`) |
+| **CPU** | ✅ | 1 core | from 0.1 to 8 |
+| **RAM** | ✅ | 2 GB | from 0.5 to 16 |
+| **Storage** | ✅ | 20 GB | database + filestore |
+| **Replicas** | ✅ | 1 | from 1 to 10 |
+| **Admin email** | ✕ | `admin@example.com` | Odoo administrator account |
+| **Admin password** | ✅ | — | min. 8 characters |
+| **PostgreSQL password** | ✅ | — | min. 8 characters, **no apostrophe** |
+| **Odoo version** | ✕ | `17.0` | 15 / 16 / 17 / 18 / 19 |
+| **Language** | ✕ | `fr_FR` | `fr_FR`, `en_US`, `es_ES`, `de_DE`, `it_IT` |
+| **Custom domain** | ✕ | — | one or several (comma-separated) |
+
+> 🔒 **Password constraints.** Minimum 8 characters. The characters `{{` and `}}` are forbidden, and the PostgreSQL password must not contain an apostrophe (`'`). These rules avoid configuration errors on the infrastructure side.
+
+## Managing custom modules
+
+Once Odoo is deployed, you can add **modules** to it (your own or the OCA community's). Two sources are possible:
+
+### From a Git repository (recommended)
+
+1. Open your Odoo deployment → **Modules** tab.
+2. Choose **Add a module** → type **Git**.
+3. Fill in:
+   - either a **connected repository** (via OAuth) + a **subpath** (e.g. `addons/my_module`),
+   - or a **public Git URL** (e.g. `https://github.com/OCA/web.git`) + a **branch** (default `17.0`).
+4. Give the **module name** and, if you want, tick **automatic installation**.
+
+Nubiecloud then clones the repository into your instance's addons directory and redeploys Odoo so it picks the module up.
+
+### From a ZIP file
+
+You can also **upload a module as a ZIP**. Current limits:
+
+| Limit | Value |
+|--------|--------|
+| ZIP size | 10 MB max |
+| Uncompressed size | 50 MB max |
+| Number of files | 500 max |
+
+> ℹ️ **Git** modules are deployed automatically onto the instance. The **ZIP** is currently stored and prepared, automatic deployment being rolled out — prefer the **Git** source whenever possible.
+
+### Track, update, delete
+
+- **List** the modules added to a deployment.
+- **Installation logs**: read the logs of each module being loaded (useful when a module fails to install). Filterable by period and number of lines.
+- **Delete** a module.
+
+## Backups
+
+Odoo relies on a managed **PostgreSQL** database: it therefore benefits from **automatic backups** (like PostgreSQL). You can enable backups, set the **retention** (30 days by default) and restore. See [Backups & restore](/en/docs/backups/restaurer).
+
+> ℹ️ Restoring uses a **Blue/Green** mechanism: the restored copy is validated before becoming active, to avoid any unplanned downtime.
+
+## Default resources
+
+| Resource | Value |
+|-----------|--------|
+| CPU | 1 core (request 0.5) |
+| RAM | 2 GB (request 1) |
+| Storage | 20 GB |
+| Replicas | 1 |
+
+## See also
+
+- [SaaS / ERP applications](/en/docs/saas) — catalog and how it works.
+- [Backups & restore](/en/docs/backups/restaurer).

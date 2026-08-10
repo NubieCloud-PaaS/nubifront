@@ -1,0 +1,49 @@
+---
+title: Troubleshooting & FAQ
+description: Answers to the most frequent problems on Nubiecloud.
+---
+
+This page gathers the most common situations. For builds, see also the [dedicated checklist](/en/docs/depannage/build-echoue).
+
+## I did not receive the validation code
+
+- Check your **spam** folder. The code is valid for **24 h**.
+- Use **Resend code** (limited to a few sends per minute).
+- Check that the email address you entered is correct.
+
+## I cannot deploy: "no environment"
+
+A project has **no default environment**. Create one (dev/staging/prod) before deploying — see [Environments](/en/docs/projets/environnements).
+
+## My deployment does not start
+
+- Read the application's **[logs](/en/docs/monitoring)**: the startup error shows up there.
+- Frequent causes: **missing environment variable**, **database not wired** (connection string absent — see [step 10 of the Quickstart](/en/docs/quickstart)), application **port** different from the one the framework expects.
+- Check the **health check**: a path answering with an error makes the app "unhealthy".
+
+## Domain that does not resolve
+
+- Check the **CNAME** record pointing at the application's Nubiecloud subdomain (see [Custom domain](/en/docs/domaines/domaine-custom)).
+- Wait for **DNS propagation** (a few minutes to a few hours).
+- The **TLS certificate** is only issued **after** DNS resolves correctly.
+
+## Quota exceeded
+
+Creation is **blocked** when a resource reaches its limit. Options: free resources (delete/pause apps), or [change plan](/en/docs/organisations/changer-de-plan). See [Quotas](/en/docs/organisations/quotas).
+
+## My database is not being backed up
+
+Managed backups cover **PostgreSQL** and **Odoo**. For the other services (MySQL, MongoDB, Redis, RabbitMQ) there is no native backup — see [Backups](/en/docs/backups).
+
+## A custom region stays "disconnected"
+
+- Check that the **install script** was really run as **root** on the server, **before it expired** (~1 h).
+- Regenerate the script through **Reconnect** if needed, or use the **manual mode**. See [Connecting my infrastructure](/en/docs/regions/connecter-mon-infra).
+
+## Contacting support
+
+If the problem persists, gather the relevant **logs** and the resource's **identifier**, then contact support.
+
+## See also
+
+- [A build fails: checklist](/en/docs/depannage/build-echoue)

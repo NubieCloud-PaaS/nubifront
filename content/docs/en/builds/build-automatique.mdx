@@ -1,0 +1,67 @@
+---
+title: Automatic builds (BuildConfiguration)
+description: Configure the automatic build of a repository — strategy, monorepo, push/tag/PR triggers, branch and path filters, automatic deployment.
+---
+
+A **build configuration** (BuildConfiguration) describes **how** and **when** Nubiecloud builds an image from a repository. This is what turns every `git push` into a new image — with no manual step.
+
+> 💡 A single repository can have **several configurations** (for example `frontend` and `backend` in a monorepo), each with its own rules.
+
+## Build parameters
+
+| Field | Default | Role |
+|-------|--------|------|
+| **Name** | — | name of the configuration (e.g. `backend`) |
+| **Default configuration** | no | the configuration used by default for this repository |
+| **Strategy** | `dockerfile` | `dockerfile` or `buildpack` |
+| **Source folder** | `.` | subfolder to build (monorepo) |
+| **Dockerfile path** | `./Dockerfile` | location of the Dockerfile |
+| **Builder image** | — | Buildpacks build image (buildpack strategy) |
+
+## Resulting image
+
+| Field | Default | Role |
+|-------|--------|------|
+| **Image name** | repository name | custom name for the image |
+| **Tag pattern** | `latest` | e.g. `latest`, `{branch}`, `{sha}`, `{branch}-{date}-{sha}` |
+| **Build variables** | — | variables/arguments available during the build |
+
+The variables available in the tag pattern are `{branch}`, `{sha}`, `{date}` and `{name}` (the name of the build configuration).
+
+> ⚠️ **With automatic builds enabled, the pattern must contain `{sha}` and `{date}`.** Otherwise the configuration is rejected. The reason: a reused tag (`latest`) is ambiguous — there is no way to know which version is actually running, nor to go back to the previous one. An **immutable** tag such as `{branch}-{date}-{sha}` identifies a commit unambiguously and makes rollback reliable.
+
+> 💡 **Monorepo**: add `{name}` to the pattern to tell each configuration's images apart (e.g. `{name}-{branch}-{date}-{sha}`).
+
+## Automatic triggers
+
+| Field | Default | Triggers a build on… |
+|-------|:------:|--------------------------|
+| **Automatic build enabled** | no | (master switch) |
+| **On push** | yes | a `git push` |
+| **On tag** | no | the creation of a tag |
+| **On pull request** | no | the opening/update of a PR |
+
+## Filters
+
+To build only what matters:
+
+| Filter | Example | Effect |
+|--------|---------|-------|
+| **Branch filter** | `main,develop` or `feature/*` | build only these branches |
+| **Path filter** | `frontend/**,shared/**` | build only if these paths change (ideal for monorepos) |
+
+> 💡 **Monorepo**: combine **Source folder** (`services/api`), **Path filter** (`services/api/**`) and a dedicated **Image name** to build each service independently.
+
+## Automatic deployment (optional)
+
+| Field | Default | Role |
+|-------|--------|------|
+| **Auto-deploy enabled** | no | deploy automatically after a successful build |
+| **Target environment** | — | the environment to deploy into |
+
+Once enabled, a push triggers: **build → image → deployment** into the chosen environment, hands-free.
+
+## See also
+
+- [Builds — overview & manual build](/en/docs/builds)
+- [Tracking builds & images](/en/docs/builds/suivi)

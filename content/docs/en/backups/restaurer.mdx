@@ -1,0 +1,37 @@
+---
+title: Restoring a backup
+description: Blue/Green restore of a PostgreSQL database — initiate, validate before switching over, or cancel.
+---
+
+Nubiecloud restores in **Blue/Green** mode: the backup is first restored onto a **standby cluster**, which you **validate** before it becomes active. That way you avoid any unplanned switch onto a faulty copy.
+
+## The journey
+
+1. **Initiate the restore.** From the backup list, pick a backup and start the restore. Nubiecloud prepares the **standby cluster** from that snapshot.
+   - Status: `pending` → `in_progress`.
+2. **Wait for the preparation.** When the standby cluster is ready and healthy, the status moves to **`awaiting_validation`** (waiting for your validation).
+3. **Validate the cutover.** You confirm: traffic switches to the restored cluster, which becomes active.
+   - Status: `completed`.
+   - ⚠️ **Validation is irreversible**: it immediately switches production onto the restored copy.
+4. **Or cancel.** As long as the restore is `pending` or `in_progress`, you can **cancel**: the standby cluster is torn down and **your active database stays unchanged**.
+
+## Safety of the process
+
+- A restore can only start from a backup taken from the **active cluster** (protection against data loss).
+- If the standby cluster has a prolonged problem, Nubiecloud **cleans up automatically** and marks the restore as failed — **without touching** your active database.
+
+## Possible states
+
+| State | Meaning |
+|------|---------------|
+| `pending` | initializing |
+| `in_progress` | standby cluster being prepared |
+| `awaiting_validation` | ready — waiting for your validation |
+| `completed` | cutover done |
+| `cancelled` | cancelled (active database unchanged) |
+| `failed` | failed (active database unchanged) |
+
+## See also
+
+- [Backups](/en/docs/backups)
+- [Managed services](/en/docs/services-manages)

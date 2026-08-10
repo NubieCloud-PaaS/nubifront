@@ -1,0 +1,158 @@
+---
+title: Deploying an application from code
+description: Every detail of deploying a CODE app — supported frameworks, resources, env variables and secrets, domain and TLS, health check, replicas and migrations.
+---
+
+A **CODE** application is deployed from an **image you have built** from your repository (see [Builds](/en/docs/builds)). This page details every parameter of the deployment.
+
+## Choosing the framework
+
+At deployment time, you choose the **framework** matching your application. That choice applies **sensible defaults** (port, resources) that you can adjust.
+
+| Framework | Language | Default port |
+|-----------|---------|:------------:|
+| Django | Python | 8000 |
+| FastAPI | Python | 8000 |
+| Flask | Python | 5000 |
+| Express.js | Node.js | 3000 |
+| NestJS | Node.js | 3000 |
+| Next.js | Node.js | 3000 |
+| React | Frontend (Nginx) | 80 |
+| Vue.js | Frontend (Nginx) | 80 |
+| Spring Boot | Java | 8080 |
+| Gin | Go | 8080 |
+| Laravel | PHP | 80 |
+| .NET | .NET | 8080 |
+| Static HTML | Static site (Nginx) | 80 |
+
+> ℹ️ Some frameworks expect specific environment variables (for example `DJANGO_SETTINGS_MODULE` for Django, `FLASK_APP` for Flask). Set them in the **environment variables** (below).
+
+### Static HTML sites
+
+The **Static HTML** template serves a site of files (HTML, CSS, JS) through Nginx, with no application server. It is the right choice for a landing page, generated documentation or a site export.
+
+## Workload type: web, worker or cron
+
+Not every application serves HTTP. The **Workload type** field describes how yours runs:
+
+| Type | Behavior |
+|------|--------------|
+| **Web** | HTTP service: exposed port, URL, health check. The common case. |
+| **Worker** | Permanent background task (queue consumer, processing worker). No port, no URL. |
+| **Cron** | Scheduled execution, at a regular interval. No port, no URL. |
+
+> ℹ️ **Workers and crons do not serve HTTP**: no port, no public exposure, no HTTP health check. Those fields disappear from the form when you pick one of these types.
+
+For a **cron**, fill in the **schedule** in standard cron format:
+
+| Expression | Runs |
+|------------|-----------|
+| `*/15 * * * *` | every 15 minutes |
+| `0 2 * * *` | every day at 2 am |
+| `0 8 * * 1` | every Monday at 8 am |
+
+## Application port
+
+The **port** is pre-filled based on the chosen framework. Change it if your application listens elsewhere.
+
+| Technology | Usual port |
+|-------------|:----------:|
+| Python (Django, FastAPI) | 8000 |
+| Flask | 5000 |
+| Node.js, React | 3000 |
+| Java, Go | 8080 |
+
+## Resources
+
+| Field | Required | Default | Notes |
+|-------|:--------:|--------|-------|
+| **CPU** | ✅ | — | in cores (e.g. 0.5; 1) |
+| **RAM** | ✅ | — | in GB |
+| **Storage** | ✕ | 1 GB | in GB |
+| **Replicas** | ✕ | 1 | number of instances |
+
+Values are **free-form** (no imposed tiers) but capped by the **project quotas**. If the quota is not enough, the deployment is refused — adjust the resources or the project's quota.
+
+> 💡 The framework's defaults are **recommendations**. A FastAPI API starts comfortably with few resources; a Spring Boot or a Django asks for more.
+
+## Environment variables and secrets
+
+Two distinct categories:
+
+| Category | What for | Storage |
+|-----------|-----------|----------|
+| **Public variables** | Non-sensitive configuration (URLs, options, `DJANGO_SETTINGS_MODULE`…) | in clear text |
+| **Secrets** | Sensitive data (passwords, API keys, `DATABASE_URL`…) | **encrypted** |
+
+- Add/edit both types at creation time **and** later through the deployment update.
+- **Secrets are encrypted** at rest and injected at runtime — they appear neither in the logs nor in API responses.
+
+> 🔒 Put database credentials (the `DATABASE_URL` string collected from a [managed service](/en/docs/services-manages)) in the **secrets**, not in the public variables.
+
+## Domain and TLS
+
+- **Automatic subdomain**: with no configuration, your application is exposed at a URL such as `https://name-xxxx.nubiecloud.io` (the subdomain includes the region for dedicated regions).
+- **Custom domain**: enter one or several domains (comma-separated) in the **Domain** field. The **TLS certificate** is obtained and renewed automatically.
+
+> ℹ️ Domains are declared individually (no wildcard for now). See [Domains & TLS](/en/docs/domaines/domaine-custom) for the DNS configuration.
+
+## Health check
+
+Nubiecloud monitors your application's health:
+
+- **HTTP**: fill in a **health check path** (e.g. `/`, `/health`, `/api/health`). The application is considered healthy if that path responds correctly.
+- **TCP**: leave the path empty → only the opening of the port is checked.
+
+The default path is `/`.
+
+> 💡 Leaving the field **empty** (TCP check) is the recommended setting to start with: it simply verifies that your application is listening. Fill in a path when you want an application that responds badly to be detected as degraded.
+
+## Custom Nginx configuration
+
+For applications served by Nginx (**Static HTML**, **React**, **Vue.js**, **Next.js**), the platform generates a suitable configuration automatically — fallback to `index.html` for single-page applications, forwarding to the application for Next.js.
+
+The **Custom nginx.conf configuration** field lets you replace it with your own. Useful for:
+
+- specific **redirects**,
+- custom **HTTP headers**,
+- **basic authentication**.
+
+> ℹ️ Leave the field **empty** to keep the automatic configuration. From a deployment's management page, clearing the field then saving **restores the default configuration**.
+
+## Replicas
+
+The **Replicas** field sets the number of instances of your application (default: 1). Increase it to spread the load and improve availability.
+
+> ℹ️ Scaling is **manual** (fixed number of instances); there is no automatic autoscaling for now.
+
+## Database migrations
+
+To run migrations (Django, Alembic, etc.) **before** the application starts:
+
+| Field | Default | Role |
+|-------|--------|------|
+| **Migrations enabled** | no | enables a migration task at deployment |
+| **Migration command** | — | e.g. `python manage.py migrate` |
+| **Block on failure** | yes | prevents the deployment from continuing if the migration fails |
+
+> 💡 Keep **Block on failure** enabled in production: a failed migration must not ship a broken version.
+
+Once enabled, the migration runs **automatically before every deployment**. Its logs are available in the deployment's **Logs** tab, **Migration** section.
+
+### Using a different image for the migration
+
+By default, the migration runs with **your application's image**. Tick **Use a different image for the migration** if your migration tooling lives elsewhere (a fuller image, a dedicated tooling container).
+
+| Field | Role |
+|-------|------|
+| **Migration image source** | A NubiBuild image, or the URL of an external image |
+| **Migration image tag** | The version to use |
+
+Leaving these fields empty amounts to using the application's main image.
+
+## See also
+
+- [Builds](/en/docs/builds) — producing the image to deploy.
+- [Deployment lifecycle](/en/docs/deploiements/cycle-de-vie) — update, rollback, pause.
+- [Managed services](/en/docs/services-manages) — wiring up a database.
+- [NubiStack](/en/docs/nubistack) — deploying several services and their databases in one go.

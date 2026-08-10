@@ -1,0 +1,175 @@
+---
+title: Managed services reference
+description: Details per service — versions, default sizes, ports, connection formats, plus the SQL console and PostgreSQL high availability.
+---
+
+This page details each managed service: versions, default resources, port and connection format. The fields common to every service are recalled at the top.
+
+## Fields common to every deployment
+
+| Field | Required | Default | Notes |
+|-------|:--------:|--------|-------|
+| **Name** | ✅ | — | lowercase, DNS format |
+| **CPU / RAM / Storage** | ✅ | see per service | within the project quotas |
+| **Replicas** | ✅ | 1 | from 1 to 3 |
+| **Root / admin password** | ✅ | — | min. 8 characters, no apostrophe |
+| **Database, User, Password** | ✕ | `app_db` / `app_user` | application user (relational/document databases) |
+| **Version** | ✕ | see per service | service image |
+| **Enable backups** | ✕ | no | **PostgreSQL only** |
+| **Extensions** | ✕ | none | **PostgreSQL only** |
+| **Additional databases** | ✕ | none | **PostgreSQL only** |
+
+---
+
+## PostgreSQL
+
+Relational database, the most complete service on the platform.
+
+| Characteristic | Value |
+|-----------------|--------|
+| Default version | `15-alpine` (configurable) |
+| Default CPU / RAM / Storage | 0.5 core / 1 GB / 10 GB |
+| Port | 5432 |
+| High availability | ✅ Blue/Green + connection pooler |
+| Backups | ✅ automatic (30-day retention by default) |
+| SQL console | ✅ |
+
+**Connection** (shown on the service's page):
+
+```
+DATABASE_URL=postgresql://USER:PASSWORD@INTERNAL_HOST:5432/DATABASE
+```
+
+### High availability (HA)
+
+PostgreSQL runs in a **Blue/Green** architecture: an active cluster (`blue`) and a standby cluster (`green`). The number of **active instances** follows the **Replicas** field. A **connection pooler** (PgBouncer) sits in front of the database to keep connections stable during a failover.
+
+> 💡 Increasing **Replicas** increases the number of instances in the active cluster. Switching to the standby cluster is used in particular during a restore (Blue/Green).
+
+### PostgreSQL extensions
+
+Two extensions can be enabled **at deployment time**, in the **PostgreSQL extensions** section:
+
+| Extension | What for |
+|-----------|-----------|
+| **PostGIS** | Geospatial data: geometries, geographies, spatial indexes |
+| **pgvector** | Vectors and *embeddings* for AI: similarity search |
+
+The extension is created when the cluster starts — there is no `CREATE EXTENSION` for you to run.
+
+> ℹ️ **PostGIS switches the service's image** to a specialized variant. Plan for that choice at deployment time rather than after the fact.
+
+### Additional databases
+
+A PostgreSQL cluster can host **several databases**, on top of the main one created automatically. This is useful to gather several applications on a single cluster while keeping their data separate.
+
+In the **Additional databases** section, add as many entries as needed:
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Database name** | ✅ | lowercase letters, digits and `_`, starting with a letter or `_` (e.g. `analytics_db`) |
+| **User** | ✕ | user dedicated to this database — leave empty to use the cluster's owner |
+| **Password** | ✕ | required if you define a user; 8 characters minimum |
+
+> 💡 **Give each database its own user** to isolate them for real: each application then only reaches its own.
+
+**On an already deployed cluster**: open the deployment, add the databases in the edit modal, **Save**, then click **Synchronize additional databases** to actually create them on the cluster.
+
+---
+
+## MySQL
+
+| Characteristic | Value |
+|-----------------|--------|
+| Default version | `8.0` (configurable) |
+| Default CPU / RAM / Storage | 0.5 core / 1 GB / 10 GB |
+| Port | 3306 |
+| Backups | — (not managed automatically) |
+
+**Connection**:
+
+```
+DATABASE_URL=mysql://USER:PASSWORD@INTERNAL_HOST:3306/DATABASE
+```
+
+---
+
+## MongoDB
+
+| Characteristic | Value |
+|-----------------|--------|
+| Default version | `7.0` (configurable) |
+| Default CPU / RAM / Storage | 0.5 core / 1 GB / 10 GB |
+| Port | 27017 |
+| Backups | — |
+
+**Connection**:
+
+```
+MONGODB_URI=mongodb://USER:PASSWORD@INTERNAL_HOST:27017/DATABASE
+```
+
+---
+
+## Redis
+
+| Characteristic | Value |
+|-----------------|--------|
+| Default version | `7-alpine` (configurable) |
+| Default CPU / RAM / Storage | 0.25 core / 0.5 GB / 2 GB |
+| Port | 6379 |
+| Persistence | enabled (append-only) |
+| Backups | — |
+
+**Connection**:
+
+```
+REDIS_URL=redis://USER:PASSWORD@INTERNAL_HOST:6379
+```
+
+Redis is deployed **with authentication**. At deployment time, provide a **username** and a **password**:
+
+- user `default` → Redis's default user is protected by your password;
+- custom user → a dedicated user is created and the `default` user is disabled.
+
+> 🔒 Access is in any case restricted to your **environment's internal network**: Redis is never exposed on the Internet.
+
+---
+
+## RabbitMQ
+
+| Characteristic | Value |
+|-----------------|--------|
+| Default version | `3.12-management-alpine` (configurable) |
+| Default CPU / RAM / Storage | 0.5 core / 1 GB / 8 GB |
+| Ports | 5672 (AMQP), 15672 (management interface) |
+| Backups | — |
+
+**Connection**:
+
+```
+RABBITMQ_URL=amqp://USER:PASSWORD@INTERNAL_HOST:5672/
+```
+
+The **username** and the **password** are set at deployment time, in the fields provided for that purpose.
+
+RabbitMQ's **management interface** is available on port 15672.
+
+---
+
+## SQL console
+
+For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
+
+- **Available for**: PostgreSQL only.
+- **How**: open the PostgreSQL deployment → **SQL** tab → type your query → run it. The result comes back in the console.
+- **Choosing the database**: if the cluster hosts [additional databases](#additional-databases), a **Database** selector lets you choose the one the query runs against. The targeted database is recalled above the editor.
+- **Under the hood**: each query runs in an isolated, ephemeral task, with credentials injected at runtime (never exposed).
+- **Access**: restricted to the project's **Developer** and **Admin** roles.
+
+> ⚠️ **You are responsible for the queries you run.** Modifications (`INSERT`, `UPDATE`, `DELETE`, `DROP`…) are **irreversible** — the console has no undo button.
+
+## See also
+
+- [Managed services — overview](/en/docs/services-manages)
+- [Backups & restore](/en/docs/backups/restaurer)

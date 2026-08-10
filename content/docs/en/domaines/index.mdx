@@ -1,0 +1,31 @@
+---
+title: Domains & TLS
+description: Automatic subdomain, custom domain and automatic TLS certificates for your applications.
+---
+
+Every deployed application is exposed on the Internet over HTTPS. Nubiecloud provides an **automatic subdomain** and lets you add your **custom domain**, with an **automatically managed TLS certificate**.
+
+## Automatic subdomain
+
+With no configuration, your application gets a URL of the form:
+
+```
+https://app-name-xxxx.<nubiecloud-apps-domain>
+```
+
+(`xxxx` is a unique identifier). That URL works right away, over HTTPS.
+
+## Custom domain
+
+You can expose the application on **your own domain** (one or several, comma-separated) — see [Custom domain & DNS](/en/docs/domaines/domaine-custom).
+
+> ℹ️ Domains are declared **individually**: **wildcards** (`*.example.com`) are not supported.
+
+## Automatic TLS
+
+The **TLS certificate** is obtained and **renewed automatically** (through Let's Encrypt). There is **nothing to install nor to renew**: once your domain's DNS is correctly configured, the certificate is issued within minutes.
+
+## See also
+
+- [Custom domain & DNS](/en/docs/domaines/domaine-custom)
+- [Deploying an application](/en/docs/deploiements/deployer-une-app-code)

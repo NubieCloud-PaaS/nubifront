@@ -1,0 +1,54 @@
+---
+title: NubiS3 access keys & usage
+description: Generate S3 access keys (with permissions) and use a bucket from an application.
+---
+
+To reach a NubiS3 bucket from an application (or an S3 client), you generate an **access key** specific to that bucket.
+
+## Generate an access key
+
+On a bucket → **Access keys** tab → **Create a key**:
+
+1. Give the key a **name**.
+2. Choose the **permissions**:
+
+| Preset | Permissions |
+|------------|-------------|
+| **Read-only** | list and read files |
+| **Read / write** | read-only + write and delete files |
+| **Full** | every allowed permission |
+
+3. Confirm: Nubiecloud shows the complete key **once only**.
+
+> 🔒 **Important.** The **secret** (secret key) is shown **at creation time only** and can never be retrieved afterwards. Copy it immediately somewhere safe. If you lose it, **revoke** the key and create a new one.
+
+The response contains everything needed to connect: **key ID**, **secret key**, **endpoint**, **region** and **bucket name**.
+
+## Revoke a key
+
+From the **Access keys** tab, delete a key to revoke its access immediately (on the storage side and in Nubiecloud).
+
+## Use the bucket from an application
+
+NubiS3 is S3-compatible: use any S3 SDK with the endpoint and region provided. Example in Python (`boto3`):
+
+```python
+import boto3
+
+s3 = boto3.client(
+    "s3",
+    endpoint_url=NUBIS3_ENDPOINT,        # endpoint provided when the key was created
+    aws_access_key_id=NUBIS3_KEY_ID,     # key ID
+    aws_secret_access_key=NUBIS3_SECRET, # secret key (shown once only)
+    region_name=NUBIS3_REGION,           # region provided
+)
+
+s3.upload_file("report.pdf", NUBIS3_BUCKET, "reports/report.pdf")
+```
+
+> 💡 Put the **key ID** and above all the **secret** in your deployment's [sensitive variables (secrets)](/en/docs/securite/secrets), not in the public variables.
+
+## See also
+
+- [NubiS3 — buckets & files](/en/docs/nubis3)
+- [Managing application secrets](/en/docs/securite/secrets)

@@ -1,0 +1,41 @@
+---
+title: Deploying WordPress
+description: Deploy a WordPress site on Nubiecloud with its built-in MariaDB database — configuration and resources.
+---
+
+WordPress can be deployed as a **SaaS / CMS application**: Nubiecloud provisions the WordPress instance **and** its built-in **MariaDB** database, with no build. You configure the administrator account and the database passwords, and your site is online.
+
+## Version
+
+WordPress is deployed on the **`6.4-apache`** image (Apache + PHP). The associated database is **MariaDB**, included in the deployment.
+
+## Configuration at deployment
+
+| Field | Required | Default | Notes |
+|-------|:--------:|--------|-------|
+| **Application name** | ✅ | — | Lowercase, DNS format |
+| **CPU** | ✅ | 0.5 core | — |
+| **RAM** | ✅ | 0.5 GB | — |
+| **Storage** | ✅ | 20 GB | includes MariaDB |
+| **Admin email** | ✕ | `admin@nubitech.io` | WordPress administrator |
+| **WordPress password** | ✅ | — | min. 8 characters |
+| **MariaDB root password** | ✅ | — | min. 8 characters |
+| **MariaDB user password** | ✅ | — | min. 8 characters |
+| **Custom domain** | ✕ | — | one or several |
+
+> 🔒 The three passwords (WordPress, MariaDB root, MariaDB user) are required and must be **at least 8 characters** long. The application database is created automatically (`wordpress`) with a dedicated user.
+
+## Default resources
+
+| Resource | Value |
+|-----------|--------|
+| CPU | 0.5 core |
+| RAM | 0.5 GB |
+| Storage | 20 GB (instance + MariaDB) |
+
+> 💡 For a site with real traffic, increase CPU/RAM at configuration time or later through the [deployment update](/en/docs/deploiements/cycle-de-vie).
+
+## See also
+
+- [SaaS / ERP applications](/en/docs/saas) — catalog and how it works.
+- [Domains & TLS](/en/docs/domaines/domaine-custom).

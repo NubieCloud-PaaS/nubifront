@@ -1,0 +1,39 @@
+---
+title: A build fails — checklist
+description: Diagnose and fix a failing build on Nubiecloud.
+---
+
+When a build turns `failed`, the cause is almost always in the **build logs** (split by step). Here are the most useful checks.
+
+## 1. Read the logs
+
+Open the build → **logs**, and spot the **step** that fails (fetching the code, building the image…). The error message there is explicit.
+
+## 2. Frequent causes
+
+| Symptom in the logs | Likely cause | Fix |
+|------------------------|----------------|-----------|
+| `Dockerfile not found` | wrong **Dockerfile path** or wrong **source folder** | fix the **Dockerfile path** / the **source folder** (monorepo) in the build configuration |
+| Dependency installation fails | missing dependency or incompatible version | fix the dependency file in your repository |
+| Branch / commit not found | the **branch** given does not exist | check the branch when starting the build |
+| Access denied to the repository | expired or revoked token | reconnect the repository (see [Connecting a repository](/en/docs/builds/connecter-un-depot)) |
+| Unsuitable strategy | Buildpacks does not detect the language, or a Dockerfile is expected | choose the right **strategy** (Dockerfile vs Buildpacks) |
+
+## 3. Check the build configuration
+
+- **Strategy**: `Dockerfile` if you provide a Dockerfile; `Buildpacks` otherwise.
+- **Source folder**: for a **monorepo**, point at the right subfolder (e.g. `services/api`).
+- **Dockerfile path**: relative to the source folder.
+- **Build variables**: present if your build needs them.
+
+See [Automatic builds (configuration)](/en/docs/builds/build-automatique).
+
+## 4. Restart
+
+After fixing things (in the repository **or** in the configuration), **restart** the build. Follow the logs again.
+
+## See also
+
+- [Builds](/en/docs/builds)
+- [Tracking builds & images](/en/docs/builds/suivi)
+- [Troubleshooting & FAQ](/en/docs/depannage)

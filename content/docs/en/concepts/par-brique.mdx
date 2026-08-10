@@ -1,0 +1,81 @@
+---
+title: What you can do in each building block
+description: The map of the actions available on an organization, a project and an application — with links to each guide.
+---
+
+Once a building block is created, what can you do with it? This page answers that question for every level of the [Organization → Project → Application](/en/docs/concepts) hierarchy. It is your **map of actions**.
+
+---
+
+## 🏢 Organization
+
+The organization carries the **billing**, the **plan** and the **resources shared** by your team.
+
+| Action | Details |
+|--------|---------|
+| **Invite members** | Add members by email. |
+| **Manage roles** | **Owner**, **Admin**, **Member** roles; manage and revoke invitations. |
+| **Choose / change plan** | FREE, PROFESSIONAL, BUSINESS, ENTERPRISE (on request). Restricted to the **owner**. |
+| **Track consumption** | Org dashboard: **CPU / RAM / Storage** used vs available (in %), broken down **per project**. |
+| **Settings & regions** | Org settings, regions, deletion / restoration. |
+
+> 💡 **The plan determines your quotas.** Upgrading the plan increases the total pool of resources you can share out across your projects. See [Changing plan](/en/docs/organisations/changer-de-plan) and [Understanding quotas](/en/docs/organisations/quotas).
+
+> 🔒 **Roles.** Only an **Owner** can change the plan or delete the organization. **Admins** manage members and projects; **Members** work in the projects they have access to.
+
+---
+
+## 📁 Project
+
+The project groups the applications of a single product and receives a **share of the organization's resources**.
+
+| Action | Details |
+|--------|---------|
+| **Set resources** | Project quotas (**CPU / RAM / Storage**), within the limits of the org's plan. |
+| **Manage environments** | Create / edit / delete environments (**dev / staging / preproduction / production**); promote from one environment to another. |
+| **Manage project members** | Invitations and roles at the project level. |
+| **Track applications** | View of the applications and their consumption, **per environment**. |
+
+> ⚠️ **An environment is not created automatically.** After creating a project, create at least one environment before you can deploy an application into it. See [step 5 of the Quickstart](/en/docs/quickstart).
+
+---
+
+## 🚀 Application / Deployment
+
+The application is the service running in an environment. This is where day-to-day operations happen.
+
+| Action | Details |
+|--------|---------|
+| **Update** | Change the **resources** (CPU/RAM/Storage), the **environment variables** and the **secrets**. |
+| **Rollback** | Go back to an **earlier image** that has already been built. |
+| **Pause / resume** | Pause (scale to 0) or restart the application. |
+| **Read the logs** | **Real-time** logs + history (code-type applications). |
+| **Monitor** | Health status, pod status and events (resource consumption at the [org quotas](/en/docs/organisations/quotas) level). |
+| **Back up** | Enable / configure **backups** (PostgreSQL, Odoo), on-demand backup, restore. |
+| **Expose** | **Custom domain** + **TLS**. |
+| **Add dependencies** | Deploy **managed services** (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) and **wire their credentials** into the application. |
+
+> 💡 **Order of dependencies.** If an application needs a database to start, deploy the database **first**, collect its connection string, then inject it into the app's env variables. See [step 10 of the Quickstart](/en/docs/quickstart).
+
+---
+
+## 🧩 Stack
+
+When your product is not a standalone application but a **set of services** (API, front end, worker, cron, databases), you can describe it in one go with [**NubiStack**](/en/docs/nubistack).
+
+| Action | Details |
+|--------|---------|
+| **Describe the stack** | A `nubicloud.yaml` file lists the services, the databases and the wiring between them. |
+| **Generate the manifest** | Automatic detection from a Git repository or an existing `docker-compose.yml`. |
+| **Preview** | A **plan** shows what will be created, the total resources and whether the quota is respected — before anything is created. |
+| **Follow the deployment** | Each block progresses on its own, in the order of its dependencies. |
+| **Update** | Edit the manifest and re-apply, or let a `git push` rebuild and redeploy everything by itself. |
+
+> 💡 **The difference with a classic deployment**: here you no longer copy a database's credentials into the app's variables — you **reference** them, and the platform injects them.
+
+---
+
+## See also
+
+- [Key concepts (Org → Project → Environment → App)](/en/docs/concepts)
+- [Quickstart: from zero to a live app](/en/docs/quickstart)

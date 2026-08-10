@@ -1,0 +1,48 @@
+---
+title: Connecting my infrastructure (Connect)
+description: Attach your own server as a Nubiecloud custom region — creation, install script, verification and management.
+---
+
+**Connect** lets you use **your own server** as a Nubiecloud region. You run a script provided by the console; it installs and configures everything (lightweight Kubernetes, secure network attachment, application components) and **automatically attaches** your server to Nubiecloud.
+
+## Prerequisites
+
+- A **Linux server** (VM or bare metal) on which you have **root** access.
+- Outbound connectivity to the Internet. **No public IP needed**: the network attachment goes through a secure overlay.
+
+## Steps
+
+1. **Create the region.** In **Organization settings → Regions** (or from the region selector), click **+ Add a region** and give it a name (and an optional description).
+2. **Generate the script.** On the region you created, click **Connect**. The console shows a **`curl` command** ready to copy.
+   - That command is valid for a **limited time** (≈ 1 hour) and is **single-use**.
+3. **Run it on your server.** Paste the command into a **root** terminal on your server. The script:
+   - installs **K3s** (lightweight Kubernetes),
+   - attaches the server to the Nubiecloud network (secure overlay),
+   - installs the required components (Helm, ingress, certificates, isolation, monitoring),
+   - **notifies Nubiecloud automatically** once ready,
+   - then **self-destructs** (the script contains temporary secrets).
+4. **Verify.** The region moves to the **Connected** status in the console. It becomes selectable when creating projects.
+
+## If the automatic attachment fails
+
+A **manual mode** is offered as a fallback: the console asks you to fill in your cluster's connection details (internal network address, access token, certificate, callback secret) to complete the attachment.
+
+## Managing a custom region
+
+| Action | Effect |
+|--------|-------|
+| **Connection status** | `pending` / `provisioning` / `connected` / `disconnected` / `error` |
+| **Disconnect** | removes the network attachment and the access |
+| **Reconnect** | regenerates a script to restore a region in error |
+| **Disable / Delete** | sets the region aside or removes it permanently |
+
+> 🔒 The tokens and keys tied to the attachment are **encrypted** on the Nubiecloud side, and the secrets injected into the script are **short-lived**.
+
+## Deploying in your region
+
+Once the region is **connected**, choose it when **creating a project**: every application of that project will run on **your** infrastructure.
+
+## See also
+
+- [Regions & Connect](/en/docs/regions)
+- [Projects](/en/docs/projets)

@@ -1,0 +1,40 @@
+---
+title: Deployments
+description: Running an application in an environment — the three routes (CODE, SaaS/ERP, managed service) and the common lifecycle.
+---
+
+A **deployment** is an application that **runs** in an environment, with its resources, its configuration and its network exposure. Not to be confused with the **build**, which produces the image beforehand (see [Key concepts](/en/docs/concepts)).
+
+## Three deployment routes
+
+| Route | What for | Details |
+|------|-----------|--------|
+| **CODE** | Your application, from your Git repository | [Deploying a CODE app](/en/docs/deploiements/deployer-une-app-code) |
+| **SaaS / ERP** | A pre-packaged application (Odoo, WordPress…) | [SaaS / ERP applications](/en/docs/saas) |
+| **Managed service** | A database or a middleware (PostgreSQL, Redis…) | [Managed services](/en/docs/services-manages) |
+
+All of them are deployed **into an environment** of a project and share the same **lifecycle** once online.
+
+> 💡 **Several services at once?** If your application is made of several blocks that talk to each other (API + front end + worker + database), describe it in one go with [**NubiStack**](/en/docs/nubistack) instead of deploying each service separately.
+
+## Common lifecycle
+
+Whichever route you take, a deployed application can be:
+
+- **updated** (resources, environment variables, image),
+- **restarted** or **synchronized**,
+- **paused** then **resumed**,
+- **rolled back to a previous version**,
+- **deleted**.
+
+The details are in [Deployment lifecycle](/en/docs/deploiements/cycle-de-vie).
+
+## Deployment states
+
+| State | Meaning |
+|------|---------------|
+| `PENDING` | Waiting to be picked up |
+| `BUILDING` | Image build in progress (CODE apps) |
+| `DEPLOYED` / `RUNNING` | Deployed and running |
+| `HEALTHY` | Healthy (health check OK) |
+| `FAILED` | Failed |

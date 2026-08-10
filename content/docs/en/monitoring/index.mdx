@@ -1,0 +1,44 @@
+---
+title: Monitoring & logs
+description: Follow the health, the logs and the events of your deployed applications.
+---
+
+From a deployment's management page (and the status dashboard), you follow the **health**, the **logs** and the **events** of your applications.
+
+## State & health of an application
+
+For each application, Nubiecloud shows:
+
+- the **sync state** (does the deployed configuration match the declared state?),
+- the **health status**: `Healthy`, `Degraded`, `Missing`, `Unknown`,
+- the **pod count** (total / running / pending / failed) and the number of services.
+
+A **health score** summarizes those indicators.
+
+> ℹ️ Fine-grained tracking of **CPU / RAM / Storage consumption** is found at the **[organization](/en/docs/organisations/quotas)** level (used vs available, per project), not as per-application charts.
+
+## Logs
+
+- **CODE applications**: logs available in **real time** (continuous stream) and as **history**.
+- Filters: **period** (e.g. last hour, last day), **number of lines**, **container**, and text **search**.
+- **Managed services** (PostgreSQL, MySQL, Redis…): logs cannot be read from the console.
+
+> ℹ️ Logs are read **per application**. There is no (yet) aggregated log view at the environment or project level.
+
+## Events
+
+The **Events** view lists the application's recent events (deployment updates, pod restarts…), with their type, reason, message and timestamp — useful to understand a state change.
+
+## Status dashboard
+
+The **status dashboard** offers a hierarchical view of **Projects → Environments → Applications**, showing for each application its status, its health, its pod count and links to monitoring, logs and backups. It is a view of **your** resources (not a global infrastructure view).
+
+## What is not (yet) available
+
+- **Configurable alerts** (thresholds, notifications): not available — the console shows the **current state**, no alerting.
+- **Metrics export** (CSV, external integration): not available from the console.
+
+## See also
+
+- [Deployment lifecycle](/en/docs/deploiements/cycle-de-vie)
+- [Organization quotas](/en/docs/organisations/quotas)

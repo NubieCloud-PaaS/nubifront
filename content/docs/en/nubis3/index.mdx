@@ -1,0 +1,46 @@
+---
+title: NubiS3 (object storage)
+description: Create and manage S3-compatible object storage buckets — files, quotas per plan.
+---
+
+**NubiS3** is Nubiecloud's **S3-compatible object storage** service. You create **buckets** in it to store files (media, application backups, exports…), reachable from your applications through any S3 client.
+
+## Availability per plan
+
+| Plan | Buckets included |
+|------|:----------------:|
+| FREE | 0 (NubiS3 not available) |
+| PROFESSIONAL | 10 |
+| BUSINESS | 25 |
+| ENTERPRISE | unlimited |
+
+> ℹ️ NubiS3 is **not available on the FREE plan**. From **PROFESSIONAL** onwards you get buckets; any attempt to create more than the plan's quota is refused.
+
+## Create a bucket
+
+From the **NubiS3** page → **Create a bucket**:
+
+| Field | Rules |
+|-------|--------|
+| **Name** | 3 to 63 characters, lowercase letters, digits and dashes (starts/ends with an alphanumeric character) |
+| **Description** | optional, max 500 characters |
+| **Quota** | optional — size limit for the bucket (otherwise unlimited) |
+
+## Manage the files
+
+Each bucket has a **file explorer** in the console:
+
+- **Upload** files (straight from the browser),
+- **Download** files,
+- **List** the objects (with prefix navigation and pagination),
+- **Delete** objects,
+- **Delete** the bucket.
+
+## Reach the bucket from an application
+
+To read/write in a bucket from your code, create an **access key** and use a standard S3 client. See **[Access keys & usage](/en/docs/nubis3/cles-d-acces)**.
+
+## See also
+
+- [Access keys & usage from an app](/en/docs/nubis3/cles-d-acces)
+- [Plans & costs](/en/docs/facturation)

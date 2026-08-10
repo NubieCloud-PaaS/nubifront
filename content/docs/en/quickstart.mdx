@@ -1,0 +1,205 @@
+---
+title: "Quickstart: from zero to a live app on Nubiecloud"
+description: "The full journey, screen by screen: create your account, your organization and your project, connect a Git repo, build your image, deploy it with its database, then monitor and back up your application."
+section: "Getting started"
+order: 2
+type: "tutorial"
+readingTime: 18
+---
+
+> By following this guide, you start with no account at all and end up with an **application online, reachable on the Internet, connected to its database, monitored and backed up**. Allow 15 to 20 minutes.
+
+This tutorial follows the **real journey through the Nubiecloud console**, in the exact order of the screens. The running example: a small API (say **FastAPI** or **Express**) that needs a **PostgreSQL** database to start — which lets us show how to deploy a dependency and wire it to your application.
+
+## Prerequisites
+
+- [ ] A valid **email address** (you will receive a validation code).
+- [ ] A **GitHub** or **GitLab** account with a repository containing your application (a `Dockerfile`, or a Buildpacks-compatible project).
+- [ ] About **15 to 20 minutes** ahead of you.
+
+> ℹ️ **Vocabulary.** On Nubiecloud, your resources are nested: **Organization → Project → Environment → Application** (+ its managed dependencies). If those terms are unclear, read [Key concepts](/en/docs/concepts) first — but you can also dive straight in, this guide introduces them along the way.
+
+---
+
+## Step 1 — Create your account
+
+Go to **console.nubiecloud.io** and click **Create an account**.
+
+1. Enter your **email** and a **password**.
+2. Submit the sign-up form.
+
+> 💡 **Tip.** Pick a password of at least 8 characters mixing uppercase letters, digits and symbols. You can reset it at any time via "Forgot password".
+
+---
+
+## Step 2 — Validate your account with the code
+
+After signing up, Nubiecloud sends you a **6-digit validation code** by email. You land on the verification screen automatically.
+
+1. Open the email you received and copy the **6-digit code**.
+2. Enter it in the verification field, then submit.
+
+> ⚠️ **Careful.** This really is a **code to type in**, not a link to click. If nothing arrives after a minute, check your spam folder then use the **Resend code** button. The code expires after a short while.
+
+---
+
+## Step 3 — Create your organization and choose your plan
+
+The **organization** is the container for billing and for the resources shared by your team. This is where you choose your **plan**.
+
+1. From **Organizations**, click **Create an organization**.
+2. Give it a **name**.
+3. Choose a **plan**: **FREE**, **PROFESSIONAL** or **BUSINESS** (the **ENTERPRISE** plan is quoted on request).
+4. Confirm.
+
+> 💡 **For this Quickstart, the FREE plan is enough**: it is free and **has no time limit**. You can [change plan](/en/docs/organisations/changer-de-plan) later without recreating anything.
+
+> ℹ️ **The plan sets your quotas.** The organization's plan determines the total CPU / RAM / Storage you can share out across your projects. See [Understanding quotas](/en/docs/organisations/quotas).
+
+---
+
+## Step 4 — Create a project and set its resources
+
+A **project** groups the applications of a single product and receives a **share of the organization's resources**.
+
+1. Go to **Projects** and click **Create a project**.
+2. Give it a **name**.
+3. Set the **allocated resources**: **CPU**, **RAM** and **Storage**, within the limits of your organization's plan.
+4. Confirm.
+
+> ℹ️ **Preset or custom.** You can start from a predefined resource template or tune each value. The maximums shown are what your plan allows — see [Configuring a project's quotas](/en/docs/projets/quotas).
+
+---
+
+## Step 5 — Create an environment
+
+An application is always deployed **into an environment** (for example `dev`, `staging`, `preproduction` or `production`).
+
+1. Open your project, then the **Environments** tab.
+2. Click **Create an environment**.
+3. Choose its **type** (for this guide: **production**) and name it.
+4. Confirm.
+
+> ⚠️ **Mandatory step, often forgotten.** No environment is created automatically with the project. **Without an environment you will not be able to deploy** at step 9. Create at least one now.
+
+---
+
+## Step 6 — Connect your Git repository
+
+To build your application, Nubiecloud needs access to your source code.
+
+1. Go to **Builds**, then **Connect a repository**.
+2. Choose your provider: **GitHub** or **GitLab**.
+3. Authorize Nubiecloud via **OAuth** (you are redirected to GitHub/GitLab, then back to the console). For GitLab, a **personal access token (PAT)** also works.
+4. Select the **repositories** you want to use.
+
+> 💡 **Several repos, several accounts.** You can connect several repositories, and even several Git accounts, to the same project.
+
+> 🔒 **Security.** Nubiecloud never stores your Git credentials in clear text: the connection relies on an encrypted OAuth token. You can revoke access at any time from GitHub/GitLab.
+
+---
+
+## Step 7 — Choose your build mode
+
+You decide **when** Nubiecloud builds your application image.
+
+- **Manual build**: you trigger each build on demand (ideal for this first run).
+- **Automatic build**: Nubiecloud builds on every **push**, **tag** or **pull request**, following rules you define (the **build configuration**).
+
+For this Quickstart, stay on **manual**: we will trigger the build by hand in the next step.
+
+> 💡 **Later on.** Once you are comfortable, turn on automatic builds to turn every `git push` into a new image. See [Configuring automatic builds](/en/docs/builds/build-automatique).
+
+---
+
+## Step 8 — Build your image
+
+1. From **Builds**, click **Start a build**.
+2. Fill in the details:
+   - **Branch** (defaults to the repository's main branch).
+   - **Image tag** (defaults to `latest` — for a production release, prefer a versioned tag such as `v1.0.0`).
+   - **Source subfolder** if your application lives in a **monorepo** (e.g. `services/api`).
+   - **Strategy**: `Dockerfile` or Buildpacks.
+3. Start the build and **follow the logs** until the success message.
+
+> ⚠️ **If it fails.** The build logs point at the failing step (missing dependency, `Dockerfile` not found, wrong subfolder…). See the ["build failing" checklist](/en/docs/depannage/build-echoue).
+
+At the end, your **image is available** and ready to deploy.
+
+---
+
+## Step 9 — Deploy your application from its template
+
+Now that the image exists, deploy it into your environment.
+
+1. Open the environment created at step 5, then **Deploy an application**.
+2. Choose the **application template** matching your framework.
+3. Select the **image** you have just built.
+4. Fill in the basics: **resources** (CPU/RAM/Storage), **environment variables**, **domain** and **health check**.
+5. Start the deployment.
+
+**Available code templates:** Django, FastAPI, Flask, Express, NestJS, React, Next.js, Vue.js, Spring Boot, Gin, Laravel, .NET.
+
+> ℹ️ **Every field in detail** (public variables vs secrets, custom domain + TLS, TCP vs HTTP health check, replicas) is documented in [Deploying an application from code](/en/docs/deploiements/deployer-une-app-code).
+
+---
+
+## Step 10 — Deploy the database and wire it to the app
+
+Our application needs a **PostgreSQL database** to start. Order matters: **deploy the dependency first**, then connect it to the application.
+
+1. Still in the environment, **deploy the managed service first**: pick the **PostgreSQL** template and launch it.
+2. Once the database is **active**, open its management page and **collect its connection details**: the **internal host** and the `DATABASE_URL`-style string are shown there.
+3. Go back to your **application** and add those details to its **environment variables** (for example `DATABASE_URL=...`).
+4. **Restart the application**: it now starts with its database ready.
+
+**Available managed services:** PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ.
+
+> ⚠️ **Wiring is an explicit action.** Nubiecloud deploys the database, but **you** are the one copying the managed service's host / `DATABASE_URL` into the application's environment variables. If the application needs the database at startup, it will only boot correctly **after** this wiring.
+
+> 💡 **Several dependencies?** Repeat the operation (e.g. deploy **Redis**, collect `REDIS_URL`, inject it into the app). Deploy each dependency **before** the application that needs it.
+
+---
+
+## Step 11 — Watch the logs and monitoring
+
+Your application is running: check its health.
+
+1. Open your **deployment** page.
+2. **Logs** tab: follow logs in **real time** plus the history (code-type applications).
+3. **Monitoring** tab: check the **health status**, the **pod status** and the application's **events**. (CPU/RAM consumption is tracked at the [organization quotas](/en/docs/organisations/quotas) level.)
+
+> 💡 If the application does not start, the **logs** are your first reflex — a database connection error (step 10 wired incorrectly) shows up there plainly.
+
+---
+
+## Step 12 — Enable database backups
+
+Last step: protect your data.
+
+1. On your **database** deployment (or your Odoo), open the **Backups** tab.
+2. **Enable automatic backups** and choose the **retention**, or run a **backup on demand**.
+
+> ℹ️ **Scope.** Managed backups cover **PostgreSQL** and **Odoo**. Restoring is done in **Blue/Green** mode (validation before switching over) — see [Restoring from a backup](/en/docs/backups/restaurer).
+
+---
+
+## Expected result
+
+You now have:
+
+- ✅ A validated **account** and an **organization** on a plan.
+- ✅ A **project** with its resources and a production **environment**.
+- ✅ An **application deployed** from your code, **reachable at its URL**.
+- ✅ A managed **PostgreSQL database**, **wired** to the application.
+- ✅ Visible **logs** and **monitoring**, and **backups** enabled.
+
+---
+
+## What's next?
+
+- [What you can do in each building block](/en/docs/concepts/par-brique) — the full map of actions on an organization, a project and an application.
+- [Configuring automatic builds](/en/docs/builds/build-automatique) — turn every `git push` into a deployment.
+- [Adding a custom domain and TLS](/en/docs/domaines/domaine-custom).
+- [Inviting members and managing roles](/en/docs/organisations/membres).
+- [Changing plan](/en/docs/organisations/changer-de-plan) when your needs grow.

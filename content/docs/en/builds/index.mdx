@@ -1,0 +1,43 @@
+---
+title: Builds
+description: Turn your code into a deployable image — connecting repositories, build strategies (Dockerfile, Buildpacks, automatic) and manual builds.
+---
+
+A **build** turns the code of a Git repository into an **image** ready to be [deployed](/en/docs/deploiements). It is the step that precedes the deployment of a CODE application.
+
+## Connect a repository
+
+Before building, connect your repository:
+
+- **GitHub** or **GitLab** via **OAuth** (authorization in a few clicks).
+- **GitLab** also accepts a **personal access token (PAT)**.
+- You can connect **several repositories** and **several accounts** (a GitHub account *and* a GitLab account).
+
+> 🔒 Access tokens are **encrypted** and stored server-side; you can revoke access at any time from GitHub/GitLab.
+
+## Build strategies
+
+| Strategy | How | When to use it |
+|-----------|---------|------------------|
+| **Dockerfile** | Builds the image from your `Dockerfile` | You control your image, specific needs |
+| **Buildpacks** | Detects the language and builds the image automatically (no Dockerfile) | Standard application, no wish to write a Dockerfile |
+| **Automatic** | Picks Dockerfile if a `Dockerfile` is present, otherwise Buildpacks | Let Nubiecloud decide |
+
+## Manual or automatic build
+
+- **Manual build**: you trigger each build on demand (see below).
+- **Automatic build**: Nubiecloud builds on every **push**, **tag** or **pull request**, following your rules. See [Automatic builds](/en/docs/builds/build-automatique).
+
+## Run a manual build
+
+1. From **Builds**, pick the repository and click **Start a build**.
+2. Fill in:
+   - **Branch** (otherwise the branch watched by default),
+   - a specific **commit** (otherwise the latest one),
+   - **Image tag** (e.g. `v1.0.0`; defaults to `latest`).
+3. Start it and **follow the logs** until success (see [Tracking builds](/en/docs/builds/suivi)).
+
+## See also
+
+- [Automatic builds (BuildConfiguration)](/en/docs/builds/build-automatique)
+- [Tracking builds & images](/en/docs/builds/suivi)

@@ -1,0 +1,47 @@
+---
+title: Members & roles
+description: Invite members into an organization, understand the roles, and manage invitations.
+---
+
+## Organization roles
+
+| Role | Description |
+|------|-------------|
+| **Owner** | The creator. Only one per organization. Full rights. |
+| **Admin** | Manages members and projects. |
+| **Member** | Accesses the projects and resources they are attached to. |
+
+### Permissions
+
+| Action | Owner | Admin | Member |
+|--------|:-----:|:-----:|:------:|
+| Invite a member | ✅ | ✅ | — |
+| Change a member's role | ✅ | — | — |
+| Remove a member | ✅ | ✅ | — |
+| Change plan | ✅ | — | — |
+| Delete the organization | ✅ | — | — |
+
+## Invite a member
+
+1. On **Members**, click **Invite a member**.
+2. Enter the **email** and choose the **role** (Member or Admin).
+3. The person receives an invitation email.
+
+## Invitations
+
+| Detail | Value |
+|--------|--------|
+| Validity | **30 days** |
+| Recipient **already registered** | accepts and joins the organization directly |
+| **New** recipient | creates their account from the invitation, then validates their email |
+
+## Remove a member
+
+If the member **owns resources** (projects, environments, applications), the console first shows a **transfer preview**: those resources will be **transferred to the organization's owner**. Confirm to finish.
+
+> ℹ️ Removing a member does not delete their resources: they change owner (to the Owner).
+
+## See also
+
+- [Creating an organization & plans](/en/docs/organisations)
+- [Project members](/en/docs/projets#project-members) — roles at the project level (distinct from organization roles).

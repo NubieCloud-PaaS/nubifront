@@ -1,0 +1,46 @@
+---
+title: Audit logs
+description: Browse the history of the actions carried out in your organization and your projects.
+---
+
+The **audit logs** record the important actions performed on the platform: who did what, when, and with what outcome. Useful for traceability, security and diagnostics.
+
+## What is traced
+
+Actions **that change state** are recorded, in particular:
+
+- **Authentication**: sign-in, failed sign-in, sign-out, password reset, 2FA, trusted devices.
+- **Organization**: creation/update, member added/removed, role change, plan change.
+- **Projects & environments**: creation, update, deletion, member management.
+- **Deployments**: creation, update, deletion, restart, synchronization.
+- **Builds & images**: start, cancellation, deletion, image **imports**.
+- **Backups**: configuration, triggering, restore, deletion.
+- **NubiS3**: bucket creation/deletion, key creation/revocation.
+- **Git repositories**: connection / disconnection.
+- **SQL console**: query execution.
+
+## Browsing the logs
+
+From the **Audit** page:
+
+- **All logs**: the actions on the projects you have access to, plus organization-level events.
+- **My actions**: only your own actions.
+
+### Filters
+
+| Filter | Details |
+|--------|--------|
+| **Project** | narrow down to one project |
+| **Action** | by action type (patterns such as `deployment.*`) |
+| **Resource type** | deployment, build, project, environment, backup, etc. |
+| **Status** | success / failure |
+| **Period** | start and end dates |
+
+Each entry shows: the **date**, the **author** (email + name), the **action**, the **resource** concerned, the **status** and the **IP address**.
+
+> ℹ️ There is no (yet) log **export** (CSV): browsing happens in the console, page by page.
+
+## See also
+
+- [Security & governance](/en/docs/securite)
+- [Members & roles](/en/docs/organisations/membres)

@@ -1,0 +1,44 @@
+---
+title: NubiImport (importing an image)
+description: Import a Docker image from an external registry (Docker Hub, GHCR, GitLab) into Nubiecloud to deploy it.
+---
+
+**NubiImport** brings into Nubiecloud a **Docker image already built elsewhere** (on Docker Hub, GitHub Container Registry, GitLab…) so you can deploy it like any image built on the platform. Handy when your image is produced by an external CI chain.
+
+> ℹ️ The feature is available from the **Builds** section, **Import** tab. The interface is still being finalized; the import mechanism (and its tracking) is operational.
+
+## Supported registries
+
+| Registry | Example reference |
+|----------|----------------------|
+| Docker Hub | `docker.io/library/nginx:1.25` |
+| GitHub Container Registry | `ghcr.io/org/image:tag` |
+| GitLab Container Registry | `registry.gitlab.com/group/image:tag` |
+
+## Private registry credentials
+
+For a **private** registry, provide credentials (registry URL, username, password/token). You can either:
+
+- enter them **at import time**, or
+- **save** them (encrypted) for reuse, then select them for later imports.
+
+> 🔒 Registry credentials are **encrypted** before storage and validated before being saved.
+
+## Import an image
+
+1. In **Builds → Import**, fill in:
+   - **Source image**: the full reference (e.g. `docker.io/library/nginx:1.25`),
+   - **Target name**: the name the image will be known by in Nubiecloud,
+   - **Target tag**: the tag (defaults to `latest`),
+   - optionally the source registry **credentials**.
+2. Start the import. Its **status** progresses: `pending` → `importing` → `succeeded` (or `failed`).
+3. Follow the **progress** and the **logs**; you can **cancel** an import in progress.
+
+## Deploy an imported image
+
+Once the import has **succeeded**, the image is available in Nubiecloud's internal registry: select it when [deploying an application](/en/docs/deploiements/deployer-une-app-code), just like an image built by NubiBuild.
+
+## See also
+
+- [Builds](/en/docs/builds)
+- [Deploying an application](/en/docs/deploiements/deployer-une-app-code)
