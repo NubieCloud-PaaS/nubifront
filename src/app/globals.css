@@ -359,3 +359,17 @@ code, pre {
 .logo-light-only { display: none; }
 .light .logo-dark-only { display: none; }
 .light .logo-light-only { display: block; }
+
+/* ── /docs : cohabitation Fumadocs ↔ plugin Typography ──
+   Les deux revendiquent la classe `.prose`. Fumadocs applique déjà ses propres
+   styles au contenu MDX ; on retire donc ici ce que Typography ajoute en trop
+   dans la doc : les backticks générés autour du code inline et le soulignement
+   des ancres de titre. Le blog, seul autre usage de `.prose`, n'est pas touché. */
+#nd-docs-layout .prose code::before,
+#nd-docs-layout .prose code::after {
+  content: none;
+}
+
+#nd-docs-layout .prose :is(h1, h2, h3, h4, h5, h6) a {
+  text-decoration: none;
+}

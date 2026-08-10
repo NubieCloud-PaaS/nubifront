@@ -14,6 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         defaultTheme: 'dark',
         enableSystem: false,
         storageKey: 'docs-theme',
+        // Fumadocs marque le thème clair par l'ABSENCE de classe sur <html>, alors
+        // que globals.css est dark-first : sans classe, ce sont les tokens sombres
+        // qui s'appliquent au body (texte clair) sous les panneaux clairs de
+        // Fumadocs. On force donc la classe `light` attendue par le site.
+        value: { light: 'light', dark: 'dark' },
       }}
     >
       <DocsLayout tree={source.getPageTree()} {...baseOptions()}>
