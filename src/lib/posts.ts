@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
 import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
@@ -52,6 +53,8 @@ export async function getPostData(slug: string) {
 
   const processedContent = await unified()
     .use(remarkParse)
+    // GFM : sans lui, les tableaux Markdown des articles sortaient en pipes bruts.
+    .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeHighlight)
