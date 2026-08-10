@@ -8,11 +8,9 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    // Les captures sont des placeholders fournis plus tard par l'équipe (cf. §3.4
-    // du plan). useImport:false → les images sont référencées depuis /public à
-    // l'exécution au lieu d'être importées statiquement au build (qui échouerait
-    // tant que le PNG n'existe pas). Dès qu'un PNG est déposé au bon chemin, il
-    // s'affiche sans rebuild.
+    // useImport:false → les images sont servies depuis /public à l'exécution au
+    // lieu d'être importées statiquement au build. Déposer un fichier au bon
+    // chemin suffit à l'afficher, sans casser le build s'il manque encore.
     remarkImageOptions: {
       useImport: false,
     },
