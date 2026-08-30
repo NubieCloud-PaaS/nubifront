@@ -191,8 +191,6 @@ The replica count determines fault tolerance, and it is not something you change
 | **1** | 1 | none — losing the node loses the messages | development, proof of concept |
 | **3** | 3 (`min.insync.replicas` = 2) | survives the loss of one node | production |
 
-> ⚠️ **A single-replica Kafka is not a production Kafka.** No copy exists elsewhere: if the node goes down, unconsumed messages are lost. Choose 3 replicas as soon as the messages matter.
-
 ### Retention
 
 Messages are kept for **7 days**, the **last 2 days on the broker's local disk**. Beyond that they are deleted — Kafka is a log with a limited lifetime, not durable storage.

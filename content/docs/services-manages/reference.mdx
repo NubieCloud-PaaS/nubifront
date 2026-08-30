@@ -191,8 +191,6 @@ Le nombre de réplicas détermine la résistance à la panne, et il ne se change
 | **1** | 1 | aucune — la perte du nœud perd les messages | développement, maquette |
 | **3** | 3 (`min.insync.replicas` = 2) | supporte la perte d'un nœud | production |
 
-> ⚠️ **Un Kafka à 1 réplica n'est pas un Kafka de production.** Aucune copie n'existe ailleurs : si le nœud tombe, les messages non consommés sont perdus. Choisissez 3 réplicas dès que les messages comptent.
-
 ### Rétention
 
 Les messages sont conservés **7 jours**, dont les **2 derniers jours sur le disque local** du broker. Au-delà, ils sont supprimés — Kafka est un journal à durée de vie limitée, pas un stockage durable.
