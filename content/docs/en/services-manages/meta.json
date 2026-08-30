@@ -1,4 +1,8 @@
 {
   "title": "Managed services",
-  "pages": ["index", "reference"]
+  "pages": [
+    "index",
+    "keycloak",
+    "reference"
+  ]
 }

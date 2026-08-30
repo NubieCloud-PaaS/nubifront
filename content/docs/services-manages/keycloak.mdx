@@ -1,0 +1,91 @@
+---
+title: Keycloak
+description: Serveur d'identité managé (OIDC / SAML) — authentification, SSO et gestion des utilisateurs pour vos applications, adossé à un PostgreSQL managé.
+---
+
+**Keycloak** est un serveur d'identité : il gère l'authentification, le SSO et les comptes utilisateurs de vos applications, via les protocoles **OIDC** et **SAML**. Vos applications déléguent leur connexion à Keycloak plutôt que de gérer mots de passe et sessions elles-mêmes.
+
+Contrairement aux autres services managés, Keycloak est une **application** : il a une **URL publique** et une console d'administration accessible depuis un navigateur.
+
+## Ce qui le distingue des autres services
+
+| | Bases et files de messages | Keycloak |
+|---|---|---|
+| Accès | interne au projet | **URL publique** |
+| Stockage | volume dédié | **aucun** — tout vit dans un PostgreSQL |
+| Identifiants | choisis par vous | **générés**, affichés une seule fois |
+
+## Prérequis : un PostgreSQL managé
+
+Keycloak n'embarque pas sa base de données. Il enregistre vos **royaumes**, **utilisateurs**, **clients** et **clés de signature** dans un [PostgreSQL managé](/docs/services-manages/reference#postgresql) que vous choisissez — et qui reste le vôtre, avec ses sauvegardes, sa console SQL et ses métriques.
+
+Avant de déployer Keycloak, il vous faut donc **un PostgreSQL managé dans le même environnement**. S'il n'y en a aucun, créez-le d'abord.
+
+> ℹ️ Le PostgreSQL doit être **dans le même environnement** que Keycloak. Un PostgreSQL d'un autre environnement n'apparaîtra pas dans la liste.
+
+Nubiecloud y crée automatiquement une base dédiée à ce Keycloak. Elle apparaît ensuite dans votre console SQL, aux côtés de vos autres bases.
+
+## Déployer Keycloak
+
+Dans **Déployer une application → Services managés → Keycloak** :
+
+| Champ | Obligatoire | Défaut | Notes |
+|-------|:-----------:|--------|-------|
+| **Nom** | ✅ | — | minuscules, format DNS |
+| **PostgreSQL hôte** | ✅ | — | un PostgreSQL managé du même environnement |
+| **CPU / RAM** | ✅ | 0,5 cœur / 1,5 Go | dans la limite des quotas projet |
+| **Réplicas** | ✅ | 1 | une seule instance pour l'instant |
+| **Domaine personnalisé** | ✕ | — | servi en plus de l'adresse générée |
+
+Il n'y a **ni mot de passe à saisir, ni stockage à dimensionner** : le compte administrateur est généré par la plateforme, et Keycloak ne consomme aucun volume.
+
+Certains PostgreSQL peuvent apparaître **grisés** dans la liste, avec un motif. C'est le cas des bases créées avec une version antérieure du modèle, qui n'autorisent pas les opérations d'administration nécessaires. Créez-en une nouvelle, ou contactez le support.
+
+## Le mot de passe administrateur
+
+À la fin du déploiement, la console affiche **une seule fois** :
+
+- l'adresse de la console d'administration,
+- l'identifiant, `admin`,
+- le mot de passe généré.
+
+> ⚠️ **Notez ce mot de passe avant de fermer la fenêtre.** Il n'est pas réaffiché par la console. Si vous le perdez, contactez le support.
+
+Une fois connecté, changez-le depuis Keycloak : **Users → admin → Credentials**. Le compte créé au déploiement est un compte d'amorçage.
+
+Le premier démarrage prend **deux à trois minutes** : Keycloak initialise son schéma de base avant de répondre. Une page d'erreur pendant ce laps de temps est normale.
+
+## Connecter une application
+
+Une fois Keycloak en ligne, créez un *client* dans sa console d'administration, puis configurez votre application avec les adresses suivantes — en remplaçant `mon-realm` par le royaume choisi :
+
+```
+Issuer         https://VOTRE-KEYCLOAK.apps.nubiecloud.io/realms/mon-realm
+Découverte     https://VOTRE-KEYCLOAK.apps.nubiecloud.io/realms/mon-realm/.well-known/openid-configuration
+```
+
+La plupart des bibliothèques OIDC ne demandent que l'URL de découverte : elles en déduisent seules les points d'entrée d'autorisation et de jetons.
+
+### Domaine personnalisé
+
+Vous pouvez servir Keycloak sur votre propre domaine, en plus de l'adresse générée.
+
+> ⚠️ Les jetons continuent d'être émis sur **l'adresse générée**. C'est elle qu'il faut configurer dans vos applications, pas votre domaine personnalisé. Cette adresse est inscrite dans chaque jeton émis : elle ne change jamais.
+
+## Sauvegarder
+
+Les données de Keycloak sont celles de son PostgreSQL. **Sauvegarder ce PostgreSQL sauvegarde votre Keycloak** — activez ses sauvegardes automatiques et consultez [Backups & restauration](/docs/backups/restaurer).
+
+## Supprimer
+
+> 🚨 Supprimer un Keycloak **détruit aussi sa base** sur le PostgreSQL hôte. Royaumes, utilisateurs, clients et clés de signature sont définitivement perdus, et les applications qui s'authentifient via ce Keycloak cessent de fonctionner.
+
+La fenêtre de confirmation nomme la base concernée et son PostgreSQL. Pour prévenir un geste accidentel, activez la **protection contre la suppression** sur la page du déploiement : la suppression sera refusée tant que vous ne l'aurez pas levée.
+
+Le PostgreSQL hôte, lui, n'est pas supprimé : seules la base de ce Keycloak et son utilisateur le sont. Vos autres bases sur ce cluster ne sont pas touchées.
+
+## Limites actuelles
+
+- **Une seule instance.** Keycloak est déployé en instance unique ; la haute disponibilité n'est pas encore proposée.
+- **Une seule version**, tenue à jour par la plateforme.
+- **Mise à jour avec coupure.** Une montée de version interrompt brièvement le service, le temps que Keycloak migre son schéma.
