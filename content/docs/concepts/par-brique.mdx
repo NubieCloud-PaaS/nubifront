@@ -53,7 +53,7 @@ L'application est le service qui tourne dans un environnement. C'est là que se 
 | **Monitorer** | état de santé, état des pods et événements (consommation des ressources au niveau [quotas de l'org](/docs/organisations/quotas)). |
 | **Sauvegarder** | Activer / configurer les **backups** (PostgreSQL, Odoo), backup à la demande, restauration. |
 | **Exposer** | **Domaine custom** + **TLS**. |
-| **Ajouter des dépendances** | Déployer des **services managés** (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) et **brancher leurs credentials** dans l'application. |
+| **Ajouter des dépendances** | Déployer des **services managés** (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka) et **brancher leurs credentials** dans l'application. |
 
 > 💡 **Ordre des dépendances.** Si une application a besoin d'une base pour démarrer, déployez la base **d'abord**, récupérez sa chaîne de connexion, puis injectez-la dans les variables d'env de l'app. Voir l'[étape 10 du Quickstart](/docs/quickstart).
 

@@ -53,7 +53,7 @@ The application is the service running in an environment. This is where day-to-d
 | **Monitor** | Health status, pod status and events (resource consumption at the [org quotas](/en/docs/organisations/quotas) level). |
 | **Back up** | Enable / configure **backups** (PostgreSQL, Odoo), on-demand backup, restore. |
 | **Expose** | **Custom domain** + **TLS**. |
-| **Add dependencies** | Deploy **managed services** (PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ) and **wire their credentials** into the application. |
+| **Add dependencies** | Deploy **managed services** (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka) and **wire their credentials** into the application. |
 
 > 💡 **Order of dependencies.** If an application needs a database to start, deploy the database **first**, collect its connection string, then inject it into the app's env variables. See [step 10 of the Quickstart](/en/docs/quickstart).
 

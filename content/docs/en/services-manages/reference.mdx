@@ -157,6 +157,64 @@ RabbitMQ's **management interface** is available on port 15672.
 
 ---
 
+## Kafka
+
+| Characteristic | Value |
+|-----------------|--------|
+| Available versions | `4.3.1` (default), `4.3.0`, `4.2.1`, `4.2.0` |
+| Default CPU / RAM / Storage | 0.5 core / 1 GB / 10 GB |
+| Port | 9092 (cluster-internal) |
+| Authentication | SASL **SCRAM-SHA-512** |
+| Message retention | 7 days (2 of them on local disk) |
+| Backups | — |
+
+Kafka runs in **KRaft** mode: no ZooKeeper, each node is both controller and broker.
+
+**Connection**:
+
+```
+KAFKA_BOOTSTRAP_SERVERS=INTERNAL_HOST:9092
+KAFKA_SECURITY_PROTOCOL=SASL_PLAINTEXT
+KAFKA_SASL_MECHANISM=SCRAM-SHA-512
+KAFKA_SASL_USERNAME=USER
+KAFKA_SASL_PASSWORD=PASSWORD
+```
+
+> ℹ️ The **username shown may differ from the one you typed**. Kafka uses the resource name as the SASL identity: Nubiecloud normalises it (lowercase, hyphens) and appends a unique suffix. Always copy the user exactly as it appears on the deployment page.
+
+### Replicas and fault tolerance
+
+The replica count determines fault tolerance, and it is not something you change lightly after the fact:
+
+| Replicas | Replication factor | Tolerance | Use |
+|:--------:|:------------------:|-----------|-----|
+| **1** | 1 | none — losing the node loses the messages | development, proof of concept |
+| **3** | 3 (`min.insync.replicas` = 2) | survives the loss of one node | production |
+
+> ⚠️ **A single-replica Kafka is not a production Kafka.** No copy exists elsewhere: if the node goes down, unconsumed messages are lost. Choose 3 replicas as soon as the messages matter.
+
+### Retention
+
+Messages are kept for **7 days**, the **last 2 days on the broker's local disk**. Beyond that they are deleted — Kafka is a log with a limited lifetime, not durable storage.
+
+Size the storage accordingly: a producer writing 1 GB per day needs at least 7 GB, before replication.
+
+### Built-in Kafka console
+
+Every Kafka deployment gets a **console in the interface**, under the **Kafka** tab:
+
+- **Topics** — list, create, inspect configuration and partition count.
+- **Consumer groups** — see active groups, their state and their consumption lag.
+- **Messages** — browse a topic's contents to check what is flowing through.
+
+The console opens an ephemeral session that connects to the broker with your credentials, injected at runtime. It is restricted to the project's **Developer** and **Admin** roles.
+
+### On deletion
+
+The **data volume survives** deletion of the deployment. This is deliberate — it protects against accidental deletion — but it means the disk space stays allocated. Contact support if you want it released.
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.

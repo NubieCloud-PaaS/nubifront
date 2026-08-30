@@ -21,7 +21,7 @@ Organisation        ← facturation, plan, ressources globales, membres
 | **Projet** | Regroupe les applications d'un même produit | Quotas projet, environnements, membres projet |
 | **Environnement** | Isole les étapes du cycle de vie | dev, staging, preproduction, production |
 | **Application** | Le service qui tourne | Image déployée, ressources, variables d'env, domaine |
-| **Dépendances** | Services dont l'app a besoin | PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ |
+| **Dépendances** | Services dont l'app a besoin | PostgreSQL, MySQL, Redis, RabbitMQ, Kafka |
 
 > ℹ️ **Les quotas descendent en cascade.** Le **plan** de l'organisation fixe le total de CPU / RAM / Stockage. Chaque **projet** consomme une part de ce total ; chaque **application** consomme une part des ressources de son projet.
 

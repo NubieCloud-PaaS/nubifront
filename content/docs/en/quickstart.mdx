@@ -153,7 +153,7 @@ Our application needs a **PostgreSQL database** to start. Order matters: **deplo
 3. Go back to your **application** and add those details to its **environment variables** (for example `DATABASE_URL=...`).
 4. **Restart the application**: it now starts with its database ready.
 
-**Available managed services:** PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ.
+**Available managed services:** PostgreSQL, MySQL, Redis, RabbitMQ, Kafka.
 
 > ⚠️ **Wiring is an explicit action.** Nubiecloud deploys the database, but **you** are the one copying the managed service's host / `DATABASE_URL` into the application's environment variables. If the application needs the database at startup, it will only boot correctly **after** this wiring.
 

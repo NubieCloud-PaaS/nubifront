@@ -21,7 +21,7 @@ Organization        ← billing, plan, global resources, members
 | **Project** | Groups the applications of a single product | Project quotas, environments, project members |
 | **Environment** | Isolates the stages of the lifecycle | dev, staging, preproduction, production |
 | **Application** | The running service | Deployed image, resources, env variables, domain |
-| **Dependencies** | Services the app needs | PostgreSQL, MySQL, MongoDB, Redis, RabbitMQ |
+| **Dependencies** | Services the app needs | PostgreSQL, MySQL, Redis, RabbitMQ, Kafka |
 
 > ℹ️ **Quotas cascade downwards.** The organization's **plan** sets the total CPU / RAM / Storage. Each **project** consumes a share of that total; each **application** consumes a share of its project's resources.
 

@@ -157,6 +157,64 @@ L'**interface de gestion** RabbitMQ est disponible sur le port 15672.
 
 ---
 
+## Kafka
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Versions disponibles | `4.3.1` (défaut), `4.3.0`, `4.2.1`, `4.2.0` |
+| CPU / RAM / Stockage par défaut | 0,5 cœur / 1 Go / 10 Go |
+| Port | 9092 (interne au cluster) |
+| Authentification | SASL **SCRAM-SHA-512** |
+| Rétention des messages | 7 jours (dont 2 jours sur disque local) |
+| Sauvegardes | — |
+
+Kafka fonctionne en mode **KRaft** : pas de ZooKeeper, chaque nœud est à la fois contrôleur et broker.
+
+**Connexion** :
+
+```
+KAFKA_BOOTSTRAP_SERVERS=HOTE_INTERNE:9092
+KAFKA_SECURITY_PROTOCOL=SASL_PLAINTEXT
+KAFKA_SASL_MECHANISM=SCRAM-SHA-512
+KAFKA_SASL_USERNAME=UTILISATEUR
+KAFKA_SASL_PASSWORD=MOT_DE_PASSE
+```
+
+> ℹ️ Le **nom d'utilisateur affiché peut différer de celui que vous avez saisi**. Kafka utilise le nom de la ressource comme identité SASL : Nubiecloud le normalise (minuscules, tirets) et lui ajoute un suffixe unique. Reprenez toujours l'utilisateur tel qu'il apparaît sur la page du déploiement.
+
+### Réplicas et tolérance de panne
+
+Le nombre de réplicas détermine la résistance à la panne, et il ne se change pas d'un claquement de doigts après coup :
+
+| Réplicas | Facteur de réplication | Tolérance | Usage |
+|:--------:|:----------------------:|-----------|-------|
+| **1** | 1 | aucune — la perte du nœud perd les messages | développement, maquette |
+| **3** | 3 (`min.insync.replicas` = 2) | supporte la perte d'un nœud | production |
+
+> ⚠️ **Un Kafka à 1 réplica n'est pas un Kafka de production.** Aucune copie n'existe ailleurs : si le nœud tombe, les messages non consommés sont perdus. Choisissez 3 réplicas dès que les messages comptent.
+
+### Rétention
+
+Les messages sont conservés **7 jours**, dont les **2 derniers jours sur le disque local** du broker. Au-delà, ils sont supprimés — Kafka est un journal à durée de vie limitée, pas un stockage durable.
+
+Dimensionnez le stockage en conséquence : un producteur écrivant 1 Go par jour a besoin d'au moins 7 Go, sans compter la réplication.
+
+### Console Kafka intégrée
+
+Chaque déploiement Kafka dispose d'une **console dans l'interface**, sous l'onglet **Kafka** :
+
+- **Topics** — lister, créer, consulter la configuration et le nombre de partitions.
+- **Groupes de consommateurs** — voir les groupes actifs, leur état et leur retard de consommation (*lag*).
+- **Messages** — parcourir le contenu d'un topic pour vérifier ce qui y transite.
+
+La console ouvre une session éphémère qui se connecte au broker avec vos identifiants, injectés à l'exécution. Elle est réservée aux rôles **Développeur** et **Admin** du projet.
+
+### À la suppression
+
+Le **volume de données survit** à la suppression du déploiement. C'est délibéré — cela protège d'une suppression accidentelle — mais cela signifie que l'espace disque reste occupé. Contactez le support si vous souhaitez le libérer.
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.
