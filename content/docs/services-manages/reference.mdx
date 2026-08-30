@@ -182,15 +182,6 @@ KAFKA_SASL_PASSWORD=MOT_DE_PASSE
 
 > ℹ️ Le **nom d'utilisateur affiché peut différer de celui que vous avez saisi**. Kafka utilise le nom de la ressource comme identité SASL : Nubiecloud le normalise (minuscules, tirets) et lui ajoute un suffixe unique. Reprenez toujours l'utilisateur tel qu'il apparaît sur la page du déploiement.
 
-### Réplicas et tolérance de panne
-
-Le nombre de réplicas détermine la résistance à la panne, et il ne se change pas d'un claquement de doigts après coup :
-
-| Réplicas | Facteur de réplication | Tolérance | Usage |
-|:--------:|:----------------------:|-----------|-------|
-| **1** | 1 | aucune — la perte du nœud perd les messages | développement, maquette |
-| **3** | 3 (`min.insync.replicas` = 2) | supporte la perte d'un nœud | production |
-
 ### Rétention
 
 Les messages sont conservés **7 jours**, dont les **2 derniers jours sur le disque local** du broker. Au-delà, ils sont supprimés — Kafka est un journal à durée de vie limitée, pas un stockage durable.

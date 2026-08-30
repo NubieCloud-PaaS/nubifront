@@ -15,7 +15,7 @@ description: Managed databases and middleware (PostgreSQL, MySQL, Redis, RabbitM
 | **RabbitMQ** | Message queue (AMQP) | 5672 (UI: 15672) | — | — |
 | **Kafka** | Distributed message log | 9092 | — | — |
 
-> ℹ️ **PostgreSQL is the most complete service**: Blue/Green high availability, automatic backups to object storage, and a [built-in SQL console](/en/docs/services-manages/reference#sql-console). The other services are deployed as single instances. **Kafka** is the one exception: it deploys with 1 or 3 replicas, and only the 3-replica setup survives the loss of a node — see [Kafka](/en/docs/services-manages/reference#kafka).
+> ℹ️ **PostgreSQL is the most complete service**: Blue/Green high availability, automatic backups to object storage, and a [built-in SQL console](/en/docs/services-manages/reference#sql-console). The other services are deployed as single instances. **Kafka** deploys with 1 or 3 replicas — see [Kafka](/en/docs/services-manages/reference#kafka).
 
 > ℹ️ **MongoDB is no longer offered in the catalogue.** Instances already deployed keep running and remain visible in the console.
 

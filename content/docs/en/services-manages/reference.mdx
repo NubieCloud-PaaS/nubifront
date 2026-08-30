@@ -182,15 +182,6 @@ KAFKA_SASL_PASSWORD=PASSWORD
 
 > ℹ️ The **username shown may differ from the one you typed**. Kafka uses the resource name as the SASL identity: Nubiecloud normalises it (lowercase, hyphens) and appends a unique suffix. Always copy the user exactly as it appears on the deployment page.
 
-### Replicas and fault tolerance
-
-The replica count determines fault tolerance, and it is not something you change lightly after the fact:
-
-| Replicas | Replication factor | Tolerance | Use |
-|:--------:|:------------------:|-----------|-----|
-| **1** | 1 | none — losing the node loses the messages | development, proof of concept |
-| **3** | 3 (`min.insync.replicas` = 2) | survives the loss of one node | production |
-
 ### Retention
 
 Messages are kept for **7 days**, the **last 2 days on the broker's local disk**. Beyond that they are deleted — Kafka is a log with a limited lifetime, not durable storage.
