@@ -206,6 +206,72 @@ The console states what is about to be destroyed before asking for confirmation.
 
 ---
 
+## Keycloak
+
+Identity server: authentication, SSO and user accounts for your applications, through **OIDC** and **SAML**.
+
+Keycloak is the only managed block that is an **application**: it has a public URL and an admin console in the browser.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `26.7.0` |
+| Default CPU / RAM | 0.5 core / 1.5 GB |
+| Storage | **none** — the data lives in a managed PostgreSQL |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL |
+
+### Prerequisite: a managed PostgreSQL
+
+Keycloak does not bundle its database. It stores your **realms**, **users**, **clients** and **signing keys** in a [managed PostgreSQL](#postgresql) that you pick at deployment — and that stays yours, with its backups, its SQL console and its metrics. Nubiecloud automatically creates a dedicated database on it, which then shows up in your SQL console.
+
+You therefore need a managed PostgreSQL **in the same environment** before deploying Keycloak. If there is none, create it first.
+
+> ℹ️ Some PostgreSQL instances may appear **greyed out** in the list, with a reason: those were created with an earlier version of the model and do not allow the required administrative operations. Create a new one, or contact support.
+
+### Deployment fields
+
+Keycloak departs from several [common fields](#fields-common-to-every-deployment): no password to enter, no storage to size, no application database.
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL from the same environment |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+### The administrator password
+
+At the end of the deployment, the console shows **once** the address of the admin console, the username `admin` and the generated password.
+
+> ⚠️ **Write this password down before closing the dialog.** It is not shown again. If you lose it, contact support.
+
+Once signed in, change it from Keycloak (**Users → admin → Credentials**): the account created at deployment is a bootstrap account.
+
+The first start takes **two to three minutes**, while Keycloak initialises its schema. An error page during that window is expected.
+
+### Connecting an application
+
+Create a *client* in the Keycloak console, then configure your application with the discovery URL — most OIDC libraries only need this one and derive the rest from it:
+
+```
+https://YOUR-KEYCLOAK.apps.nubiecloud.io/realms/YOUR-REALM/.well-known/openid-configuration
+```
+
+> ⚠️ If you add a **custom domain**, tokens are still issued on **the generated address**. That is the one to configure in your applications: it is written into every token and never changes.
+
+### On deletion
+
+Deleting the deployment **also destroys its database** on the host PostgreSQL: realms, users, clients and signing keys are lost, and applications that authenticate through this Keycloak stop working.
+
+The console names the database and its PostgreSQL before asking for confirmation. Turn on **deletion protection** so an accidental click is refused.
+
+The host PostgreSQL itself is not deleted — your other databases on that cluster are untouched.
+
+### Current limits
+
+Single instance (no high availability), a single version kept up to date by the platform, and an upgrade briefly interrupts the service while the schema migrates.
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.

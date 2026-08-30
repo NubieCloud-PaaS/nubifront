@@ -206,6 +206,72 @@ La console énonce ce qui va être détruit avant de demander confirmation. Pour
 
 ---
 
+## Keycloak
+
+Serveur d'identité : authentification, SSO et comptes utilisateurs pour vos applications, via **OIDC** et **SAML**.
+
+Keycloak est la seule brique managée qui soit une **application** : elle a une URL publique et une console d'administration dans le navigateur.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `26.7.0` |
+| CPU / RAM par défaut | 0,5 cœur / 1,5 Go |
+| Stockage | **aucun** — les données vivent dans un PostgreSQL managé |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte |
+
+### Prérequis : un PostgreSQL managé
+
+Keycloak n'embarque pas sa base. Il enregistre vos **royaumes**, **utilisateurs**, **clients** et **clés de signature** dans un [PostgreSQL managé](#postgresql) que vous choisissez au déploiement — et qui reste le vôtre, avec ses sauvegardes, sa console SQL et ses métriques. Nubiecloud y crée automatiquement une base dédiée, qui apparaît ensuite dans votre console SQL.
+
+Il vous faut donc un PostgreSQL managé **dans le même environnement** avant de déployer Keycloak. S'il n'y en a aucun, créez-le d'abord.
+
+> ℹ️ Certains PostgreSQL peuvent apparaître **grisés** dans la liste, avec un motif : ce sont des bases créées avec une version antérieure du modèle, qui n'autorisent pas les opérations d'administration nécessaires. Créez-en une nouvelle, ou contactez le support.
+
+### Champs au déploiement
+
+Keycloak déroge à plusieurs [champs communs](#champs-communs-au-déploiement) : ni mot de passe à saisir, ni stockage à dimensionner, ni base applicative.
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+### Le mot de passe administrateur
+
+À la fin du déploiement, la console affiche **une seule fois** l'adresse de la console d'administration, l'identifiant `admin` et le mot de passe généré.
+
+> ⚠️ **Notez ce mot de passe avant de fermer la fenêtre.** Il n'est pas réaffiché. Si vous le perdez, contactez le support.
+
+Une fois connecté, changez-le depuis Keycloak (**Users → admin → Credentials**) : le compte créé au déploiement est un compte d'amorçage.
+
+Le premier démarrage prend **deux à trois minutes**, le temps que Keycloak initialise son schéma. Une page d'erreur pendant ce laps de temps est normale.
+
+### Connecter une application
+
+Créez un *client* dans la console Keycloak, puis configurez votre application avec l'URL de découverte — la plupart des bibliothèques OIDC n'ont besoin que de celle-ci et en déduisent le reste :
+
+```
+https://VOTRE-KEYCLOAK.apps.nubiecloud.io/realms/VOTRE-REALM/.well-known/openid-configuration
+```
+
+> ⚠️ Si vous ajoutez un **domaine personnalisé**, les jetons continuent d'être émis sur **l'adresse générée**. C'est elle qu'il faut configurer dans vos applications : elle est inscrite dans chaque jeton et ne change jamais.
+
+### À la suppression
+
+Supprimer le déploiement **détruit aussi sa base** sur le PostgreSQL hôte : royaumes, utilisateurs, clients et clés de signature sont perdus, et les applications qui s'authentifient via ce Keycloak cessent de fonctionner.
+
+La console nomme la base concernée et son PostgreSQL avant de demander confirmation. Activez la **protection contre la suppression** pour qu'un geste accidentel soit refusé.
+
+Le PostgreSQL hôte, lui, n'est pas supprimé — vos autres bases sur ce cluster ne sont pas touchées.
+
+### Limites actuelles
+
+Instance unique (pas de haute disponibilité), une seule version tenue à jour par la plateforme, et une montée de version interrompt brièvement le service le temps de la migration de schéma.
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.
