@@ -200,7 +200,9 @@ The console opens an ephemeral session that connects to the broker with your cre
 
 ### On deletion
 
-The **data volume survives** deletion of the deployment. This is deliberate — it protects against accidental deletion — but it means the disk space stays allocated. Contact support if you want it released.
+Deleting the deployment **destroys the data volume**, and with it any messages still held in the topics. Kafka has no platform-side backup: whatever has not been consumed is lost.
+
+The console states what is about to be destroyed before asking for confirmation. For a deployment you do not want to lose by accident, turn on **deletion protection**: while it is on, deletion is refused.
 
 ---
 

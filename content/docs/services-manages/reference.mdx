@@ -200,7 +200,9 @@ La console ouvre une session éphémère qui se connecte au broker avec vos iden
 
 ### À la suppression
 
-Le **volume de données survit** à la suppression du déploiement. C'est délibéré — cela protège d'une suppression accidentelle — mais cela signifie que l'espace disque reste occupé. Contactez le support si vous souhaitez le libérer.
+Supprimer le déploiement **détruit le volume de données**, et avec lui les messages encore présents dans les topics. Kafka n'a pas de sauvegarde côté plateforme : ce qui n'a pas été consommé est perdu.
+
+La console énonce ce qui va être détruit avant de demander confirmation. Pour un déploiement qu'on ne veut pas voir disparaître par inadvertance, activez la **protection contre la suppression** : tant qu'elle est active, la suppression est refusée.
 
 ---
 
