@@ -272,6 +272,110 @@ Instance unique (pas de haute disponibilité), une seule version tenue à jour p
 
 ---
 
+## n8n
+
+Automatisation de workflows : relie vos applications entre elles — API, bases de données, courriels, webhooks — sans écrire de code d'intégration.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `2.36.8` |
+| CPU / RAM par défaut | 0,5 cœur / 1 Go |
+| Stockage | **aucun** — les données vivent dans un PostgreSQL managé |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte |
+
+### Prérequis : un PostgreSQL managé
+
+n8n n'embarque pas sa base. Vos **workflows**, **exécutions** et **identifiants de connexion** vivent dans un [PostgreSQL managé](#postgresql) — le vôtre, avec ses sauvegardes, sa console SQL et ses métriques. Choisissez-en un au déploiement, ou laissez Nubiecloud en créer un.
+
+### L'accès temporaire, et pourquoi il existe
+
+À la différence de Keycloak, **n8n n'a aucun compte administrateur à sa création**. Il en demande un à la première ouverture de son adresse — et le crée pour **la première personne qui la visite**.
+
+Nubiecloud pose donc une authentification devant l'application le temps que vous fassiez votre installation. La console affiche **une seule fois** l'identifiant `nubie` et un mot de passe généré.
+
+> ⚠️ **Notez ce mot de passe avant de fermer la fenêtre.** Il n'est pas réaffiché.
+
+Le parcours est le suivant :
+
+1. Ouvrez l'adresse, authentifiez-vous avec ces identifiants.
+2. Créez votre compte propriétaire dans l'assistant n8n.
+3. Revenez sur la fiche du déploiement et cliquez sur **« J'ai terminé mon installation — retirer l'accès temporaire »**.
+
+Tant que vous ne le retirez pas, vous vous authentifiez **deux fois** à chaque visite. Une fois retiré, l'application est protégée par son propre compte.
+
+Vous pouvez le remettre à tout moment depuis la même fiche : un **nouveau** mot de passe est alors généré et affiché une fois. L'ancien cesse de fonctionner.
+
+### Champs au déploiement
+
+n8n déroge à plusieurs [champs communs](#champs-communs-au-déploiement) : ni mot de passe à saisir, ni stockage à dimensionner.
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement, ou création automatique |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+Le premier démarrage prend **une à deux minutes**, le temps que n8n initialise son schéma.
+
+### À la suppression
+
+Supprimer le déploiement **détruit aussi sa base** : workflows, historiques d'exécution et identifiants stockés sont perdus. La console nomme la base concernée avant de demander confirmation.
+
+Le PostgreSQL hôte, lui, n'est pas supprimé.
+
+### Limites actuelles
+
+Instance unique, sans mode « queue » ni workers séparés : les exécutions se font dans le même processus. Une seule version tenue à jour par la plateforme.
+
+---
+
+## Metabase
+
+Décisionnel : tableaux de bord, questions et graphiques sur **vos propres bases de données**.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `v0.56.8` |
+| CPU / RAM par défaut | 0,5 cœur / 2 Go |
+| Stockage | **aucun** — les données vivent dans un PostgreSQL managé |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte |
+
+> ℹ️ **Deux bases à ne pas confondre.** Le PostgreSQL hôte stocke ce que Metabase *fabrique* — questions, tableaux de bord, comptes. Les bases que vous *analysez* se branchent ensuite depuis Metabase, et peuvent être ailleurs.
+
+### Prérequis : un PostgreSQL managé
+
+Comme n8n, Metabase range ses propres données dans un [PostgreSQL managé](#postgresql) de votre environnement. Choisissez-en un au déploiement, ou laissez Nubiecloud en créer un.
+
+### L'accès temporaire
+
+Metabase n'a **aucun compte** tant que son assistant n'a pas été rempli, et le premier visiteur en devient l'administrateur — avec accès à toutes les bases que vous y brancherez ensuite. La même protection que pour n8n s'applique donc : identifiants affichés une fois, à retirer une fois votre compte créé. Voir [le parcours détaillé](#laccès-temporaire-et-pourquoi-il-existe).
+
+### Champs au déploiement
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement, ou création automatique |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+Le premier démarrage prend **deux à trois minutes** : Metabase joue ses migrations et construit son index de recherche. Une page d'erreur pendant ce laps de temps est normale.
+
+### Brancher une base à analyser
+
+Depuis Metabase : **Paramètres → Bases de données → Ajouter**. Pour une base managée du même environnement, utilisez son **adresse interne** (visible sur la fiche du déploiement) et les identifiants de la base.
+
+### À la suppression
+
+Supprimer le déploiement **détruit aussi sa base** : questions, tableaux de bord et comptes sont perdus. Les bases que vous analysiez ne sont **pas** touchées — Metabase ne fait que s'y connecter.
+
+### Limites actuelles
+
+Instance unique. La version open source : pas de fonctionnalités payantes (bac à sable de données, incorporation avancée, authentification SSO).
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.

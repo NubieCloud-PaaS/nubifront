@@ -1,6 +1,6 @@
 ---
 title: Managed services
-description: Managed databases and middleware (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka) — how they work, and how to connect from your applications.
+description: Managed databases and middleware (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka, Keycloak, n8n, Metabase) — how they work, and how to connect from your applications.
 ---
 
 **Managed services** are ready-to-use infrastructure blocks (databases, cache, message queue) that you deploy **like an application**, in an environment, and that your applications consume through the project's internal network.
@@ -15,8 +15,12 @@ description: Managed databases and middleware (PostgreSQL, MySQL, Redis, RabbitM
 | **RabbitMQ** | Message queue (AMQP) | 5672 (UI: 15672) | — | — |
 | **Kafka** | Distributed message log | 9092 | — | — |
 | **Keycloak** | Identity, SSO (OIDC / SAML) | public URL | via its PostgreSQL | — |
+| **n8n** | Workflow automation | public URL | through its PostgreSQL | — |
+| **Metabase** | Dashboards and analytics | public URL | through its PostgreSQL | — |
 
 > ℹ️ **PostgreSQL is the most complete service**: Blue/Green high availability, automatic backups to object storage, and a [built-in SQL console](/en/docs/services-manages/reference#sql-console). The other services are deployed as single instances. **Kafka** deploys with 1 or 3 replicas — see [Kafka](/en/docs/services-manages/reference#kafka).
+
+> ℹ️ **Three of these blocks are applications**, not services: **Keycloak**, **n8n** and **Metabase** open in a browser at a public URL, have no port to connect to, and keep their data in a managed PostgreSQL that stays yours.
 
 > ℹ️ **MongoDB is no longer offered in the catalogue.** Instances already deployed keep running and remain visible in the console.
 

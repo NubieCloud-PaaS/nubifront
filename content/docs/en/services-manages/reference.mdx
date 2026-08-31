@@ -272,6 +272,110 @@ Single instance (no high availability), a single version kept up to date by the 
 
 ---
 
+## n8n
+
+Workflow automation: connects your applications together — APIs, databases, email, webhooks — without writing integration code.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `2.36.8` |
+| Default CPU / RAM | 0.5 core / 1 GB |
+| Storage | **none** — the data lives in a managed PostgreSQL |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL |
+
+### Prerequisite: a managed PostgreSQL
+
+n8n does not bundle its database. Your **workflows**, **executions** and **stored credentials** live in a [managed PostgreSQL](#postgresql) — yours, with its backups, SQL console and metrics. Pick one at deployment, or let Nubiecloud create one.
+
+### The temporary access, and why it exists
+
+Unlike Keycloak, **n8n has no administrator account when it is created**. It asks for one the first time its address is opened — and creates it for **whoever visits first**.
+
+Nubiecloud therefore puts an authentication in front of the application while you set it up. The console shows the username `nubie` and a generated password **once**.
+
+> ⚠️ **Write this password down before closing the window.** It is not shown again.
+
+The flow is:
+
+1. Open the address and sign in with those credentials.
+2. Create your owner account in the n8n wizard.
+3. Go back to the deployment page and click **"I have finished setting up — remove the temporary access"**.
+
+Until you remove it, you sign in **twice** on every visit. Once removed, the application is protected by its own account.
+
+You can put it back at any time from the same page: a **new** password is generated and shown once. The previous one stops working.
+
+### Deployment fields
+
+n8n departs from several [common fields](#fields-common-to-every-deployment): no password to enter, no storage to size.
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+The first start takes **one to two minutes**, while n8n initialises its schema.
+
+### On deletion
+
+Deleting the deployment **also destroys its database**: workflows, execution history and stored credentials are lost. The console names the database before asking for confirmation.
+
+The host PostgreSQL itself is not deleted.
+
+### Current limits
+
+Single instance, no queue mode and no separate workers: executions run in the same process. One version kept up to date by the platform.
+
+---
+
+## Metabase
+
+Business intelligence: dashboards, questions and charts on **your own databases**.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `v0.56.8` |
+| Default CPU / RAM | 0.5 core / 2 GB |
+| Storage | **none** — the data lives in a managed PostgreSQL |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL |
+
+> ℹ️ **Two databases, not to be confused.** The host PostgreSQL stores what Metabase *produces* — questions, dashboards, accounts. The databases you *analyse* are connected afterwards from within Metabase, and may live elsewhere.
+
+### Prerequisite: a managed PostgreSQL
+
+Like n8n, Metabase keeps its own data in a [managed PostgreSQL](#postgresql) from your environment. Pick one at deployment, or let Nubiecloud create one.
+
+### The temporary access
+
+Metabase has **no account** until its wizard has been completed, and the first visitor becomes its administrator — with access to every database you later connect to it. The same protection as n8n applies: credentials shown once, to be removed once your account exists. See [the detailed flow](#the-temporary-access-and-why-it-exists).
+
+### Deployment fields
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+The first start takes **two to three minutes**: Metabase runs its migrations and builds its search index. An error page during that time is normal.
+
+### Connecting a database to analyse
+
+From Metabase: **Settings → Databases → Add**. For a managed database in the same environment, use its **internal address** (shown on the deployment page) and the database credentials.
+
+### On deletion
+
+Deleting the deployment **also destroys its database**: questions, dashboards and accounts are lost. The databases you were analysing are **not** touched — Metabase only connects to them.
+
+### Current limits
+
+Single instance. The open source edition: no paid features (data sandboxing, advanced embedding, SSO authentication).
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
