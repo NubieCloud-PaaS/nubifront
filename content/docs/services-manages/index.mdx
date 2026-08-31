@@ -1,6 +1,6 @@
 ---
 title: Services managés
-description: Bases de données, middleware et applications managés (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka, Keycloak, n8n, Metabase) — fonctionnement commun, connexion depuis vos applications.
+description: Bases de données, middleware et applications managés (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka, Keycloak, n8n, Metabase, Hasura) — fonctionnement commun, connexion depuis vos applications.
 ---
 
 Les **services managés** sont des briques d'infrastructure prêtes à l'emploi (bases de données, cache, file de messages) que vous déployez **comme une application**, dans un environnement, et que vos applications consomment via le réseau interne du projet.
@@ -17,10 +17,11 @@ Les **services managés** sont des briques d'infrastructure prêtes à l'emploi 
 | **Keycloak** | Identité, SSO (OIDC / SAML) | URL publique | via son PostgreSQL | — |
 | **n8n** | Automatisation de workflows | URL publique | via son PostgreSQL | — |
 | **Metabase** | Tableaux de bord et analyses | URL publique | via son PostgreSQL | — |
+| **Hasura** | API GraphQL sur vos bases | URL publique | via son PostgreSQL | — |
 
 > ℹ️ **PostgreSQL est le service le plus complet** : haute disponibilité Blue/Green, sauvegardes automatiques vers le stockage objet, et [console SQL intégrée](/docs/services-manages/reference#console-sql). Les autres services sont déployés en instance simple. **Kafka** se déploie en 1 ou 3 réplicas — voir [Kafka](/docs/services-manages/reference#kafka).
 
-> ℹ️ **Trois de ces briques sont des applications**, pas des services : **Keycloak**, **n8n** et **Metabase** s'ouvrent dans un navigateur à une URL publique, n'ont pas de port à connecter, et rangent leurs données dans un PostgreSQL managé qui reste le vôtre.
+> ℹ️ **Quatre de ces briques sont des applications**, pas des services : **Keycloak**, **n8n**, **Metabase** et **Hasura** s'ouvrent dans un navigateur à une URL publique, n'ont pas de port à connecter, et rangent leurs données dans un PostgreSQL managé qui reste le vôtre.
 
 > ℹ️ **MongoDB n'est plus proposé au catalogue.** Les instances déjà déployées continuent de fonctionner et restent visibles dans la console.
 

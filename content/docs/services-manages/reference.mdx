@@ -376,6 +376,68 @@ Instance unique. La version open source : pas de fonctionnalités payantes (bac 
 
 ---
 
+## Hasura
+
+Une **API GraphQL** instantanée sur vos bases PostgreSQL : vous branchez une base, Hasura en expose les tables en lecture et en écriture, sans écrire une ligne de serveur.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `v2.50.2-ce` (édition communautaire) |
+| CPU / RAM par défaut | 0,5 cœur / 1 Go |
+| Stockage | **aucun** — les données vivent dans un PostgreSQL managé |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte |
+
+> ℹ️ **Deux bases à ne pas confondre.** Le PostgreSQL hôte stocke ce que Hasura *retient* — les bases déclarées, les permissions, les relations. Les bases que vous *exposez* en GraphQL se branchent ensuite depuis la console, et peuvent être ailleurs.
+
+### Prérequis : un PostgreSQL managé
+
+Comme n8n et Metabase, Hasura range ses propres données dans un [PostgreSQL managé](#postgresql) de votre environnement. Choisissez-en un au déploiement, ou laissez Nubiecloud en créer un.
+
+### Le secret d'administration
+
+Contrairement à n8n et Metabase, Hasura **n'a pas d'assistant de premier démarrage** : son secret d'administration est posé dès le premier boot, et l'API est fermée immédiatement. Il n'y a donc **pas d'accès temporaire à retirer**.
+
+- Le secret vous est affiché **une seule fois**, à la création. Conservez-le : il n'est stocké nulle part où vous puissiez le relire.
+- Il n'y a **pas de nom d'utilisateur** — le secret seul ouvre la console.
+- C'est aussi lui qui signe les appels d'administration à l'API, via l'en-tête `x-hasura-admin-secret`.
+
+### Champs au déploiement
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement, ou création automatique |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+Le premier démarrage prend **une à deux minutes** : Hasura crée son schéma de métadonnées. Une réponse `503` pendant ce laps de temps est normale.
+
+### Exposer une base en GraphQL
+
+Depuis la console : **Data → Connect Database**.
+
+> ⚠️ **Le formulaire propose « Environment variable » par défaut.** Vos bases managées ne sont pas déclarées en variables d'environnement : choisissez **Database URL** et saisissez l'adresse de connexion à la main.
+
+L'adresse prend la forme `postgres://utilisateur:motdepasse@adresse-interne:5432/base`. L'adresse interne et le nom exact de la base se lisent sur la fiche du déploiement PostgreSQL — le nom de la base n'est **pas** celui de l'application.
+
+Une fois la base connectée, **Data → Track All** publie les tables dans le schéma GraphQL. Tant qu'une table n'est pas suivie, elle reste invisible de l'API.
+
+> ℹ️ À la première visite, une fenêtre d'accueil avec une vidéo se superpose à la console et intercepte les clics. Fermez-la avant de commencer.
+
+### Ouvrir l'API à vos applications
+
+Par défaut **tout est fermé** : sans le secret d'administration, aucune requête ne passe. Pour qu'une application interroge l'API sans détenir ce secret, définissez des **rôles et des permissions** par table (onglet **Permissions** d'une table). C'est le mécanisme prévu — ne diffusez jamais le secret d'administration à un client.
+
+### À la suppression
+
+Supprimer le déploiement **détruit aussi sa base de métadonnées** : bases déclarées, permissions et relations sont perdues. Les bases que vous exposiez ne sont **pas** touchées — Hasura ne fait que s'y connecter.
+
+### Limites actuelles
+
+Instance unique. L'édition communautaire : pas de fonctionnalités payantes (mise en cache des requêtes, mode entreprise, connecteurs propriétaires).
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.

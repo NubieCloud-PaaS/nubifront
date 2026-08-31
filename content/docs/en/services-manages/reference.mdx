@@ -376,6 +376,68 @@ Single instance. The open source edition: no paid features (data sandboxing, adv
 
 ---
 
+## Hasura
+
+An instant **GraphQL API** over your PostgreSQL databases: connect a database and Hasura exposes its tables for reading and writing, without writing a line of server code.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `v2.50.2-ce` (community edition) |
+| Default CPU / RAM | 0.5 core / 1 GB |
+| Storage | **none** — data lives in a managed PostgreSQL |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL |
+
+> ℹ️ **Two databases, not to be confused.** The host PostgreSQL stores what Hasura *remembers* — the declared databases, permissions and relationships. The databases you *expose* over GraphQL are connected afterwards from the console, and may live elsewhere.
+
+### Prerequisite: a managed PostgreSQL
+
+Like n8n and Metabase, Hasura keeps its own data in a [managed PostgreSQL](#postgresql) in your environment. Pick one at deployment time, or let Nubiecloud create one.
+
+### The admin secret
+
+Unlike n8n and Metabase, Hasura has **no first-run wizard**: its admin secret is set at the very first boot and the API is closed immediately. There is therefore **no temporary access to remove**.
+
+- The secret is shown **once**, at creation. Keep it: it is not stored anywhere you can read it back.
+- There is **no username** — the secret alone opens the console.
+- It also signs admin calls to the API, through the `x-hasura-admin-secret` header.
+
+### Deployment fields
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+The first start takes **one to two minutes**: Hasura creates its metadata schema. A `503` response during that time is normal.
+
+### Exposing a database over GraphQL
+
+From the console: **Data → Connect Database**.
+
+> ⚠️ **The form offers "Environment variable" by default.** Your managed databases are not declared as environment variables: choose **Database URL** and enter the connection address by hand.
+
+The address looks like `postgres://user:password@internal-address:5432/database`. The internal address and the exact database name are shown on the PostgreSQL deployment page — the database name is **not** the application name.
+
+Once the database is connected, **Data → Track All** publishes the tables into the GraphQL schema. Until a table is tracked, it stays invisible to the API.
+
+> ℹ️ On the first visit, a welcome dialog with a video overlays the console and intercepts clicks. Close it before starting.
+
+### Opening the API to your applications
+
+By default **everything is closed**: without the admin secret, no query goes through. To let an application query the API without holding that secret, define **roles and permissions** per table (the **Permissions** tab of a table). That is the intended mechanism — never hand the admin secret to a client.
+
+### On deletion
+
+Deleting the deployment **also destroys its metadata database**: declared databases, permissions and relationships are lost. The databases you were exposing are **not** touched — Hasura only connects to them.
+
+### Current limits
+
+Single instance. The community edition: no paid features (query caching, enterprise mode, proprietary connectors).
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
