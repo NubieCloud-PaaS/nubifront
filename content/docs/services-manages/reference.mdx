@@ -438,6 +438,65 @@ Instance unique. L'édition communautaire : pas de fonctionnalités payantes (mi
 
 ---
 
+## DocuSeal
+
+Signature électronique de documents : vous déposez un contrat, désignez les signataires, et DocuSeal collecte leurs signatures et renvoie le document signé.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `3.2.2` |
+| CPU / RAM par défaut | 0,5 cœur / 2 Go |
+| Stockage | **aucun volume** — les données vont dans un PostgreSQL managé, les documents dans un bucket NubiS3 |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte, et celles de son bucket |
+
+> ℹ️ **DocuSeal consomme un bucket NubiS3.** Il est créé automatiquement avec l'application et supprimé avec elle. Il compte dans votre quota de stockage objet — au **plan Gratuit, qui en donne un seul**, DocuSeal est donc la seule application de ce type que vous pouvez déployer, et vous ne pouvez pas en garder un pour un usage direct en même temps.
+
+### Prérequis : un PostgreSQL managé
+
+Comme les autres applications managées, DocuSeal range ses données dans un [PostgreSQL managé](#postgresql) de votre environnement. Choisissez-en un au déploiement, ou laissez Nubiecloud en créer un.
+
+### L'accès temporaire
+
+DocuSeal n'a **aucun compte** tant que son assistant n'a pas été rempli, et le premier visiteur de son adresse en devient le propriétaire — avec accès à tous les documents qui y transiteront ensuite. Ici ce sont des contrats signés : la même protection que pour n8n s'applique, identifiants affichés une fois, à retirer une fois votre compte créé. Voir [le parcours détaillé](#laccès-temporaire-et-pourquoi-il-existe).
+
+### Champs au déploiement
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement, ou création automatique |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+Le premier démarrage prend **deux à quatre minutes** : DocuSeal joue toutes ses migrations. Une page d'erreur pendant ce laps de temps est normale.
+
+### Où vont les documents
+
+Dans un **bucket NubiS3 dédié**, jamais sur le disque du serveur. C'est ce qui permet à l'application de n'avoir aucun volume à elle : elle peut être redémarrée, déplacée ou mise à jour sans rien perdre.
+
+Ce bucket apparaît dans **NubiS3** sous le nom de l'application. Vous pouvez y voir ce qu'il contient, mais **vous ne pouvez pas le supprimer tant que l'application existe** : ce serait retirer le stockage sous une application en service, qui continuerait de paraître saine tout en perdant chaque document déposé.
+
+### Envoyer un document à signer
+
+Depuis DocuSeal : **New Document** → téléversez un PDF → placez les champs de signature → ajoutez les signataires. Chacun reçoit un lien par courriel.
+
+> ℹ️ **L'envoi de courriels demande une configuration SMTP.** Sans elle, DocuSeal fabrique les liens de signature mais ne les envoie pas : vous devez les copier depuis l'interface et les transmettre vous-même. La configuration se fait dans DocuSeal, **Settings → Email**.
+
+### À la suppression
+
+Supprimer le déploiement **détruit deux choses** :
+
+- sa **base de données** — modèles, signataires, historique de signature ;
+- son **bucket** — les documents signés et leurs pièces jointes, **définitivement**.
+
+La console vous l'annonce dans la fenêtre de confirmation. Téléchargez ce que vous voulez garder avant.
+
+### Limites actuelles
+
+Instance unique. Édition communautaire, sous licence AGPL. Un traitement en cours au moment d'un redémarrage n'est pas repris.
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.

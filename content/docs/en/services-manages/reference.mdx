@@ -438,6 +438,65 @@ Single instance. The community edition: no paid features (query caching, enterpr
 
 ---
 
+## DocuSeal
+
+Electronic document signing: upload a contract, name the signers, and DocuSeal collects their signatures and returns the signed document.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `3.2.2` |
+| Default CPU / RAM | 0.5 core / 2 GB |
+| Storage | **no volume** — data goes to a managed PostgreSQL, documents to a NubiS3 bucket |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL, and those of its bucket |
+
+> ℹ️ **DocuSeal uses one NubiS3 bucket.** It is created with the application and deleted with it. It counts towards your object storage quota — on the **Free plan, which grants a single one**, DocuSeal is therefore the only application of this kind you can deploy, and you cannot keep a bucket for direct use at the same time.
+
+### Prerequisite: a managed PostgreSQL
+
+Like the other managed applications, DocuSeal keeps its data in a [managed PostgreSQL](#postgresql) in your environment. Pick one at deployment time, or let Nubiecloud create one.
+
+### Temporary access
+
+DocuSeal has **no account** until its wizard has been completed, and the first visitor to its address becomes its owner — with access to every document that passes through it afterwards. These are signed contracts: the same protection as for n8n applies, credentials shown once, to be removed once your account exists. See [the detailed walkthrough](#the-temporary-access-and-why-it-exists).
+
+### Deployment fields
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+The first start takes **two to four minutes**: DocuSeal runs all its migrations. An error page during that time is normal.
+
+### Where documents go
+
+Into a **dedicated NubiS3 bucket**, never onto the server's disk. That is what lets the application have no volume of its own: it can be restarted, moved or upgraded without losing anything.
+
+The bucket appears in **NubiS3** under the application's name. You can see what it holds, but **you cannot delete it while the application exists**: that would remove the storage from under a running application, which would keep looking healthy while losing every document uploaded to it.
+
+### Sending a document for signature
+
+From DocuSeal: **New Document** → upload a PDF → place the signature fields → add the signers. Each one receives a link by email.
+
+> ℹ️ **Sending email requires SMTP configuration.** Without it, DocuSeal creates the signing links but does not send them: you have to copy them from the interface and pass them on yourself. Configure it in DocuSeal, **Settings → Email**.
+
+### On deletion
+
+Deleting the deployment **destroys two things**:
+
+- its **database** — templates, signers, signing history;
+- its **bucket** — signed documents and their attachments, **permanently**.
+
+The console tells you so in the confirmation dialog. Download anything you want to keep beforehand.
+
+### Current limits
+
+Single instance. Community edition, under the AGPL licence. Work in progress at the time of a restart is not resumed.
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
