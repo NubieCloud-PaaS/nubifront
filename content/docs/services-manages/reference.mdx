@@ -497,6 +497,75 @@ Instance unique. Édition communautaire, sous licence AGPL. Un traitement en cou
 
 ---
 
+## Open WebUI
+
+Interface de chat sur des modèles de langage : une seule porte d'entrée pour vos équipes, et la possibilité de faire lire vos propres documents au modèle.
+
+| Caractéristique | Valeur |
+|-----------------|--------|
+| Version | `v0.11.1` |
+| CPU / RAM par défaut | 0,5 cœur / 2 Go |
+| Stockage | **aucun volume** — conversations *et* index documentaire dans un PostgreSQL managé, fichiers téléversés dans un bucket NubiS3 |
+| Accès | URL publique, en HTTPS |
+| Réplicas | 1 (instance unique) |
+| Sauvegardes | via celles de son PostgreSQL hôte, et celles de son bucket |
+
+> ⚠️ **Nubiecloud ne fournit aucun modèle.** Open WebUI est l'interface, pas le moteur : vous y branchez le fournisseur de votre choix, avec **votre propre clé API**. C'est un choix délibéré — aucune de vos conversations ne part vers un modèle que vous n'avez pas désigné, et aucune inférence ne vous est facturée par Nubiecloud.
+
+> ℹ️ **Open WebUI consomme un bucket NubiS3**, créé avec l'application et supprimé avec elle. Comme DocuSeal, il compte dans votre quota de stockage objet — au **plan Gratuit, qui en donne un seul**, vous ne pouvez pas déployer les deux en même temps.
+
+### Prérequis : un PostgreSQL managé portant l'extension `vector`
+
+Open WebUI ne range pas que ses conversations dans son PostgreSQL hôte : **son index documentaire y va aussi**, sous forme de vecteurs. C'est ce qui lui évite d'avoir un disque à lui — et ce qui exige l'extension `vector` (pgvector) sur la base hôte.
+
+Cette extension ne peut être posée qu'**à la création** du PostgreSQL. Conséquence pratique : un PostgreSQL managé créé sans elle **ne peut pas** héberger Open WebUI. La console vous l'indique en grisant le choix, avec la raison, plutôt que de laisser le déploiement échouer plus tard. Si vous laissez Nubiecloud créer le PostgreSQL, il arrive avec l'extension.
+
+### Le compte administrateur
+
+Contrairement à n8n, Metabase et DocuSeal, Open WebUI **n'a pas d'accès temporaire à retirer** : son compte administrateur est posé au premier démarrage, et l'application est donc protégée dès sa première seconde.
+
+- L'**identifiant** est une adresse de la forme `admin@<adresse-de-votre-application>`.
+- Le **mot de passe** est affiché **une seule fois**, à la création. Notez-le : il n'est réaffiché nulle part, et se change ensuite depuis l'application.
+- Dès que ce compte existe, **l'inscription se ferme** : personne ne peut plus créer de compte depuis la page de connexion.
+
+Pour ouvrir des comptes à vos collaborateurs : **Admin Panel → Users**. Vous pouvez y rouvrir l'inscription — sachez alors que **tout visiteur de l'adresse publique** pourra créer un compte.
+
+### Champs au déploiement
+
+| Champ | Obligatoire | Notes |
+|-------|:-----------:|-------|
+| **PostgreSQL hôte** | ✅ | un PostgreSQL managé du même environnement **portant `vector`**, ou création automatique |
+| **Domaine personnalisé** | ✕ | servi en plus de l'adresse générée |
+
+Le **premier démarrage prend plusieurs minutes** : Open WebUI joue ses migrations, puis télécharge son modèle d'indexation local (`all-MiniLM-L6-v2`). Une page d'erreur pendant ce laps de temps est normale ; l'application dispose de sept minutes avant d'être considérée en échec.
+
+### Brancher votre fournisseur de modèles
+
+Dans Open WebUI : **Settings → Connections → OpenAI API**, puis renseignez l'URL de base et votre clé. Tout fournisseur exposant une **API compatible OpenAI** convient.
+
+**Ollama est désactivé** : la plateforme n'héberge pas de serveur de modèles. Laissé actif, Open WebUI chercherait à chaque démarrage un serveur qui n'existe pas.
+
+### Vos documents
+
+Les fichiers que vous téléversez vont dans le **bucket NubiS3** de l'application. Leur **index vectoriel**, lui, vit dans le PostgreSQL hôte : il pèse donc sur le stockage de cette base, pas sur celui du bucket.
+
+L'indexation est faite **localement**, par le modèle embarqué dans l'application : le contenu de vos documents ne part pas chez un tiers pour être indexé. Il part en revanche vers le fournisseur que vous avez branché au moment où vous posez une question — c'est lui qui répond.
+
+### À la suppression
+
+Supprimer le déploiement **détruit deux choses** :
+
+- sa **base de données** — conversations, comptes, index documentaire ;
+- son **bucket** — les fichiers téléversés, **définitivement**.
+
+La console vous l'annonce dans la fenêtre de confirmation. Téléchargez ce que vous voulez garder avant.
+
+### Limites actuelles
+
+Instance unique. Aucun modèle fourni par la plateforme. Édition communautaire, sous licence BSD-3-Clause.
+
+---
+
 ## Console SQL
 
 Pour les bases **PostgreSQL**, Nubiecloud intègre une **console SQL** dans l'interface : exécutez des requêtes directement depuis la console, sans installer de client.

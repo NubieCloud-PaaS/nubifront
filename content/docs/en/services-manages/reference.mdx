@@ -497,6 +497,75 @@ Single instance. Community edition, under the AGPL licence. Work in progress at 
 
 ---
 
+## Open WebUI
+
+A chat interface over language models: a single entry point for your teams, and the ability to have the model read your own documents.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | `v0.11.1` |
+| Default CPU / RAM | 0.5 core / 2 GB |
+| Storage | **no volume** — conversations *and* document index in a managed PostgreSQL, uploaded files in a NubiS3 bucket |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL, and those of its bucket |
+
+> ⚠️ **Nubiecloud provides no model.** Open WebUI is the interface, not the engine: you connect the provider of your choice, with **your own API key**. This is deliberate — none of your conversations goes to a model you did not name, and Nubiecloud bills you no inference.
+
+> ℹ️ **Open WebUI uses one NubiS3 bucket**, created with the application and deleted with it. Like DocuSeal, it counts towards your object storage quota — on the **Free plan, which grants a single one**, you cannot deploy both at the same time.
+
+### Prerequisite: a managed PostgreSQL carrying the `vector` extension
+
+Open WebUI does not only keep its conversations in its host PostgreSQL: **its document index goes there too**, as vectors. That is what spares it a disk of its own — and what requires the `vector` extension (pgvector) on the host database.
+
+That extension can only be installed **when the PostgreSQL is created**. In practice: a managed PostgreSQL created without it **cannot** host Open WebUI. The console tells you so by greying out the choice, with the reason, rather than letting the deployment fail later. If you let Nubiecloud create the PostgreSQL, it comes with the extension.
+
+### The administrator account
+
+Unlike n8n, Metabase and DocuSeal, Open WebUI has **no temporary access to remove**: its administrator account is created at first start, so the application is protected from its very first second.
+
+- The **username** is an address of the form `admin@<your-application-address>`.
+- The **password** is shown **once**, at creation. Write it down: it is displayed nowhere else, and is changed from within the application afterwards.
+- As soon as that account exists, **sign-up closes**: nobody can create an account from the login page.
+
+To open accounts for your colleagues: **Admin Panel → Users**. You can reopen sign-up there — be aware that **any visitor to the public address** will then be able to create an account.
+
+### Deployment fields
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment **carrying `vector`**, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+The **first start takes several minutes**: Open WebUI runs its migrations, then downloads its local indexing model (`all-MiniLM-L6-v2`). An error page during that time is normal; the application is given seven minutes before being considered failed.
+
+### Connecting your model provider
+
+In Open WebUI: **Settings → Connections → OpenAI API**, then fill in the base URL and your key. Any provider exposing an **OpenAI-compatible API** works.
+
+**Ollama is disabled**: the platform hosts no model server. Left enabled, Open WebUI would look for a server that does not exist at every start.
+
+### Your documents
+
+The files you upload go to the application's **NubiS3 bucket**. Their **vector index**, however, lives in the host PostgreSQL: it weighs on that database's storage, not on the bucket's.
+
+Indexing is done **locally**, by the model embedded in the application: the content of your documents is not sent to a third party to be indexed. It does go to the provider you connected at the moment you ask a question — that provider is the one answering.
+
+### On deletion
+
+Deleting the deployment **destroys two things**:
+
+- its **database** — conversations, accounts, document index;
+- its **bucket** — the uploaded files, **permanently**.
+
+The console tells you so in the confirmation dialog. Download whatever you want to keep first.
+
+### Current limits
+
+Single instance. No model provided by the platform. Community edition, under the BSD-3-Clause licence.
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
