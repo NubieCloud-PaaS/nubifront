@@ -566,6 +566,72 @@ Single instance. No model provided by the platform. Community edition, under the
 
 ---
 
+## Open Bank Project
+
+Open banking API: accounts, transactions, consents and roles, exposed following the Open Banking and PSD2 standards. It is an **API**, not a user interface — it is aimed at your developers.
+
+| Characteristic | Value |
+|----------------|-------|
+| Version | pinned by **commit** (`a98ba98`) — see below |
+| Default CPU / RAM | 1 core / 2 GB |
+| Storage | **no volume** — its 149 tables live in a managed PostgreSQL |
+| Access | public URL, over HTTPS |
+| Replicas | 1 (single instance) |
+| Backups | through those of its host PostgreSQL |
+
+> ⚠️ **The administrator account does not exist at startup, and it does not create itself.** Read the next section before deploying: it is the only thing separating a usable instance from an empty one.
+
+### The administrator account
+
+Open Bank Project has **no** administrator when created, and **signing up on its public address does not make you one**. This is the point to understand:
+
+- signing up is **open, without authentication** — that is Open Bank Project's model, designed for a sandbox where developers register themselves;
+- but an account created this way has **no rights**: no bank, no account, no transaction. Access is carried by **entitlements** (roles), which only an administrator can grant.
+
+Administrator status comes solely from the deployment's configuration. You set it **from the console**:
+
+1. open the deployment page;
+2. click **"Create the administrator"**;
+3. **write down the password shown** — it is displayed once and stored nowhere;
+4. the application restarts to take these rights into account (about two minutes).
+
+The account created carries **your own e-mail address**. Someone else in your organisation can then add themselves through the same button: this removes no one's rights.
+
+### No temporary access, and why
+
+Unlike n8n, Metabase and DocuSeal, Open Bank Project has **no provisional authentication** placed in front of its address during installation. This is not an oversight: with those applications the first visitor becomes the owner of the instance, which justifies closing the door until you arrive. Here the first visitor becomes nothing at all — the door would guard against a risk that does not exist, while preventing you from using the API yourself.
+
+### First startup
+
+Allow **about two minutes**: this is a Java application, and it creates its 149 tables on first launch. An error page during that window is normal.
+
+### The home page and its directory
+
+At the root of your instance, Open Bank Project shows a **directory of applications** from its ecosystem — API Explorer, Portal, Opey, MCP… Most appear as *"Public URL is not set"*, and **that is expected**: Nubiecloud deploys the API, not those satellite applications. Only the **OBP API** entry carries an address — yours.
+
+The useful links are further down that same page: **API Documentation** (the full list of your instance's endpoints) and **Banks**.
+
+### Deployment fields
+
+| Field | Required | Notes |
+|-------|:--------:|-------|
+| **Host PostgreSQL** | ✅ | a managed PostgreSQL in the same environment, or created automatically |
+| **Custom domain** | ✕ | served in addition to the generated address |
+
+### A version pinned by commit
+
+Open Bank Project publishes **no releases** in the usual sense: its latest tags date from 2023 and its live artefact is rebuilt continuously. Nubiecloud therefore pins a specific, verified **commit** rather than a moving tag — that is what guarantees your instance does not change under your feet. The API declares itself `BLEEDING_EDGE`.
+
+### On deletion
+
+Deleting the deployment **destroys its database**: accounts, transactions, consents, entitlements. The console tells you so in the confirmation dialog.
+
+### Current limits
+
+Single instance. `mapped` connector: Open Bank Project stores data in **its own database**, it is not wired to an existing core banking system. AGPL-3.0 licence.
+
+---
+
 ## SQL console
 
 For **PostgreSQL** databases, Nubiecloud embeds a **SQL console** in the interface: run queries straight from the console, with no client to install.
