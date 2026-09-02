@@ -1,6 +1,6 @@
 ---
 title: Services managés
-description: Bases de données, middleware et applications managés (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka, Keycloak, n8n, Metabase, Hasura, DocuSeal, Open WebUI, Open Bank Project) — fonctionnement commun, connexion depuis vos applications.
+description: Bases de données, middleware et applications managés (PostgreSQL, MySQL, Redis, RabbitMQ, Kafka, Keycloak, n8n, Metabase, Hasura, DocuSeal, Open WebUI) — fonctionnement commun, connexion depuis vos applications.
 ---
 
 Les **services managés** sont des briques d'infrastructure prêtes à l'emploi (bases de données, cache, file de messages) que vous déployez **comme une application**, dans un environnement, et que vos applications consomment via le réseau interne du projet.
@@ -20,15 +20,12 @@ Les **services managés** sont des briques d'infrastructure prêtes à l'emploi 
 | **Hasura** | API GraphQL sur vos bases | URL publique | via son PostgreSQL | — |
 | **DocuSeal** | Signature électronique | URL publique | via son PostgreSQL et son bucket | — |
 | **Open WebUI** | Chat sur vos modèles de langage | URL publique | via son PostgreSQL et son bucket | — |
-| **Open Bank Project** | API bancaire ouverte (PSD2, Open Banking) | URL publique | via son PostgreSQL | — |
 
 > ℹ️ **PostgreSQL est le service le plus complet** : haute disponibilité Blue/Green, sauvegardes automatiques vers le stockage objet, et [console SQL intégrée](/docs/services-manages/reference#console-sql). Les autres services sont déployés en instance simple. **Kafka** se déploie en 1 ou 3 réplicas — voir [Kafka](/docs/services-manages/reference#kafka).
 
-> ℹ️ **Sept de ces briques sont des applications**, pas des services : **Keycloak**, **n8n**, **Metabase**, **Hasura**, **DocuSeal**, **Open WebUI** et **Open Bank Project** s'ouvrent dans un navigateur à une URL publique, n'ont pas de port à connecter, et rangent leurs données dans un PostgreSQL managé qui reste le vôtre. **DocuSeal** et **Open WebUI** y ajoutent chacun un bucket [NubiS3](/docs/services-manages/reference#docuseal) — documents signés pour l'un, fichiers téléversés pour l'autre — créé et supprimé avec l'application.
+> ℹ️ **Six de ces briques sont des applications**, pas des services : **Keycloak**, **n8n**, **Metabase**, **Hasura**, **DocuSeal** et **Open WebUI** s'ouvrent dans un navigateur à une URL publique, n'ont pas de port à connecter, et rangent leurs données dans un PostgreSQL managé qui reste le vôtre. **DocuSeal** et **Open WebUI** y ajoutent chacun un bucket [NubiS3](/docs/services-manages/reference#docuseal) — documents signés pour l'un, fichiers téléversés pour l'autre — créé et supprimé avec l'application.
 
 > ⚠️ **[Open WebUI](/docs/services-manages/reference#open-webui) exige un PostgreSQL portant l'extension `vector`**, et cette extension ne se pose qu'à la création de la base. Un PostgreSQL existant qui ne l'a pas ne pourra pas l'héberger : la console grise alors le choix plutôt que de laisser le déploiement échouer plus tard.
-
-> ⚠️ **[Open Bank Project](/docs/services-manages/reference#open-bank-project) n'a aucun administrateur au démarrage**, et s'inscrire soi-même sur son adresse ne donne aucun droit. Le compte d'administration se crée **depuis la console**, sur la fiche du déploiement — c'est le seul chemin.
 
 > ℹ️ **MongoDB n'est plus proposé au catalogue.** Les instances déjà déployées continuent de fonctionner et restent visibles dans la console.
 
