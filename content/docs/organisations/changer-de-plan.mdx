@@ -1,24 +1,38 @@
 ---
 title: Changer de plan
-description: Passer d'un plan à un autre (upgrade/downgrade) et effets sur les quotas.
+description: Demander un plan payant, redescendre au gratuit, et effets sur les quotas.
 ---
 
-Le changement de plan se fait depuis **Organisation → Plan**. Seul le **propriétaire (Owner)** peut changer le plan.
+Tout se passe depuis **Organisation → Plan**. Seul le **propriétaire (Owner)** peut agir sur le plan.
 
-## Comment
+> ℹ️ **Les plans payants ne s'activent pas en libre-service.** Vous en faites la **demande** depuis la console ; notre équipe vous répond et procède à l'activation. La **redescente vers le plan Gratuit**, elle, reste immédiate et à votre main.
 
-1. Ouvrez la page **Plan** : la grille affiche les plans (FREE, PROFESSIONAL, BUSINESS, ENTERPRISE), avec votre plan actuel mis en évidence.
+## Demander un plan payant
+
+1. Ouvrez la page **Plan** : la grille affiche les plans, votre plan actuel mis en évidence.
 2. Choisissez la **région de facturation** (Afrique / Europe) pour voir les bons tarifs en FCFA.
-3. Sélectionnez le nouveau plan et confirmez.
+3. Sélectionnez le plan souhaité et confirmez : une **demande** part vers notre équipe.
+4. Nous revenons vers vous pour les modalités, puis nous activons le plan. **Vos quotas augmentent à ce moment-là**, pas avant.
+
+Vous pouvez aussi nous écrire directement à **contact@nubitech.io**.
+
+> 💡 Rien n'est interrompu pendant la demande : votre organisation continue de fonctionner sur son plan actuel.
+
+## Redescendre au plan Gratuit
+
+Sélectionnez **FREE** et confirmez : le changement est **immédiat**.
+
+Si votre consommation dépasse les quotas du plan Gratuit, la console **refuse** le changement et vous l'indique — libérez d'abord des ressources (supprimez des déploiements ou des projets), puis recommencez.
 
 ## Effets sur les quotas
 
-- **Montée en gamme (upgrade)** : vos quotas (CPU / RAM / Stockage, nombre de projets et de membres) augmentent immédiatement.
-- **Descente en gamme (downgrade)** : les quotas diminuent. Si votre consommation actuelle dépasse les nouvelles limites, la console vous en avertit — réduisez d'abord votre usage.
+- **À l'activation d'un plan payant** : vos quotas (CPU / RAM / Stockage, nombre de projets et de membres) passent à ceux du plan.
+- **À la redescente** : ils diminuent d'autant. D'où le refus ci-dessus quand l'usage ne rentre pas.
 
-> ℹ️ Pour le plan **ENTERPRISE** (sur devis), contactez l'équipe commerciale : il n'est pas sélectionnable en libre-service.
+Le plan fixe le **total** de l'organisation ; ce total se répartit ensuite entre vos projets — voir [Quotas](/docs/organisations/quotas).
 
 ## Voir aussi
 
 - [Plans & tarifs](/docs/organisations)
 - [Quotas](/docs/organisations/quotas)
+- [Plans & coûts](/docs/facturation)

@@ -1,24 +1,38 @@
 ---
 title: Changing plan
-description: Moving from one plan to another (upgrade/downgrade) and the effect on quotas.
+description: Requesting a paid plan, moving back to Free, and the effect on quotas.
 ---
 
-Changing plan is done from **Organization → Plan**. Only the **Owner** can change the plan.
+Everything happens from **Organization → Plan**. Only the **Owner** can act on the plan.
 
-## How
+> ℹ️ **Paid plans are not activated in self-service.** You **request** them from the console; our team gets back to you and activates the plan. Moving **back to the Free plan** stays immediate and in your hands.
 
-1. Open the **Plan** page: the grid shows the plans (FREE, PROFESSIONAL, BUSINESS, ENTERPRISE), with your current plan highlighted.
+## Requesting a paid plan
+
+1. Open the **Plan** page: the grid shows the plans, with your current plan highlighted.
 2. Choose the **billing region** (Africa / Europe) to see the right prices in FCFA.
-3. Select the new plan and confirm.
+3. Select the plan you want and confirm: a **request** is sent to our team.
+4. We get back to you about the terms, then activate the plan. **Your quotas increase at that point**, not before.
+
+You can also write to us directly at **contact@nubitech.io**.
+
+> 💡 Nothing is interrupted while the request is pending: your organization keeps running on its current plan.
+
+## Moving back to the Free plan
+
+Select **FREE** and confirm: the change is **immediate**.
+
+If your consumption exceeds the Free plan's quotas, the console **refuses** the change and tells you so — free up resources first (delete deployments or projects), then try again.
 
 ## Effect on quotas
 
-- **Upgrade**: your quotas (CPU / RAM / Storage, number of projects and members) increase immediately.
-- **Downgrade**: quotas shrink. If your current consumption exceeds the new limits, the console warns you — reduce your usage first.
+- **When a paid plan is activated**: your quotas (CPU / RAM / Storage, number of projects and members) move to that plan's values.
+- **When moving back down**: they shrink accordingly. Hence the refusal above when your usage does not fit.
 
-> ℹ️ For the **ENTERPRISE** plan (on request), contact the sales team: it cannot be selected in self-service.
+The plan sets the **total** for the organization; that total is then split across your projects — see [Quotas](/en/docs/organisations/quotas).
 
 ## See also
 
 - [Plans & pricing](/en/docs/organisations)
 - [Quotas](/en/docs/organisations/quotas)
+- [Plans & costs](/en/docs/facturation)
