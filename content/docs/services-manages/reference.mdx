@@ -226,9 +226,17 @@ Trois règles :
 
 - Les noms disponibles sont ceux de **la documentation de l'application**, pas de Nubiecloud.
 - Une variable qui porte le même nom qu'une variable posée par la plateforme **la remplace**. Vous pouvez donc casser votre instance ; la retirer suffit à revenir en arrière.
-- **N'y mettez aucun secret.** Ces valeurs sont stockées en clair ; les applications managées n'ont pas de variables sensibles, contrairement aux applications déployées depuis votre code.
+- **N'y mettez aucun secret.** Ces valeurs sont stockées en clair. Une clé d'API ou un mot de passe va dans les **secrets**, juste en dessous.
 
 Chaque enregistrement remplace la liste complète : une variable retirée de l'écran disparaît de l'instance au redéploiement suivant.
+
+### Secrets
+
+Même écran, section **Secrets** : une clé d'API de fournisseur de modèles pour Open WebUI, un mot de passe SMTP pour n8n ou Keycloak. Ils sont injectés dans le conteneur comme variables d'environnement, chiffrés au repos, et changer l'un d'eux redémarre l'application.
+
+Une valeur enregistrée n'est **jamais réaffichée**. À la modification suivante, la ligne apparaît avec son nom et un champ vide : laissez-le vide pour conserver la valeur, saisissez-en une pour la remplacer, supprimez la ligne pour retirer le secret.
+
+Une variable posée par Nubiecloud garde la main sur un secret de même nom : vous ne pouvez pas remplacer la base ou le compte administrateur par ce biais.
 
 ---
 

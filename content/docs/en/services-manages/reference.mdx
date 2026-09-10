@@ -226,9 +226,17 @@ Three rules:
 
 - The available names are those of **the application's documentation**, not Nubiecloud's.
 - A variable with the same name as one set by the platform **overrides it**. You can therefore break your instance; removing it is enough to go back.
-- **Never put a secret there.** These values are stored in plain text; managed applications have no sensitive variables, unlike applications deployed from your code.
+- **Never put a secret there.** These values are stored in plain text. An API key or a password goes into the **secrets**, right below.
 
 Each save replaces the whole list: a variable removed from the screen disappears from the instance at the next redeploy.
+
+### Secrets
+
+Same screen, **Secrets** section: a model provider API key for Open WebUI, an SMTP password for n8n or Keycloak. They are injected into the container as environment variables, encrypted at rest, and changing one restarts the application.
+
+A saved value is **never shown again**. On the next edit, the row appears with its name and an empty field: leave it empty to keep the value, type one to replace it, remove the row to delete the secret.
+
+A variable set by Nubiecloud keeps precedence over a secret of the same name: you cannot replace the database or the administrator account this way.
 
 ---
 
