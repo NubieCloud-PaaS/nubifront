@@ -206,6 +206,32 @@ The console states what is about to be destroyed before asking for confirmation.
 
 ---
 
+## Managed applications: what they share
+
+Keycloak, n8n, Metabase, Hasura, DocuSeal and Open WebUI follow the same model: an application container, a public URL, and **a dedicated database created for them on a managed PostgreSQL** you choose. Two things apply to all of them.
+
+### The dedicated database credentials
+
+At the end of the deployment, the console shows **once** — together with the administrator account or the temporary access, depending on the application — the credentials of the database created on your PostgreSQL: host, port, database name, user, password and a ready-to-paste connection URL.
+
+They are yours: plug in a BI tool, export the data, or migrate it elsewhere. The host is the internal address of your PostgreSQL, reachable from your applications in this environment, not from the Internet.
+
+> ⚠️ **Save this password before closing the window.** Like the administrator's, it is not shown again: the database stays listed among the additional databases of your PostgreSQL, without its password. If you lose it, contact support.
+
+### Extra environment variables
+
+From **Edit**, you can add environment variables to the application container, on top of those Nubiecloud sets (database, administrator account, public address). This is how you tune the options the application reads from its environment — for Open WebUI, for instance, connecting a Redis, setting persistent parameters or disabling sign-up.
+
+Three rules:
+
+- The available names are those of **the application's documentation**, not Nubiecloud's.
+- A variable with the same name as one set by the platform **overrides it**. You can therefore break your instance; removing it is enough to go back.
+- **Never put a secret there.** These values are stored in plain text; managed applications have no sensitive variables, unlike applications deployed from your code.
+
+Each save replaces the whole list: a variable removed from the screen disappears from the instance at the next redeploy.
+
+---
+
 ## Keycloak
 
 Identity server: authentication, SSO and user accounts for your applications, through **OIDC** and **SAML**.
