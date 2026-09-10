@@ -206,6 +206,32 @@ La console énonce ce qui va être détruit avant de demander confirmation. Pour
 
 ---
 
+## Applications managées : ce qui leur est commun
+
+Keycloak, n8n, Metabase, Hasura, DocuSeal et Open WebUI partagent le même modèle : un conteneur applicatif, une URL publique, et **une base dédiée créée pour elles sur un PostgreSQL managé** que vous choisissez. Deux choses valent pour toutes.
+
+### Les identifiants de la base dédiée
+
+À la fin du déploiement, la console affiche **une seule fois** — avec le compte administrateur ou l'accès temporaire, selon l'application — les identifiants de la base créée sur votre PostgreSQL : hôte, port, nom de la base, utilisateur, mot de passe et URL de connexion prête à coller.
+
+Ils sont à vous : branchez un outil de BI, exportez les données, ou migrez-les ailleurs. L'hôte est l'adresse interne de votre PostgreSQL, joignable depuis vos applications de cet environnement, pas depuis Internet.
+
+> ⚠️ **Notez ce mot de passe avant de fermer la fenêtre.** Comme celui de l'administrateur, il n'est pas réaffiché : la base reste visible dans la liste des bases additionnelles de votre PostgreSQL, sans son mot de passe. Si vous le perdez, contactez le support.
+
+### Variables d'environnement supplémentaires
+
+Depuis **Modifier**, vous pouvez ajouter des variables d'environnement au conteneur de l'application, en plus de celles que Nubiecloud pose (base de données, compte administrateur, adresse publique). C'est ainsi que se règlent les options que l'application lit dans son environnement — par exemple, pour Open WebUI, brancher un Redis, fixer les paramètres persistants ou désactiver l'inscription.
+
+Trois règles :
+
+- Les noms disponibles sont ceux de **la documentation de l'application**, pas de Nubiecloud.
+- Une variable qui porte le même nom qu'une variable posée par la plateforme **la remplace**. Vous pouvez donc casser votre instance ; la retirer suffit à revenir en arrière.
+- **N'y mettez aucun secret.** Ces valeurs sont stockées en clair ; les applications managées n'ont pas de variables sensibles, contrairement aux applications déployées depuis votre code.
+
+Chaque enregistrement remplace la liste complète : une variable retirée de l'écran disparaît de l'instance au redéploiement suivant.
+
+---
+
 ## Keycloak
 
 Serveur d'identité : authentification, SSO et comptes utilisateurs pour vos applications, via **OIDC** et **SAML**.
