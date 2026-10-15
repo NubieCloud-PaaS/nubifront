@@ -16,7 +16,7 @@ Parce que la mise en production, c'est un autre monde. Provisionner un serveur, 
 
 Quand vous etes une startup de 3 developpeurs ou un freelance solo, la question c'est : qui fait tout ca ?
 
-## Le quotidien des equipes en Afrique de l'Ouest
+## Le quotidien des equipes en Afrique de centre
 
 En Afrique de l'Ouest, cette complexite est encore plus penalisante. Les talents DevOps sont rares et chers. La plupart des equipes sont composees de developpeurs full-stack qui doivent *aussi* gerer l'infrastructure, souvent sur des plateformes concues pour le marche americain et facturees en dollars.
 
