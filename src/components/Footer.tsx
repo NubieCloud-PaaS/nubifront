@@ -31,6 +31,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-text-tertiary">
               <li><a href="mailto:contact@nubitech.io" className="hover:text-text-primary transition-colors">Contact</a></li>
               <li><a href="mailto:support@nubitech.io" className="hover:text-text-primary transition-colors">Support</a></li>
+              <li><a href="/confidentialite" className="hover:text-text-primary transition-colors">Confidentialité</a></li>
               <li><a href={`${CONSOLE_URL}/login`} className="hover:text-text-primary transition-colors">Connexion</a></li>
             </ul>
           </div>
