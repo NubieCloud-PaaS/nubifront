@@ -11,11 +11,11 @@ const nextConfig = {
       },
     ],
   },
-  // L'URL canonique de la politique de confidentialité est `/confidentialite`
-  // (les routes du site sont en français : /docs, /blog). Mais une URL de
-  // politique de confidentialité est devinée par des tiers — annuaires de
-  // connecteurs, robots, navigateurs — qui essaient d'abord les formes
-  // habituelles. Un 404 sur /privacy se lit comme « pas de politique ».
+  // Les URL canoniques des pages légales sont en français, comme le reste du
+  // site (/docs, /blog) : `/confidentialite` et `/conditions`. Mais ces deux
+  // URL-là sont DEVINÉES par des tiers — annuaires de connecteurs, robots,
+  // navigateurs — qui essaient d'abord les formes habituelles. Un 404 sur
+  // /privacy ou /terms se lit comme « ce document n'existe pas ».
   async redirects() {
     return [
       { source: '/privacy', destination: '/confidentialite', permanent: true },
@@ -25,6 +25,9 @@ const nextConfig = {
         destination: '/confidentialite',
         permanent: true,
       },
+      { source: '/cgu', destination: '/conditions', permanent: true },
+      { source: '/terms', destination: '/conditions', permanent: true },
+      { source: '/terms-of-service', destination: '/conditions', permanent: true },
     ];
   },
 };
