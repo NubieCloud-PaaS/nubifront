@@ -1,0 +1,122 @@
+---
+title: MCP reference
+description: The 28 tools of the NubieCloud MCP server, their capabilities, the available resources and procedures, and the protocol revisions supported.
+---
+
+This page lists what the server exposes. For connecting and the permission model, see [MCP server](/en/docs/mcp).
+
+> ℹ️ **This list is the production server's**, read from its registry. Your agent discovers it on connection — it doesn't need to know it in advance.
+
+## Read tools (16)
+
+They change nothing. Your client can allow them as a group.
+
+| Tool | What it does |
+|---|---|
+| `whoami` | Who you are, and in which organisation |
+| `list_projects` | Your projects |
+| `describe_project` | A project, its environments and its deployments |
+| `describe_deployment` | An application's state: status, image served, URL, auto-deploy |
+| `get_deployment_config` | Environment variables, **names** of the secrets set, workload type and command |
+| `get_deployment_logs` | An application's logs |
+| `get_deployment_events` | A deployment's Kubernetes events |
+| `check_deployment_health` | Probe an application on its public URL |
+| `list_builds` | A project's builds |
+| `get_build` | A build's detail, and whether its image was put into service |
+| `get_build_logs` | A build's logs |
+| `list_repositories` | Connected git repositories |
+| `detect_stack` | Infer a repository's technology stack |
+| `plan_stack` | Propose a deployment plan, executing nothing |
+| `list_databases` | The databases of a managed PostgreSQL |
+| `run_sql_readonly` | Query a database **read-only**, through a dedicated role |
+
+> ℹ️ **`run_sql_readonly` uses a separate PostgreSQL role**, member of nothing, with `SELECT` only and a connection limit. It is not your application's role: reading does not require granting write.
+
+## Write tools (11)
+
+They create or modify. Your client will ask for approval.
+
+| Tool | What it does |
+|---|---|
+| `create_organisation` | Create an organisation |
+| `create_project` | Create a project |
+| `create_environment` | Create an environment |
+| `build_image` | Build an image from a repository — **does not deploy** |
+| `deploy_build` | Put a built image into service on a deployment |
+| `create_code_app` | Deploy a code application from an **already built** image |
+| `create_managed_service` | Deploy a managed service or application |
+| `update_deployment` | Modify a deployment: memory, CPU, storage, replicas, port, image tag, workload type, start command |
+| `set_environment_variables` | Save non-secret variables |
+| `set_secrets` | Set secrets — **entered in the console** |
+| `set_auto_deploy` | Turn a deployment's auto-deploy on or off |
+
+> ⚠️ **`set_environment_variables` REPLACES the list, it does not add to it.** The tool refuses by itself a payload that would drop variables you didn't name — but read the current state first with `get_deployment_config` and send back the full set you want to keep.
+
+> ℹ️ **`build_image` builds, `deploy_build` puts into service.** The two are deliberately separate: a built image only reaches your production through an explicit action.
+
+### Workload type and start command
+
+`create_code_app` and `update_deployment` accept `workload_type`:
+
+| Value | What it produces |
+|---|---|
+| `web` | Application exposed on the internet (default) |
+| `private` | Reachable inside the cluster only |
+| `worker` | Background process: **no Service, no Ingress, no probes, therefore no URL** |
+| `cron` | Scheduled task — `schedule` then becomes mandatory |
+
+`command` overrides the image's ENTRYPOINT: essential for a `worker` or a `cron` whose image starts a web server by default, otherwise the container starts its server and the task never runs. An **empty list** hands control back to the image's ENTRYPOINT — which is not the same as omitting `command`.
+
+## Operate tool (1)
+
+| Tool | What it does |
+|---|---|
+| `restart_deployment` | Restart an application — **sealed confirmation required** |
+
+## No deletion tool
+
+There is none, and there is no capability disabled "for later" either. The registry refuses at import any tool whose name contains `delete`, `destroy`, `drop`, `purge`, `remove`, `wipe` or `reset`, and a test checks this across the whole catalogue. **Every deletion happens in the console.**
+
+## Resources (4)
+
+An agent reads these to inform itself, without calling a tool.
+
+| Resource | Contents |
+|---|---|
+| `nubie://catalog/frameworks` | The frameworks the platform can deploy |
+| `nubie://catalog/managed-services` | The managed services and applications available |
+| `nubie://deployment/{id}/values` | A deployment's configuration, **secrets removed** |
+| `nubie://project/{id}/access` | Who has access to a project, and why |
+
+> ℹ️ **Secrets are *removed*, not masked.** Only their names remain. A masked value is still a value in the model's context, which it could copy verbatim into a later write.
+
+## Procedures (4)
+
+Step-by-step guides the server provides to the agent, so it doesn't improvise the order of operations.
+
+| Procedure | When |
+|---|---|
+| `mettre-en-ligne-un-depot` | From git repository to running application |
+| `diagnostiquer-un-deploiement-en-echec` | An application won't start or won't respond |
+| `analyser-une-construction-qui-echoue` | A build fails |
+| `configurer-les-variables-d-une-application` | Set or change variables without losing any |
+
+## Protocol
+
+The server speaks revision **`2026-07-28`** of the Model Context Protocol natively, and also serves **`2025-06-18`** and **`2025-03-26`** for clients that stopped there.
+
+Revision `2024-11-05` is **not** announced: it required an HTTP+SSE transport this server does not implement, and announcing it would promise what isn't delivered.
+
+The server is **stateless**: there is no session to maintain, each request carries its own authentication.
+
+## Authentication, for an integrator
+
+| | |
+|---|---|
+| Endpoint | `POST https://api.nubiecloud.io/mcp` |
+| Unauthenticated | `401` with `WWW-Authenticate: Bearer resource_metadata="…"` |
+| Resource metadata | `/.well-known/oauth-protected-resource/mcp` |
+| Authorization server | `/.well-known/oauth-authorization-server` |
+| Client registration | **Client ID Metadata Document (CIMD)** — no dynamic registration, no client to pre-declare |
+
+The consent screen names the **host** of the client's identifier, never the name the client gave itself: anyone can write "Claude" in their metadata, nobody can claim a domain they don't control.

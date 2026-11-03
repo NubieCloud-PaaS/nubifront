@@ -1,0 +1,122 @@
+---
+title: Référence MCP
+description: Les 28 outils du serveur MCP NubieCloud, leurs capacités, les ressources et les procédures disponibles, et les révisions du protocole prises en charge.
+---
+
+Cette page liste ce que le serveur expose. Pour la connexion et le modèle de droits, voir [Serveur MCP](/docs/mcp).
+
+> ℹ️ **Cette liste est celle du serveur en production**, relevée sur son registre. Votre agent la découvre lui-même à la connexion — il n'a pas à la connaître d'avance.
+
+## Outils de lecture (16)
+
+Ils ne changent rien. Votre client peut les autoriser en bloc.
+
+| Outil | Ce qu'il fait |
+|---|---|
+| `whoami` | Qui vous êtes, et dans quelle organisation |
+| `list_projects` | Vos projets |
+| `describe_project` | Un projet, ses environnements et ses déploiements |
+| `describe_deployment` | L'état d'une application : statut, image servie, URL, auto-déploiement |
+| `get_deployment_config` | Variables d'environnement, **noms** des secrets posés, type de charge et commande |
+| `get_deployment_logs` | Les journaux d'une application |
+| `get_deployment_events` | Les événements Kubernetes d'un déploiement |
+| `check_deployment_health` | Sonder une application sur son URL publique |
+| `list_builds` | Les constructions d'un projet |
+| `get_build` | Le détail d'une construction, et si son image a été mise en service |
+| `get_build_logs` | Les journaux d'une construction |
+| `list_repositories` | Les dépôts git connectés |
+| `detect_stack` | Déduire la pile technique d'un dépôt |
+| `plan_stack` | Proposer un plan de déploiement, sans rien exécuter |
+| `list_databases` | Les bases d'un PostgreSQL managé |
+| `run_sql_readonly` | Interroger une base **en lecture seule**, par un rôle dédié |
+
+> ℹ️ **`run_sql_readonly` passe par un rôle PostgreSQL distinct**, membre d'aucun groupe, avec le seul droit `SELECT` et une limite de connexions. Ce n'est pas le rôle de votre application : lire n'exige pas d'accorder l'écriture.
+
+## Outils d'écriture (11)
+
+Ils créent ou modifient. Votre client vous demandera une approbation.
+
+| Outil | Ce qu'il fait |
+|---|---|
+| `create_organisation` | Créer une organisation |
+| `create_project` | Créer un projet |
+| `create_environment` | Créer un environnement |
+| `build_image` | Construire une image depuis un dépôt — **ne déploie pas** |
+| `deploy_build` | Mettre une image construite en service sur un déploiement |
+| `create_code_app` | Déployer une application de code à partir d'une image **déjà construite** |
+| `create_managed_service` | Déployer un service ou une application managée |
+| `update_deployment` | Modifier un déploiement : mémoire, processeur, stockage, répliques, port, étiquette d'image, type de charge, commande de démarrage |
+| `set_environment_variables` | Enregistrer les variables non secrètes |
+| `set_secrets` | Poser des secrets — **par saisie dans la console** |
+| `set_auto_deploy` | Activer ou couper l'auto-déploiement d'un déploiement |
+
+> ⚠️ **`set_environment_variables` REMPLACE la liste, il ne s'y ajoute pas.** L'outil refuse de lui-même un envoi qui perdrait des variables que vous n'avez pas nommées — mais relisez d'abord avec `get_deployment_config` et renvoyez l'ensemble de celles à conserver.
+
+> ℹ️ **`build_image` construit, `deploy_build` met en service.** Les deux sont distincts à dessein : une image construite n'atteint votre production que par un geste explicite.
+
+### Type de charge et commande de démarrage
+
+`create_code_app` et `update_deployment` acceptent `workload_type` :
+
+| Valeur | Ce que ça produit |
+|---|---|
+| `web` | Application exposée sur Internet (défaut) |
+| `private` | Joignable dans le cluster seulement |
+| `worker` | Processus de fond : **aucun Service, aucun Ingress, aucune sonde, donc aucune URL** |
+| `cron` | Tâche planifiée — `schedule` devient alors obligatoire |
+
+`command` écrase l'ENTRYPOINT de l'image : indispensable pour un `worker` ou un `cron` dont l'image démarre un serveur web par défaut, sans quoi le conteneur lance son serveur et la tâche ne tourne jamais. Une **liste vide** rend la main à l'ENTRYPOINT de l'image — ce qui n'est pas la même chose que ne pas passer `command`.
+
+## Outil d'opération (1)
+
+| Outil | Ce qu'il fait |
+|---|---|
+| `restart_deployment` | Redémarrer une application — **confirmation scellée exigée** |
+
+## Aucun outil de suppression
+
+Il n'y en a pas, et il n'y a pas non plus de capacité désactivée « pour plus tard ». Le registre refuse à l'import tout outil dont le nom contient `delete`, `destroy`, `drop`, `purge`, `remove`, `wipe` ou `reset`, et un test le vérifie sur l'ensemble du catalogue. **Toute suppression se fait dans la console.**
+
+## Ressources (4)
+
+Un agent les lit pour se renseigner, sans appeler d'outil.
+
+| Ressource | Contenu |
+|---|---|
+| `nubie://catalog/frameworks` | Les frameworks que la plateforme sait déployer |
+| `nubie://catalog/managed-services` | Les services et applications managés disponibles |
+| `nubie://deployment/{id}/values` | La configuration d'un déploiement, **secrets retirés** |
+| `nubie://project/{id}/access` | Qui accède à un projet, et pourquoi |
+
+> ℹ️ **Les secrets sont *retirés*, pas masqués.** Seuls leurs noms subsistent. Une valeur masquée resterait une valeur dans le contexte du modèle, qui pourrait la recopier telle quelle dans un enregistrement suivant.
+
+## Procédures (4)
+
+Des marches à suivre que le serveur fournit à l'agent, pour qu'il n'improvise pas l'ordre des opérations.
+
+| Procédure | Quand |
+|---|---|
+| `mettre-en-ligne-un-depot` | Du dépôt git à l'application en ligne |
+| `diagnostiquer-un-deploiement-en-echec` | Une application ne démarre pas ou ne répond pas |
+| `analyser-une-construction-qui-echoue` | Une construction échoue |
+| `configurer-les-variables-d-une-application` | Poser ou changer des variables sans en perdre |
+
+## Protocole
+
+Le serveur parle nativement la révision **`2026-07-28`** du Model Context Protocol, et sert également **`2025-06-18`** et **`2025-03-26`** pour les clients qui en sont restés là.
+
+La révision `2024-11-05` n'est **pas** annoncée : elle exigeait un transport HTTP+SSE que ce serveur n'implémente pas, et l'annoncer serait promettre ce qui n'est pas tenu.
+
+Le serveur est **sans état** : il n'y a pas de session à maintenir, chaque requête porte son authentification.
+
+## Authentification, pour un intégrateur
+
+| | |
+|---|---|
+| Point d'entrée | `POST https://api.nubiecloud.io/mcp` |
+| Non authentifié | `401` avec `WWW-Authenticate: Bearer resource_metadata="…"` |
+| Métadonnées de ressource | `/.well-known/oauth-protected-resource/mcp` |
+| Serveur d'autorisation | `/.well-known/oauth-authorization-server` |
+| Enregistrement du client | **Client ID Metadata Document (CIMD)** — pas d'enregistrement dynamique, pas de client à pré-déclarer |
+
+L'écran de consentement nomme l'**hôte** de l'identifiant du client, jamais le nom qu'il s'est donné lui-même : n'importe qui peut écrire « Claude » dans ses métadonnées, personne ne peut se réclamer d'un domaine qu'il ne contrôle pas.

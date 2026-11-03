@@ -1,0 +1,85 @@
+---
+title: Serveur MCP
+description: Piloter NubieCloud depuis un agent IA (Claude, Claude Code, Cursor, Codex) via le Model Context Protocol — connexion, capacités, approbations, et ce que l'agent ne peut pas faire.
+---
+
+Le **serveur MCP** de NubieCloud expose la plateforme à un agent IA. Vous décrivez ce que vous voulez en langage naturel — « déploie la branche `main` de mon API en recette », « pourquoi ce pod ne démarre pas ? » — et l'agent appelle les outils de la plateforme à votre place, **avec vos droits et jamais plus**.
+
+Le protocole employé est le [Model Context Protocol](https://modelcontextprotocol.io), le standard ouvert que Claude, Claude Code et d'autres clients parlent nativement.
+
+## Adresse du serveur
+
+```
+https://api.nubiecloud.io/mcp
+```
+
+Une seule adresse pour tout le monde : c'est votre connexion qui détermine l'organisation, les projets et les droits que l'agent voit. Il n'y a pas d'URL par client à retenir.
+
+## Se connecter
+
+### Depuis Claude (claude.ai ou l'application de bureau)
+
+1. **Paramètres → Connecteurs → Ajouter un connecteur personnalisé**
+2. Collez `https://api.nubiecloud.io/mcp`
+3. Claude vous redirige vers NubieCloud pour vous authentifier, puis vous demande d'autoriser l'accès. **L'écran d'autorisation nomme l'organisation concernée** — vérifiez-la avant d'accepter.
+
+L'authentification passe par **OAuth 2.0** : Claude ne voit jamais votre mot de passe, et vous pouvez révoquer l'accès à tout moment depuis la console sans changer quoi que ce soit d'autre.
+
+### Depuis un client en terminal
+
+Les clients qui ne font pas d'OAuth acceptent un **jeton**. Dans la console, ouvrez **Serveur MCP** dans le menu latéral : l'écran donne l'adresse du serveur, permet d'émettre un jeton, et montre l'activité des dernières 24 heures (appels reçus, erreurs, refus).
+
+Un jeton est rattaché à **une organisation dont vous êtes déjà membre**, et porte les droits que vous y avez — ni plus, ni moins. Vous pouvez en émettre plusieurs (un par machine, par exemple) et en révoquer un seul sans toucher aux autres.
+
+> ℹ️ **La première organisation se crée dans la console**, pas par un agent : un jeton s'émet depuis une organisation, donc un compte qui n'en a aucune n'a rien d'où en émettre un.
+
+## Révoquer un accès
+
+Toujours depuis **Serveur MCP** dans la console : les **jetons** se révoquent un par un, et les **sessions** ouvertes par un client OAuth aussi. La révocation est **immédiate** — l'appel suivant de l'agent est refusé.
+
+## Ce que l'agent peut faire, et ce qu'il ne peut pas
+
+Chaque outil porte une **capacité**, et il y en a trois :
+
+| Capacité | Ce que c'est | Exemples |
+|---|---|---|
+| **Lecture** | Consulter sans rien changer | lister vos projets, lire des journaux, sonder une application, interroger une base **en lecture seule** |
+| **Écriture** | Créer et modifier | créer un projet, déployer une application, changer la mémoire, poser des variables |
+| **Opération** | Agir sur l'existant sans le modifier | redémarrer une application |
+
+> ⚠️ **Aucun outil ne détruit quoi que ce soit, et ce n'est pas un réglage.** Il n'existe pas de capacité « suppression » dans le modèle : supprimer un déploiement, un environnement, un projet ou une base **se fait dans la console**, par une personne. Un agent ne peut pas détruire vos données, même si on le lui demande, même si son client est mal configuré.
+
+Les droits effectifs sont l'**intersection** de ce que porte votre connexion et de ce que vous pouvez faire dans le projet visé. Un agent n'hérite jamais de plus que vous.
+
+## Approbations : ce que votre client vous demandera
+
+Les outils de **lecture** se déclarent comme tels auprès du client. Dans Claude, ils apparaissent groupés sous **« Outils en lecture seule »** avec un réglage unique : vous pouvez les autoriser tous d'un coup, et ne plus être interrompu pour consulter des journaux ou lister des projets.
+
+Les outils d'**écriture** et d'**opération** demandent une approbation. Deux d'entre eux vont plus loin et exigent une **confirmation scellée**, que le client ne peut pas pré-approuver :
+
+- **Poser des secrets**
+- **Redémarrer une application**
+
+## Vos secrets ne passent jamais par le modèle
+
+Quand un agent a besoin de poser un secret, il **ne vous le demande pas dans la conversation** : il vous renvoie vers une page de la console où vous le saisissez vous-même. La valeur ne traverse donc ni le contexte du modèle, ni l'historique de la conversation, ni son fournisseur.
+
+Même principe à la création d'un service managé : les mots de passe sont **générés côté serveur** et ne sont jamais restitués à l'agent. La console vous les montre, c'est son rôle.
+
+Et dans l'autre sens : ce que l'agent **relit** d'une configuration ne contient que les **noms** des secrets, jamais leurs valeurs.
+
+## Ce qui reste dans la console
+
+- **Toute suppression** (déploiement, environnement, projet, base, bucket).
+- **La création de votre première organisation.**
+- **La saisie des secrets.**
+- **La connexion d'un dépôt git** (OAuth GitHub ou GitLab).
+
+## Un avertissement qui vaut d'être lu
+
+Les journaux et les sorties d'une application sont écrits **par cette application**. Le serveur marque donc explicitement ce contenu comme **non fiable** quand il le rend à l'agent : qui peut faire écrire une chaîne dans vos journaux peut tenter d'adresser le modèle. Un agent bien conçu en tient compte ; sachez que la plateforme le signale.
+
+## Pour aller plus loin
+
+- [Référence des outils](/docs/mcp/reference) — les 28 outils, les ressources et les procédures.
+- [Sécurité](/docs/securite) — les garanties générales de la plateforme.

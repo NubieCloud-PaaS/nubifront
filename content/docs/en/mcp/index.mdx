@@ -1,0 +1,85 @@
+---
+title: MCP server
+description: Drive NubieCloud from an AI agent (Claude, Claude Code, Cursor, Codex) over the Model Context Protocol — connecting, capabilities, approvals, and what the agent cannot do.
+---
+
+NubieCloud's **MCP server** exposes the platform to an AI agent. You describe what you want in plain language — "deploy the `main` branch of my API to staging", "why won't this pod start?" — and the agent calls the platform's tools on your behalf, **with your permissions and never more**.
+
+The protocol is the [Model Context Protocol](https://modelcontextprotocol.io), the open standard that Claude, Claude Code and other clients speak natively.
+
+## Server address
+
+```
+https://api.nubiecloud.io/mcp
+```
+
+One address for everyone: it is your connection that determines which organisation, projects and permissions the agent sees. There is no per-customer URL to remember.
+
+## Connecting
+
+### From Claude (claude.ai or the desktop app)
+
+1. **Settings → Connectors → Add custom connector**
+2. Paste `https://api.nubiecloud.io/mcp`
+3. Claude redirects you to NubieCloud to sign in, then asks you to authorise access. **The authorisation screen names the organisation concerned** — check it before accepting.
+
+Authentication uses **OAuth 2.0**: Claude never sees your password, and you can revoke access at any time from the console without changing anything else.
+
+### From a terminal client
+
+Clients that don't do OAuth accept a **token**. In the console, open **MCP server** in the sidebar: the screen gives the server address, lets you issue a token, and shows the last 24 hours of activity (calls received, errors, refusals).
+
+A token belongs to **an organisation you are already a member of**, and carries the permissions you hold there — no more, no less. You can issue several (one per machine, for instance) and revoke one without touching the others.
+
+> ℹ️ **Your first organisation is created in the console**, not by an agent: a token is issued from an organisation, so an account with none has nothing to issue one from.
+
+## Revoking access
+
+From **MCP server** in the console: **tokens** are revoked one by one, and so are **sessions** opened by an OAuth client. Revocation is **immediate** — the agent's next call is refused.
+
+## What the agent can do, and what it cannot
+
+Every tool carries a **capability**, and there are three:
+
+| Capability | What it means | Examples |
+|---|---|---|
+| **Read** | Look without changing anything | list your projects, read logs, probe an application, query a database **read-only** |
+| **Write** | Create and modify | create a project, deploy an application, change memory, set variables |
+| **Operate** | Act on what exists without modifying it | restart an application |
+
+> ⚠️ **No tool destroys anything, and this is not a setting.** There is no "destroy" capability in the model: deleting a deployment, an environment, a project or a database **happens in the console**, by a person. An agent cannot destroy your data, even if asked to, even if its client is misconfigured.
+
+Effective permissions are the **intersection** of what your connection carries and what you can do in the target project. An agent never inherits more than you have.
+
+## Approvals: what your client will ask
+
+**Read** tools declare themselves as such to the client. In Claude they appear grouped under **"Read-only tools"** with a single setting: you can allow them all at once and stop being interrupted to read logs or list projects.
+
+**Write** and **operate** tools ask for approval. Two of them go further and require a **sealed confirmation** that the client cannot pre-approve:
+
+- **Setting secrets**
+- **Restarting an application**
+
+## Your secrets never pass through the model
+
+When an agent needs to set a secret, it **does not ask you in the conversation**: it points you to a console page where you enter it yourself. The value therefore never crosses the model's context, the conversation history, or its provider.
+
+Same principle when creating a managed service: passwords are **generated server-side** and never returned to the agent. The console shows them to you, which is its job.
+
+And in the other direction: what an agent **reads back** from a configuration contains only the **names** of secrets, never their values.
+
+## What stays in the console
+
+- **Every deletion** (deployment, environment, project, database, bucket).
+- **Creating your first organisation.**
+- **Entering secrets.**
+- **Connecting a git repository** (GitHub or GitLab OAuth).
+
+## One warning worth reading
+
+An application's logs and output are written **by that application**. The server therefore marks that content explicitly as **untrusted** when returning it to the agent: whoever can get a string written into your logs can attempt to address the model. A well-built agent accounts for this; you should know the platform flags it.
+
+## Going further
+
+- [Tool reference](/en/docs/mcp/reference) — the 28 tools, the resources and the procedures.
+- [Security](/en/docs/securite) — the platform's general guarantees.
