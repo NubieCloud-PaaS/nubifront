@@ -149,7 +149,7 @@ function DeployIllustration() {
         {[
           { label: 'SSL', value: '✓', color: 'text-green-400' },
           { label: 'CDN', value: '✓', color: 'text-green-400' },
-          { label: 'Uptime', value: '99.9%', color: 'text-accent-400' },
+          { label: 'Uptime', value: '99,5%', color: 'text-accent-400' },
         ].map((stat, i) => (
           <motion.div
             key={stat.label}

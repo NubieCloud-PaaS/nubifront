@@ -42,7 +42,7 @@ const plans: Plan[] = [
       '30 builds/mois',
       'Backup hebdomadaire (7j)',
       'Support communautaire',
-      'SLA 95%',
+      'Disponibilite sans engagement',
     ],
   },
   {
@@ -82,8 +82,8 @@ const plans: Plan[] = [
       'Builds illimites prioritaires',
       'Deploiement < 5 min (Blue/Green)',
       'Backup quotidien (90j)',
-      'Support prioritaire (< 2h)',
-      'Load balancing avance, SLA 99.9%',
+      'Support prioritaire (1 jour ouvre)',
+      'Load balancing avance, SLA 99,5%',
     ],
   },
   {
@@ -102,10 +102,10 @@ const plans: Plan[] = [
       'Infrastructure 100% dediee',
       'Isolation complete et securisee',
       'Serveur Build & Deploy dedies',
-      'Support Enterprise 24/7 (< 30 min)',
+      'Support Enterprise (1 jour ouvre)',
       'Account + Technical Manager dedies',
       'Conformite (ISO, SOC2, RGPD)',
-      'SLA 99.99% avec penalites',
+      'SLA 99,5%, engagements renforces sur devis',
     ],
   },
 ];

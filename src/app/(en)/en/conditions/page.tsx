@@ -407,7 +407,7 @@ export default function TermsPage() {
               The platform offers <strong>four plans</strong> — Free, Professional, Business and
               Enterprise — whose quotas and monthly prices are published in the{' '}
               <a href="/en/docs">documentation</a>. Prices are expressed{' '}
-              <strong>in XAF (FCFA)</strong> and <strong>differentiated by region</strong> (Africa
+              <strong>in FCFA</strong> and <strong>differentiated by region</strong> (Africa
               / Europe); the Enterprise plan is quoted on request.
             </p>
 

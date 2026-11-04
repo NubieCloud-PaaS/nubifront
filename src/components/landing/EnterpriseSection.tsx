@@ -23,8 +23,8 @@ const benefits = [
   },
   {
     icon: PhoneIcon,
-    title: 'Support 24/7 Dedie',
-    description: 'Account Manager personnel, support prioritaire et SLA 99.99% garanti.',
+    title: 'Support dedie',
+    description: 'Account Manager personnel, support prioritaire et engagements negocies au contrat.',
   },
   {
     icon: ArrowsPointingOutIcon,
@@ -134,7 +134,7 @@ export default function EnterpriseSection() {
                   className="flex items-center justify-center gap-2 pt-2"
                 >
                   <LockClosedIcon className="w-4 h-4 text-green-400" />
-                  <span className="text-xs text-green-400 font-mono">Encryption E2E &middot; RGPD &middot; SLA 99.99%</span>
+                  <span className="text-xs text-green-400 font-mono">Chiffrement &middot; RGPD &middot; SLA 99,5%</span>
                 </motion.div>
               </div>
             </div>

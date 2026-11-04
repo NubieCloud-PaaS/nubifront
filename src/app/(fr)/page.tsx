@@ -10,6 +10,7 @@ import EnterpriseSection from '@/components/landing/EnterpriseSection';
 import FAQSection from '@/components/landing/FAQSection';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/Footer';
+import { FAQ } from '@/content/faq';
 
 const jsonLd = {
   organization: {
@@ -37,6 +38,9 @@ const jsonLd = {
     offers: {
       '@type': 'AggregateOffer',
       lowPrice: '0',
+      // XOF ou XAF ? La grille affiche « FCFA », qui couvre les DEUX zones, et
+      // `priceCurrency` exige un code ISO 4217. La valeur d'origine est conservée
+      // faute d'avoir pu la trancher : à confirmer selon la zone facturée.
       priceCurrency: 'XOF',
       offerCount: 4,
     },
@@ -52,72 +56,19 @@ const jsonLd = {
   faqPage: {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: "Qu'est-ce que Nubiecloud ?",
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Nubiecloud est une plateforme cloud PaaS (Platform as a Service) qui permet de deployer des applications web, des SaaS et des ERP en quelques minutes. Nous gerons l'infrastructure pour que vous puissiez vous concentrer sur votre code.",
-        },
+    // DÉRIVÉ de `src/content/faq.ts`, jamais recopié. Les huit questions l'étaient
+    // mot pour mot ici, et c'est la copie la plus coûteuse à laisser dériver : Google
+    // affiche ce balisage dans ses résultats, donc une réponse périmée y survit à la
+    // correction de l'écran. Trois d'entre elles contredisaient les conditions
+    // d'utilisation (SLA du plan Gratuit, 99,9 %, pénalités).
+    mainEntity: FAQ.map((entree) => ({
+      '@type': 'Question',
+      name: entree.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: entree.reponse,
       },
-      {
-        '@type': 'Question',
-        name: 'Quels langages et frameworks sont supportes ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Nubiecloud supporte Node.js, Python, PHP, Go, Java, .NET, ainsi que les frameworks populaires comme Next.js, React, Django, Laravel, et bien d\'autres. Nous detectons automatiquement votre stack technique.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Comment fonctionne le deploiement ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Connectez votre depot GitHub ou GitLab, configurez vos variables d'environnement, et poussez votre code. A chaque git push, Nubiecloud build, teste et deploie automatiquement votre application.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Puis-je deployer WordPress ou Odoo en un clic ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Oui ! Nubiecloud propose des templates preconfigures pour WordPress, Odoo, Dolibarr et d'autres SaaS/ERP. Le deploiement se fait en un clic avec base de donnees et SSL inclus.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Quelle est la difference entre les plans Free, Pro et Enterprise ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Le plan Free est ideal pour tester avec 1 projet et des ressources limitees. Le plan Professional offre plus de puissance avec 5 projets et du load balancing. Enterprise propose une infrastructure 100% dediee avec SLA 99.99% et support 24/7.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Pourquoi les tarifs sont en XOF ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Nubiecloud est concu pour les developpeurs et entreprises d'Afrique de l'Ouest. Nos tarifs en XOF (Franc CFA) eliminent les complications liees au change et offrent une facturation locale transparente.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Puis-je essayer gratuitement ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Oui, le plan Gratuit vous permet de tester Nubiecloud gratuitement, sans limite de temps et sans carte bancaire. Vous pouvez deployer une application avec 0,5 vCPU, 1 Go RAM et 5 Go SSD.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Quel est le SLA garanti ?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Le SLA varie selon le plan : 95% pour Free, 99% pour Starter, 99.5% pour Professional, 99.9% pour Business, et 99.99% pour Enterprise avec penalites contractuelles.',
-        },
-      },
-    ],
+    })),
   },
 };
 

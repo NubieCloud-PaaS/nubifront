@@ -3,41 +3,8 @@
 import { useState } from 'react';
 import SectionWrapper from '@/components/ui/SectionWrapper';
 import AccordionItem from '@/components/ui/AccordionItem';
+import { FAQ } from '@/content/faq';
 
-const faqs = [
-  {
-    question: 'Qu\'est-ce que Nubiecloud ?',
-    answer: 'Nubiecloud est une plateforme cloud PaaS (Platform as a Service) qui permet de deployer des applications web, des SaaS et des ERP en quelques minutes. Nous gerons l\'infrastructure pour que vous puissiez vous concentrer sur votre code.',
-  },
-  {
-    question: 'Quels langages et frameworks sont supportes ?',
-    answer: 'Nubiecloud supporte Node.js, Python, PHP, Go, Java, .NET, ainsi que les frameworks populaires comme Next.js, React, Django, Laravel, et bien d\'autres. Nous detectons automatiquement votre stack technique.',
-  },
-  {
-    question: 'Comment fonctionne le deploiement ?',
-    answer: 'Connectez votre depot GitHub ou GitLab, configurez vos variables d\'environnement, et poussez votre code. A chaque git push, Nubiecloud build, teste et deploie automatiquement votre application.',
-  },
-  {
-    question: 'Puis-je deployer WordPress ou Odoo en un clic ?',
-    answer: 'Oui ! Nubiecloud propose des templates preconfigures pour WordPress, Odoo, Dolibarr et d\'autres SaaS/ERP. Le deploiement se fait en un clic avec base de donnees et SSL inclus.',
-  },
-  {
-    question: 'Quelle est la difference entre les plans Free, Pro et Enterprise ?',
-    answer: 'Le plan Free est ideal pour tester avec 1 projet et des ressources limitees. Le plan Professional offre plus de puissance avec 5 projets et du load balancing. Enterprise propose une infrastructure 100% dediee avec SLA 99.99% et support 24/7.',
-  },
-  {
-    question: 'Pourquoi les tarifs sont en XOF ?',
-    answer: 'Nubiecloud est concu pour les developpeurs et entreprises d\'Afrique de l\'Ouest. Nos tarifs en XOF (Franc CFA) eliminent les complications liees au change et offrent une facturation locale transparente.',
-  },
-  {
-    question: 'Puis-je essayer gratuitement ?',
-    answer: 'Oui, le plan Gratuit vous permet de tester Nubiecloud gratuitement, sans limite de temps et sans carte bancaire. Vous pouvez deployer une application avec 0,5 vCPU, 1 Go RAM et 5 Go SSD.',
-  },
-  {
-    question: 'Quel est le SLA garanti ?',
-    answer: 'Le SLA varie selon le plan : 95% pour Free, 99% pour Starter, 99.5% pour Professional, 99.9% pour Business, et 99.99% pour Enterprise avec penalites contractuelles.',
-  },
-];
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -55,11 +22,11 @@ export default function FAQSection() {
         </div>
 
         <div>
-          {faqs.map((faq, i) => (
+          {FAQ.map((faq, i) => (
             <AccordionItem
               key={i}
               question={faq.question}
-              answer={faq.answer}
+              answer={faq.reponse}
               isOpen={openIndex === i}
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}
             />
