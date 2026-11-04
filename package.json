@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
-    "verifier:legal": "node scripts/verifier-pages-legales.mjs"
+    "verifier:bilingue": "node scripts/verifier-bilingue.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

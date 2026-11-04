@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { StarIcon, TrophyIcon } from '@heroicons/react/24/solid';
@@ -27,93 +28,223 @@ interface Plan {
   ctaStyle: 'default' | 'primary' | 'enterprise';
 }
 
-const plans: Plan[] = [
-  {
-    name: 'GRATUIT',
-    subtitle: 'Test et POC',
-    price: { afrique: '0 FCFA', europe: '0 FCFA' },
-    period: 'gratuit, sans limite de temps',
-    cta: 'Essayer gratuitement',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'default',
-    features: [
-      '0,5 vCPU, 1 Go RAM, 5 Go SSD',
-      '1 projet',
-      '30 builds/mois',
-      'Backup hebdomadaire (7j)',
-      'Support communautaire',
-      'Disponibilite sans engagement',
+/**
+ * LES PRIX ET LES QUOTAS NE SONT PAS TRADUITS, parce que ce ne sont pas du texte : un
+ * montant en FCFA et « 8 vCPU » se lisent dans les deux langues. Ne diverge que ce qui
+ * est redige -- noms de plans, sous-titres, libelles de boutons, intitules de lignes.
+ *
+ * TOUTE LIGNE QUI PORTE UN ENGAGEMENT (disponibilite, delai de support, duree de
+ * conservation) doit figurer dans /conditions AVANT d'etre ecrite ici. Trois d'entre
+ * elles promettaient le 2026-11-04 plus que le contrat -- voir src/content/faq.ts.
+ */
+const PLANS = {
+  fr: [
+    {
+      name: 'GRATUIT',
+      subtitle: 'Test et POC',
+      price: { afrique: '0 FCFA', europe: '0 FCFA' },
+      period: 'gratuit, sans limite de temps',
+      cta: 'Essayer gratuitement',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'default',
+      features: [
+        '0,5 vCPU, 1 Go RAM, 5 Go SSD',
+        '1 projet',
+        '30 builds/mois',
+        'Backup hebdomadaire (7j)',
+        'Support communautaire',
+        'Disponibilite sans engagement',
+      ],
+    },
+    {
+      name: 'PROFESSIONNEL',
+      subtitle: 'Production PME',
+      price: { afrique: '145 000 FCFA', europe: '100 000 FCFA' },
+      period: '/mois',
+      cta: 'Choisir Pro',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'primary',
+      highlighted: true,
+      badge: 'LE PLUS POPULAIRE',
+      badgeIcon: 'star',
+      badgeGradient: 'from-accent-500 to-accent-600',
+      accentBorder: 'border-accent-500',
+      features: [
+        '8 vCPU, 16 Go RAM, 200 Go SSD',
+        '5 projets',
+        'Builds prioritaires paralleles',
+        'Deploiement < 5 min (Blue/Green)',
+        'Backup quotidien (30j)',
+        'Support email + chat (< 4h)',
+        'Load balancing, SLA 99.5%',
+      ],
+    },
+    {
+      name: 'BUSINESS',
+      subtitle: 'Production intensive',
+      price: { afrique: '445 000 FCFA', europe: '305 000 FCFA' },
+      period: '/mois',
+      cta: 'Choisir Business',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'default',
+      features: [
+        '24 vCPU, 48 Go RAM, 600 Go SSD',
+        'Projets illimites',
+        'Builds illimites prioritaires',
+        'Deploiement < 5 min (Blue/Green)',
+        'Backup quotidien (90j)',
+        'Support prioritaire (1 jour ouvre)',
+        'Load balancing avance, SLA 99,5%',
+      ],
+    },
+    {
+      name: 'ENTERPRISE',
+      subtitle: 'Sur-mesure dedie',
+      price: null,
+      period: 'Tarification personnalisee',
+      cta: 'Contacter NubieCloud',
+      ctaHref: 'mailto:contact@nubitech.io',
+      ctaStyle: 'enterprise',
+      badge: 'PREMIUM',
+      badgeIcon: 'trophy',
+      badgeGradient: 'from-violet-600 to-pink-600',
+      accentBorder: 'border-violet-500/30',
+      features: [
+        'Infrastructure 100% dediee',
+        'Isolation complete et securisee',
+        'Serveur Build & Deploy dedies',
+        'Support Enterprise (1 jour ouvre)',
+        'Account + Technical Manager dedies',
+        'Conformite (ISO, SOC2, RGPD)',
+        'SLA 99,5%, engagements renforces sur devis',
+      ],
+    },
     ],
-  },
-  {
-    name: 'PROFESSIONNEL',
-    subtitle: 'Production PME',
-    price: { afrique: '145 000 FCFA', europe: '100 000 FCFA' },
-    period: '/mois',
-    cta: 'Choisir Pro',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'primary',
-    highlighted: true,
-    badge: 'LE PLUS POPULAIRE',
-    badgeIcon: 'star',
-    badgeGradient: 'from-accent-500 to-accent-600',
-    accentBorder: 'border-accent-500',
-    features: [
-      '8 vCPU, 16 Go RAM, 200 Go SSD',
-      '5 projets',
-      'Builds prioritaires paralleles',
-      'Deploiement < 5 min (Blue/Green)',
-      'Backup quotidien (30j)',
-      'Support email + chat (< 4h)',
-      'Load balancing, SLA 99.5%',
-    ],
-  },
-  {
-    name: 'BUSINESS',
-    subtitle: 'Production intensive',
-    price: { afrique: '445 000 FCFA', europe: '305 000 FCFA' },
-    period: '/mois',
-    cta: 'Choisir Business',
-    ctaHref: `${CONSOLE_URL}/register`,
-    ctaStyle: 'default',
-    features: [
-      '24 vCPU, 48 Go RAM, 600 Go SSD',
-      'Projets illimites',
-      'Builds illimites prioritaires',
-      'Deploiement < 5 min (Blue/Green)',
-      'Backup quotidien (90j)',
-      'Support prioritaire (1 jour ouvre)',
-      'Load balancing avance, SLA 99,5%',
-    ],
-  },
-  {
-    name: 'ENTERPRISE',
-    subtitle: 'Sur-mesure dedie',
-    price: null,
-    period: 'Tarification personnalisee',
-    cta: 'Contacter NubieCloud',
-    ctaHref: 'mailto:contact@nubitech.io',
-    ctaStyle: 'enterprise',
-    badge: 'PREMIUM',
-    badgeIcon: 'trophy',
-    badgeGradient: 'from-violet-600 to-pink-600',
-    accentBorder: 'border-violet-500/30',
-    features: [
-      'Infrastructure 100% dediee',
-      'Isolation complete et securisee',
-      'Serveur Build & Deploy dedies',
-      'Support Enterprise (1 jour ouvre)',
-      'Account + Technical Manager dedies',
-      'Conformite (ISO, SOC2, RGPD)',
-      'SLA 99,5%, engagements renforces sur devis',
-    ],
-  },
-];
+  en: [
+    {
+      name: 'FREE',
+      subtitle: 'Testing and POCs',
+      price: { afrique: '0 FCFA', europe: '0 FCFA' },
+      period: 'free, with no time limit',
+      cta: 'Try it for free',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'default',
+      features: [
+        '0.5 vCPU, 1 GB RAM, 5 GB SSD',
+        '1 project',
+        '30 builds/month',
+        'Weekly backup (7 days)',
+        'Community support',
+        'No availability commitment',
+      ],
+    },
+    {
+      name: 'PROFESSIONAL',
+      subtitle: 'Production, small teams',
+      price: { afrique: '145 000 FCFA', europe: '100 000 FCFA' },
+      period: '/month',
+      cta: 'Choose Pro',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'primary',
+      highlighted: true,
+      badge: 'MOST POPULAR',
+      badgeIcon: 'star',
+      badgeGradient: 'from-accent-500 to-accent-600',
+      accentBorder: 'border-accent-500',
+      features: [
+        '8 vCPU, 16 GB RAM, 200 GB SSD',
+        '5 projects',
+        'Parallel priority builds',
+        'Deployment under 5 min (blue/green)',
+        'Daily backup (30 days)',
+        'Email and chat support (< 4h)',
+        'Load balancing, 99.5% SLA',
+      ],
+    },
+    {
+      name: 'BUSINESS',
+      subtitle: 'Heavy production',
+      price: { afrique: '445 000 FCFA', europe: '305 000 FCFA' },
+      period: '/month',
+      cta: 'Choose Business',
+      ctaHref: `${CONSOLE_URL}/register`,
+      ctaStyle: 'default',
+      features: [
+        '24 vCPU, 48 GB RAM, 600 GB SSD',
+        'Unlimited projects',
+        'Unlimited priority builds',
+        'Deployment under 5 min (blue/green)',
+        'Daily backup (90 days)',
+        'Priority support (one business day)',
+        'Advanced load balancing, 99.5% SLA',
+      ],
+    },
+    {
+      name: 'ENTERPRISE',
+      subtitle: 'Dedicated and bespoke',
+      price: null,
+      period: 'Custom pricing',
+      cta: 'Contact NubieCloud',
+      ctaHref: 'mailto:contact@nubitech.io',
+      ctaStyle: 'enterprise',
+      badge: 'PREMIUM',
+      badgeIcon: 'trophy',
+      badgeGradient: 'from-violet-600 to-pink-600',
+      accentBorder: 'border-violet-500/30',
+      features: [
+        'Fully dedicated infrastructure',
+        'Complete, secure isolation',
+        'Dedicated build and deploy servers',
+        'Enterprise support (one business day)',
+        'Dedicated account and technical manager',
+        'Compliance (ISO, SOC 2, GDPR)',
+        '99.5% SLA, stronger commitments quoted on request',
+      ],
+    },
+  ],
+} satisfies Record<DocsLang, Plan[]>;
 
-function PricingCard({ plan, index, region }: { plan: Plan; index: number; region: Region }) {
+const LIBELLES = {
+  fr: {
+    titre: 'Tarification Simple et Transparente',
+    accroche: 'Choisissez le plan qui correspond a vos besoins. Pas de frais caches, jamais.',
+    region: 'Prix selon la region de deploiement',
+    byoTitre: 'Votre infrastructure, notre plateforme',
+    byoAccroche:
+      'Vous avez deja vos serveurs (on-premise, OVH, Hetzner, AWS, Azure...) ? Connectez-les a NubieCloud et profitez de toute la plateforme \u2014 sans migrer.',
+    byoPlan: 'En plus de votre plan (Pro ou Business) \u00b7 Inclus avec Enterprise',
+    byoCta: 'Connecter mon infrastructure',
+    byoInclus: 'Inclus pour chaque VM connectee',
+    byoControle:
+      'Vous gardez le controle total : compute, RAM, stockage et disponibilite de la VM restent les votres.',
+    piedDePage: 'Tous les plans incluent SSL, monitoring et support. -10% sur paiement annuel.',
+    surDevis: 'Sur devis',
+    afrique: '\ud83c\udf0d Afrique',
+    europe: '\ud83c\uddea\ud83c\uddfa Europe',
+  },
+  en: {
+    titre: 'Simple, transparent pricing',
+    accroche: 'Pick the plan that fits your needs. No hidden fees, ever.',
+    region: 'Prices depend on the deployment region',
+    byoTitre: 'Your infrastructure, our platform',
+    byoAccroche:
+      'Already have your own servers (on-premise, OVH, Hetzner, AWS, Azure...)? Connect them to NubieCloud and get the whole platform \u2014 without migrating.',
+    byoPlan: 'On top of your plan (Pro or Business) \u00b7 Included with Enterprise',
+    byoCta: 'Connect my infrastructure',
+    byoInclus: 'Included for every connected VM',
+    byoControle:
+      'You keep full control: the VM\u2019s compute, RAM, storage and availability remain yours.',
+    piedDePage: 'Every plan includes SSL, monitoring and support. 10% off when paying annually.',
+    surDevis: 'On request',
+    afrique: '\ud83c\udf0d Africa',
+    europe: '\ud83c\uddea\ud83c\uddfa Europe',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+function PricingCard({ plan, index, region, lang }: { plan: Plan; index: number; region: Region; lang: DocsLang }) {
   const isHighlighted = plan.highlighted;
   const isEnterprise = plan.ctaStyle === 'enterprise';
-  const priceLabel = plan.price ? plan.price[region] : 'Sur devis';
+  const priceLabel = plan.price ? plan.price[region] : LIBELLES[lang].surDevis;
 
   return (
     <motion.div
@@ -172,12 +303,14 @@ function PricingCard({ plan, index, region }: { plan: Plan; index: number; regio
   );
 }
 
-export default function PricingSection() {
+export default function PricingSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const plans = PLANS[lang];
+  const t = LIBELLES[lang];
   const [region, setRegion] = useState<Region>('europe');
 
   const regions: { id: Region; label: string }[] = [
-    { id: 'afrique', label: '🌍 Afrique' },
-    { id: 'europe', label: '🇪🇺 Europe' },
+    { id: 'afrique', label: t.afrique },
+    { id: 'europe', label: t.europe },
   ];
 
   return (
@@ -185,10 +318,10 @@ export default function PricingSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
-            Tarification Simple et Transparente
+            {t.titre}
           </h2>
           <p className="text-lg text-text-secondary max-w-3xl mx-auto mb-3">
-            Choisissez le plan qui correspond a vos besoins. Pas de frais caches, jamais.
+            {t.accroche}
           </p>
           <p className="text-text-tertiary text-sm">
             -10% sur paiement annuel &middot; SSL automatique &middot; Support inclus
@@ -215,13 +348,13 @@ export default function PricingSection() {
             ))}
           </div>
           <p className="text-text-quaternary text-xs">
-            Prix selon la region de deploiement
+            {t.region}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan, i) => (
-            <PricingCard key={plan.name} plan={plan} index={i} region={region} />
+            <PricingCard lang={lang} key={plan.name} plan={plan} index={i} region={region} />
           ))}
         </div>
 
@@ -240,31 +373,30 @@ export default function PricingSection() {
                 CONNECT &middot; BYO-VM
               </span>
               <h3 className="text-2xl font-bold text-text-primary mb-2">
-                Votre infrastructure, notre plateforme
+                {t.byoTitre}
               </h3>
               <p className="text-text-secondary text-sm mb-5">
-                Vous avez deja vos serveurs (on-premise, OVH, Hetzner, AWS, Azure...) ?
-                Connectez-les a NubieCloud et profitez de toute la plateforme — sans migrer.
+                {t.byoAccroche}
               </p>
               <div className="mb-5">
                 <span className="text-3xl font-bold text-text-primary">100 000 FCFA</span>
                 <span className="text-text-tertiary text-sm"> / VM / mois</span>
                 <p className="text-text-quaternary text-xs mt-1">
-                  En plus de votre plan (Pro ou Business) &middot; Inclus avec Enterprise
+                  {t.byoPlan}
                 </p>
               </div>
               <a
                 href={`${CONSOLE_URL}/register`}
                 className="btn-primary inline-block py-2.5 px-6 rounded-lg text-sm font-medium"
               >
-                Connecter mon infrastructure
+                {t.byoCta}
               </a>
             </div>
 
             {/* Inclus par VM */}
             <div className="lg:border-l lg:border-border-0 lg:pl-8">
               <p className="text-text-tertiary text-xs font-semibold uppercase tracking-wide mb-3">
-                Inclus pour chaque VM connectee
+                {t.byoInclus}
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
                 {[
@@ -282,14 +414,14 @@ export default function PricingSection() {
                 ))}
               </ul>
               <p className="text-text-quaternary text-xs mt-4">
-                Vous gardez le controle total : compute, RAM, stockage et disponibilite de la VM restent les votres.
+                {t.byoControle}
               </p>
             </div>
           </div>
         </motion.div>
 
         <p className="text-center text-text-quaternary text-xs mt-8">
-          Tous les plans incluent SSL, monitoring et support. -10% sur paiement annuel.
+          {t.piedDePage}
         </p>
       </div>
     </SectionWrapper>

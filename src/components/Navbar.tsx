@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -55,6 +56,45 @@ const LIBELLES = {
   },
 } satisfies Record<DocsLang, Record<string, string>>;
 
+/**
+ * LE SELECTEUR DE LANGUE DE LA BARRE DE NAVIGATION.
+ *
+ * Il n'existait que dans /docs -- celui de Fumadocs, monte par `DocsProviders`. Hors de
+ * ce sous-arbre, aucune bascule : la landing, le blog et les pages legales n'en avaient
+ * pas, donc leurs versions anglaises etaient inatteignables depuis le francais.
+ *
+ * LA REGLE EST LA MEME QUE CELLE DE LA DOCUMENTATION : le francais garde son URL,
+ * l'anglais est prefixe de `/en`. Elle est appliquee ici sur le CHEMIN COURANT, comme le
+ * fait `DocsProviders` -- donc un seul endroit a corriger si elle change, et aucune table
+ * de correspondance a tenir.
+ *
+ * `/en` seul (et non `/en/`) pour la racine : Next normalise, mais l'ecrire evite un
+ * aller-retour de redirection a chaque bascule depuis l'accueil.
+ */
+function SelecteurLangue({ lang }: { lang: DocsLang }) {
+  const pathname = usePathname() || '/';
+  const autre: DocsLang = lang === 'fr' ? 'en' : 'fr';
+
+  const sansPrefixe = pathname.startsWith('/en/')
+    ? pathname.slice('/en'.length)
+    : pathname === '/en'
+      ? '/'
+      : pathname;
+  const cible = autre === 'fr' ? sansPrefixe : sansPrefixe === '/' ? '/en' : `/en${sansPrefixe}`;
+
+  return (
+    <a
+      href={cible}
+      hrefLang={autre}
+      lang={autre}
+      aria-label={autre === 'en' ? 'Switch to English' : 'Passer en francais'}
+      className="h-8 px-2 flex items-center justify-center rounded-md text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-3 transition-colors"
+    >
+      {autre === 'en' ? 'EN' : 'FR'}
+    </a>
+  );
+}
+
 export default function Navbar({ lang = 'fr' }: { lang?: DocsLang } = {}) {
   const navLinks = NAV[lang];
   const t = LIBELLES[lang];
@@ -93,6 +133,7 @@ export default function Navbar({ lang = 'fr' }: { lang?: DocsLang } = {}) {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <SelecteurLangue lang={lang} />
             <button
               onClick={toggleDarkMode}
               aria-label={isDarkMode ? t.clair : t.sombre}
@@ -153,6 +194,7 @@ export default function Navbar({ lang = 'fr' }: { lang?: DocsLang } = {}) {
                 </a>
               ))}
               <div className="pt-3 border-t border-border-0 flex items-center gap-4">
+                <SelecteurLangue lang={lang} />
                 <button
                   onClick={toggleDarkMode}
                   className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-surface-3 transition-colors"

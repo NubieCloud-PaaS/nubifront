@@ -42,7 +42,7 @@ Odoo necessite Python, PostgreSQL, des dependances systeme specifiques, wkhtmlto
 
 On a cree des templates pre-configures pour les applications les plus demandees. L'idee est simple : vous choisissez votre app, vous remplissez 3-4 champs, vous cliquez, et c'est en production.
 
-Chaque template inclut l'application dans sa derniere version stable, la base de donnees pre-configuree (PostgreSQL pour Odoo, MySQL pour WordPress), le certificat SSL automatique, les backups quotidiens et le monitoring.
+Chaque template inclut l'application dans sa derniere version stable, la base de donnees pre-configuree (PostgreSQL pour Odoo, MySQL pour WordPress), le certificat SSL automatique et le monitoring (les sauvegardes de la plateforme portent sur PostgreSQL manage, voir nos conditions d'utilisation).
 
 ### Ce qui est disponible aujourd'hui
 
@@ -74,7 +74,7 @@ Une PME a besoin d'un ERP pour gerer sa comptabilite, ses stocks et ses ventes. 
 
 ### Une association sur Dolibarr
 
-Dolibarr est un excellent outil open source pour les associations : gestion des adherents, suivi des cotisations, facturation. En un clic, tout est en place avec une base de donnees sauvegardee automatiquement.
+Dolibarr est un excellent outil open source pour les associations : gestion des adherents, suivi des cotisations, facturation. En un clic, tout est en place, avec une base de donnees provisionnee et surveillee.
 
 ## Bases de donnees managees
 
@@ -83,11 +83,11 @@ Au-dela des templates, on propose aussi des bases de donnees managees pour vos p
 | Base de donnees | Usage typique | Inclus |
 |---|---|---|
 | PostgreSQL | Applications modernes, API | Backups, monitoring, haute dispo |
-| MySQL | WordPress, applications PHP | Backups, monitoring |
-| MongoDB | NoSQL, temps reel, catalogues | Backups, monitoring |
+| MySQL | WordPress, applications PHP | Monitoring |
+| MongoDB | NoSQL, temps reel, catalogues | Monitoring |
 | Redis | Cache, sessions, files de messages | Monitoring |
 
-Chaque base est provisionnee avec des identifiants securises, des backups automatiques et un monitoring des performances.
+Chaque base est provisionnee avec des identifiants securises et un monitoring des performances. Les sauvegardes automatiques portent sur PostgreSQL.
 
 ## La securite des templates
 
@@ -95,7 +95,7 @@ On prend la securite au serieux. Chaque template est isole dans son propre envir
 
 ## Tarification
 
-Les templates sont inclus dans tous les plans, y compris le gratuit. Vous payez uniquement les ressources utilisees. Un WordPress basique (blog, site vitrine) tient sur le plan FREE. Un Odoo pour PME avec 20 utilisateurs et les modules compta + stock + CRM tourne sur le plan STARTER.
+Les templates sont inclus dans tous les plans, y compris le gratuit. Vous payez uniquement les ressources utilisees. Un WordPress basique (blog, site vitrine) tient sur le plan FREE. Un Odoo pour PME avec 20 utilisateurs et les modules compta + stock + CRM tourne sur le plan PROFESSIONNEL.
 
 ## Arretez de configurer des serveurs
 

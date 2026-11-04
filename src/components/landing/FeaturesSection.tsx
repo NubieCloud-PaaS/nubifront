@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 
 const titleVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -132,40 +133,97 @@ function StackIllust() {
   );
 }
 
-const features = [
-  {
-    title: 'Deploiement ultra-rapide',
-    description: 'Passez de l\'idee a la production en quelques minutes grace a notre pipeline CI/CD optimise.',
-    Illustration: DeployIllust,
-  },
-  {
-    title: 'Securite Enterprise',
-    description: 'Protection DDoS, certificats SSL automatiques et surveillance continue de la securite.',
-    Illustration: SecurityIllust,
-  },
-  {
-    title: 'Scalabilite Automatique',
-    description: 'Votre application s\'adapte au trafic sans aucune intervention manuelle de votre part.',
-    Illustration: ScaleIllust,
-  },
-  {
-    title: 'SaaS/ERP 1-Click',
-    description: 'Deployez WordPress, Odoo et autres SaaS en un seul clic sans configuration.',
-    Illustration: SaasIllust,
-  },
-  {
-    title: 'Configuration Simplifiee',
-    description: 'Interface intuitive pour gerer tous les aspects de votre infrastructure sans complexite.',
-    Illustration: ConfigIllust,
-  },
-  {
-    title: 'Multi-Stack Support',
-    description: 'Node.js, Python, PHP, Go, Java, .NET, Next.js et React.',
-    Illustration: StackIllust,
-  },
+const CARTES = {
+  fr: [
+    {
+      title: 'Deploiement ultra-rapide',
+      description:
+        "Passez de l'idee a la production en quelques minutes grace a notre pipeline CI/CD optimise.",
+    },
+    {
+      title: 'Securite Enterprise',
+      description:
+        'Protection DDoS, certificats SSL automatiques et surveillance continue de la securite.',
+    },
+    {
+      title: 'Scalabilite Automatique',
+      description:
+        "Votre application s'adapte au trafic sans aucune intervention manuelle de votre part.",
+    },
+    {
+      title: 'SaaS/ERP 1-Click',
+      description: 'Deployez WordPress, Odoo et autres SaaS en un seul clic sans configuration.',
+    },
+    {
+      title: 'Configuration Simplifiee',
+      description:
+        'Interface intuitive pour gerer tous les aspects de votre infrastructure sans complexite.',
+    },
+    {
+      title: 'Multi-Stack Support',
+      description: 'Node.js, Python, PHP, Go, Java, .NET, Next.js et React.',
+    },
+  ],
+  en: [
+    {
+      title: 'Blazing-fast deployment',
+      description:
+        'Go from idea to production in minutes, through our optimised CI/CD pipeline.',
+    },
+    {
+      title: 'Enterprise-grade security',
+      description:
+        'DDoS protection, automatic SSL certificates and continuous security monitoring.',
+    },
+    {
+      title: 'Automatic scaling',
+      description: 'Your application follows the traffic, with no manual work on your side.',
+    },
+    {
+      title: 'One-click SaaS and ERP',
+      description:
+        'Deploy WordPress, Odoo and other SaaS products in a single click, with no configuration.',
+    },
+    {
+      title: 'Configuration made simple',
+      description:
+        'An intuitive interface to manage every part of your infrastructure, without the complexity.',
+    },
+    {
+      title: 'Multi-stack support',
+      description: 'Node.js, Python, PHP, Go, Java, .NET, Next.js and React.',
+    },
+  ],
+} satisfies Record<DocsLang, { title: string; description: string }[]>;
+
+/**
+ * Les illustrations sont APPARIEES PAR L'INDEX aux textes ci-dessus : leur contenu est du
+ * texte de terminal et des noms de frameworks, identiques dans les deux langues. Ajouter
+ * une carte demande donc une entree dans les DEUX langues et une illustration ici.
+ */
+const ILLUSTRATIONS = [
+  DeployIllust,
+  SecurityIllust,
+  ScaleIllust,
+  SaasIllust,
+  ConfigIllust,
+  StackIllust,
 ];
 
-export default function FeaturesSection() {
+const LIBELLES = {
+  fr: {
+    titre: 'Fonctionnalites Principales',
+    accroche: 'Tout ce dont vous avez besoin pour deployer et gerer vos applications en production.',
+  },
+  en: {
+    titre: 'Key features',
+    accroche: 'Everything you need to deploy and run your applications in production.',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+export default function FeaturesSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const t = LIBELLES[lang];
+  const features = CARTES[lang].map((carte, i) => ({ ...carte, Illustration: ILLUSTRATIONS[i] }));
   return (
     <SectionWrapper id="fonctionnalites" className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -180,13 +238,13 @@ export default function FeaturesSection() {
             variants={titleVariants}
             className="text-3xl sm:text-4xl font-bold text-text-primary mb-4"
           >
-            Fonctionnalites Principales
+            {t.titre}
           </motion.h2>
           <motion.p
             variants={titleVariants}
             className="text-lg text-text-secondary max-w-3xl mx-auto"
           >
-            Tout ce dont vous avez besoin pour deployer et gerer vos applications en production.
+            {t.accroche}
           </motion.p>
         </motion.div>
 

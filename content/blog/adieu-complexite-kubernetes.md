@@ -118,7 +118,7 @@ Votre seule interaction : `git push`. Le reste est invisible.
 
 Et derriere, vous obtenez tout ce que K8s offre de mieux : vos applications tournent sur plusieurs instances (haute dispo), la capacite s'adapte au trafic (auto-scaling), les mises a jour se font sans interruption (zero-downtime), et vos ressources sont completement isolees.
 
-Les backups de vos bases de donnees sont automatiques. Le monitoring CPU, RAM, reseau et logs est en temps reel. Tout ca est inclus dans chaque plan, y compris le gratuit.
+Les sauvegardes de vos bases PostgreSQL managees sont automatiques. Le monitoring CPU, RAM, reseau et logs est en temps reel. Tout ca est inclus dans chaque plan, y compris le gratuit.
 
 ## Kubernetes DIY vs. Nubiecloud
 
@@ -131,7 +131,7 @@ Les backups de vos bases de donnees sont automatiques. Le monitoring CPU, RAM, r
 | Mises a jour infra | A votre charge | Gerees par nous |
 | Isolation des projets | A implementer | Native |
 | CI/CD | A configurer | Git push = deploy |
-| Cout mensuel | Variable et imprevisible | Forfait clair en XOF |
+| Cout mensuel | Variable et imprevisible | Forfait clair en FCFA |
 
 ## Quand gerer K8s soi-meme a du sens
 

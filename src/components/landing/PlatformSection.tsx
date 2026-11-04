@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 
 const containerVariants = {
   hidden: {},
@@ -25,7 +26,30 @@ const titleVariants = {
 
 /* ── Illustrations ── */
 
-function CodeIllustration() {
+const LIBELLES = {
+  fr: {
+    titre: 'Une plateforme pour chaque projet',
+    accroche:
+      "Nubiecloud s'adapte a vos besoins, que vous soyez un developpeur solo ou une grande entreprise.",
+    deployer: 'Deployer en 1 clic \u2192',
+    databases: 'Databases managees',
+    backup: 'Backup auto',
+    quotidien: 'Quotidien \u2713',
+    templates: 'Templates 1-Click',
+  },
+  en: {
+    titre: 'One platform for every project',
+    accroche:
+      'Nubiecloud fits your needs, whether you are a solo developer or a large company.',
+    deployer: 'Deploy in one click \u2192',
+    databases: 'Managed databases',
+    backup: 'Auto backup',
+    quotidien: 'Daily \u2713',
+    templates: '1-Click templates',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+function CodeIllustration(_: { lang: DocsLang }) {
   return (
     <div className="glass-card rounded-lg p-3 text-xs font-mono space-y-2">
       <div className="flex items-center gap-1.5 mb-2">
@@ -65,12 +89,13 @@ function CodeIllustration() {
   );
 }
 
-function SaasIllustration() {
+function SaasIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-3 text-xs font-mono space-y-2">
       <div className="text-text-tertiary text-[10px] mb-2 flex items-center gap-1.5">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-        Templates 1-Click
+        {t.templates}
       </div>
       {[
         { name: 'WordPress', status: 'Pret', icon: 'W' },
@@ -104,18 +129,19 @@ function SaasIllustration() {
         transition={{ delay: 0.7, duration: 0.3 }}
         className="w-full p-1.5 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-400 text-[10px] text-center"
       >
-        Deployer en 1 clic →
+        {t.deployer}
       </motion.button>
     </div>
   );
 }
 
-function DbIllustration() {
+function DbIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-3 text-xs font-mono space-y-2">
       <div className="text-text-tertiary text-[10px] mb-2 flex items-center gap-1.5">
         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
-        Databases managees
+        {t.databases}
       </div>
       {[
         { name: 'PostgreSQL 16', size: '10 GB', status: 'active' },
@@ -148,8 +174,8 @@ function DbIllustration() {
         transition={{ delay: 0.7, duration: 0.3 }}
         className="flex items-center justify-between pt-1 border-t border-border-0 mt-1"
       >
-        <span className="text-[10px] text-text-quaternary">Backup auto</span>
-        <span className="text-[10px] text-emerald-400">Quotidien ✓</span>
+        <span className="text-[10px] text-text-quaternary">{t.backup}</span>
+        <span className="text-[10px] text-emerald-400">{t.quotidien}</span>
       </motion.div>
     </div>
   );
@@ -157,31 +183,59 @@ function DbIllustration() {
 
 const illustrations = [CodeIllustration, SaasIllustration, DbIllustration];
 
-const platforms = [
-  {
-    title: 'Applications Code',
-    techs: ['Node.js', 'Python', 'PHP', 'Go', 'Java', '.NET'],
-    description:
-      'Concentrez-vous sur votre code, pas sur l\'infrastructure. Deployez en quelques secondes avec des environnements de previsualisation.',
-    accent: 'from-accent-400 to-accent-600',
-  },
-  {
-    title: 'SaaS / ERP',
-    techs: ['WordPress', 'Odoo', 'Dolibarr', 'Ghost'],
-    description:
-      'Deployez WordPress, Odoo et autres SaaS en un clic. Templates preconfigures, bases de donnees incluses.',
-    accent: 'from-violet-500 to-pink-500',
-  },
-  {
-    title: 'Databases',
-    techs: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis'],
-    description:
-      'Bases de donnees managees avec backups automatiques, replications et monitoring integre.',
-    accent: 'from-emerald-500 to-teal-500',
-  },
-];
+const PLATEFORMES = {
+  fr: [
+    {
+      title: 'Applications Code',
+      techs: ['Node.js', 'Python', 'PHP', 'Go', 'Java', '.NET'],
+      description:
+        "Concentrez-vous sur votre code, pas sur l'infrastructure. Deployez en quelques secondes avec des environnements de previsualisation.",
+      accent: 'from-accent-400 to-accent-600',
+    },
+    {
+      title: 'SaaS / ERP',
+      techs: ['WordPress', 'Odoo', 'Dolibarr', 'Ghost'],
+      description:
+        'Deployez WordPress, Odoo et autres SaaS en un clic. Templates preconfigures, bases de donnees incluses.',
+      accent: 'from-violet-500 to-pink-500',
+    },
+    {
+      title: 'Databases',
+      techs: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis'],
+      description:
+        'Bases de donnees managees avec backups automatiques, replications et monitoring integre.',
+      accent: 'from-emerald-500 to-teal-500',
+    },
+  ],
+  en: [
+    {
+      title: 'Code applications',
+      techs: ['Node.js', 'Python', 'PHP', 'Go', 'Java', '.NET'],
+      description:
+        'Focus on your code, not on the infrastructure. Deploy in seconds, with preview environments.',
+      accent: 'from-accent-400 to-accent-600',
+    },
+    {
+      title: 'SaaS / ERP',
+      techs: ['WordPress', 'Odoo', 'Dolibarr', 'Ghost'],
+      description:
+        'Deploy WordPress, Odoo and other SaaS products in one click. Preconfigured templates, databases included.',
+      accent: 'from-violet-500 to-pink-500',
+    },
+    {
+      title: 'Databases',
+      techs: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis'],
+      description:
+        'Managed databases with automatic backups, replication and built-in monitoring.',
+      accent: 'from-emerald-500 to-teal-500',
+    },
+  ],
+} satisfies Record<DocsLang, { title: string; techs: string[]; description: string; accent: string }[]>;
 
-export default function PlatformSection() {
+
+export default function PlatformSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const platforms = PLATEFORMES[lang];
+  const t = LIBELLES[lang];
   return (
     <SectionWrapper id="plateformes" className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -196,13 +250,13 @@ export default function PlatformSection() {
             variants={titleVariants}
             className="text-3xl sm:text-4xl font-bold text-text-primary mb-4"
           >
-            Une plateforme pour chaque projet
+            {t.titre}
           </motion.h2>
           <motion.p
             variants={titleVariants}
             className="text-lg text-text-secondary max-w-2xl mx-auto"
           >
-            Nubiecloud s&apos;adapte a vos besoins, que vous soyez un developpeur solo ou une grande entreprise.
+            {t.accroche}
           </motion.p>
         </motion.div>
 
@@ -240,7 +294,7 @@ export default function PlatformSection() {
                 </div>
                 <p className="text-sm text-text-secondary leading-relaxed mb-4">{p.description}</p>
                 <div className="h-44 overflow-hidden illustration-mask">
-                  <Illustration />
+                  <Illustration lang={lang} />
                 </div>
               </motion.div>
             );

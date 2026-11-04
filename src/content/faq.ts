@@ -28,7 +28,7 @@ export type EntreeFaq = {
   reponse: string;
 };
 
-export const FAQ: EntreeFaq[] = [
+const fr: EntreeFaq[] = [
   {
     question: "Qu'est-ce que Nubiecloud ?",
     reponse:
@@ -74,3 +74,57 @@ export const FAQ: EntreeFaq[] = [
       "Nous nous engageons sur une disponibilite de 99,5 % par mois civil pour les organisations sur un plan payant. Le plan Gratuit ne porte aucun engagement de disponibilite. Si l'engagement n'est pas tenu, il n'y a ni avoir ni remboursement, mais une disponibilite restee sous 99,5 % pendant trois mois civils consecutifs vous permet de resilier sans frais et sans preavis. Le detail figure dans nos conditions d'utilisation.",
   },
 ];
+
+/**
+ * MEME NOMBRE D'ENTREES, DANS LE MEME ORDRE.
+ *
+ * `EntreeFaq[]` ne verifie que le type, pas la longueur : une question ajoutee au seul
+ * francais passerait la compilation. Le balisage JSON-LD etant derive de la langue
+ * rendue, l'ecart se verrait dans les resultats de recherche d'une langue et pas de
+ * l'autre. `npm run verifier:legal` compte les deux.
+ */
+const en: EntreeFaq[] = [
+  {
+    question: 'What is Nubiecloud?',
+    reponse:
+      'Nubiecloud is a cloud PaaS (Platform as a Service) that lets you deploy web applications, SaaS products and ERPs in minutes. We run the infrastructure so that you can focus on your code.',
+  },
+  {
+    question: 'Which languages and frameworks are supported?',
+    reponse:
+      'Nubiecloud supports Node.js, Python, PHP, Go, Java and .NET, along with popular frameworks such as Next.js, React, Django and Laravel. We detect your stack automatically.',
+  },
+  {
+    question: 'How does deployment work?',
+    reponse:
+      'Connect your GitHub or GitLab repository, set your environment variables, and push your code. On every git push, Nubiecloud builds, tests and deploys your application automatically.',
+  },
+  {
+    question: 'Can I deploy WordPress or Odoo in one click?',
+    reponse:
+      'Yes. Nubiecloud offers preconfigured templates for WordPress, Odoo, Dolibarr and other SaaS and ERP products. Deployment takes one click, database and SSL included.',
+  },
+  {
+    question: 'What is the difference between the Free, Professional and Enterprise plans?',
+    reponse:
+      'The Free plan is ideal for testing, with 1 project and limited resources, and with no time limit. The Professional plan offers more power, with 5 projects and load balancing. Enterprise provides dedicated infrastructure, with commitments negotiated in the contract.',
+  },
+  {
+    question: 'Why are prices in FCFA?',
+    reponse:
+      'Nubiecloud is built for developers and companies in Africa. Pricing in FCFA removes the friction of currency conversion and gives you transparent local billing, with prices that differ by region.',
+  },
+  {
+    question: 'Can I try it for free?',
+    reponse:
+      'Yes. The Free plan lets you try Nubiecloud at no cost, with no time limit and no credit card. You can deploy one application with 0.5 vCPU, 1 GB RAM and 5 GB SSD.',
+  },
+  {
+    // Reprend mot pour mot les conditions d'utilisation, point 4 -- version anglaise.
+    question: 'What availability do you commit to?',
+    reponse:
+      "We commit to 99.5% availability per calendar month for organisations on a paid plan. The Free plan carries no availability commitment. If the commitment is not met there is no credit and no refund, but availability that stays below 99.5% for three consecutive calendar months lets you terminate at no cost and with no notice period. The details are in our terms of service.",
+  },
+];
+
+export const FAQ = { fr, en };

@@ -5,16 +5,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Badge from '@/components/ui/Badge';
 import GradientText from '@/components/ui/GradientText';
 import AnimatedTerminal from './AnimatedTerminal';
+import type { DocsLang } from '@/lib/i18n';
 
 const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubiecloud.io';
 
-const rotatingWords = [
-  'En toute simplicite.',
-  'En quelques clics.',
-  'Sans effort.',
-  'Sans ops.',
-  'A votre rythme.',
-];
+const LIBELLES = {
+  fr: {
+    badge: 'Plateforme Cloud PaaS',
+    titre: 'Deployer.',
+    // Les mots qui defilent : une liste, donc TypeScript ne verifie que le TYPE. Garder
+    // le meme NOMBRE d'entrees dans les deux langues -- la rotation est a duree fixe
+    // (3 s), donc une liste plus courte d'un cote ferait boucler plus vite sans que rien
+    // ne le signale.
+    mots: ['En toute simplicite.', 'En quelques clics.', 'Sans effort.', 'Sans ops.', 'A votre rythme.'],
+    accroche:
+      'Nubiecloud simplifie votre cycle de vie DevOps du debut a la fin. CI/CD automatise, SSL, monitoring et scalabilite en quelques clics.',
+    commencer: 'Commencer gratuitement',
+    demo: 'Demander une demo',
+  },
+  en: {
+    badge: 'Cloud PaaS Platform',
+    titre: 'Deploy.',
+    mots: ['Effortlessly.', 'In a few clicks.', 'Without the ops.', 'At your own pace.', 'And move on.'],
+    accroche:
+      'Nubiecloud simplifies your DevOps lifecycle end to end. Automated CI/CD, SSL, monitoring and scaling in a few clicks.',
+    commencer: 'Start for free',
+    demo: 'Request a demo',
+  },
+} satisfies Record<DocsLang, {
+  badge: string;
+  titre: string;
+  mots: string[];
+  accroche: string;
+  commencer: string;
+  demo: string;
+}>;
 
 const container = {
   hidden: {},
@@ -26,7 +51,9 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
 };
 
-export default function HeroSection() {
+export default function HeroSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const t = LIBELLES[lang];
+  const rotatingWords = t.mots;
   const [wordIndex, setWordIndex] = useState(0);
 
   useEffect(() => {
@@ -43,14 +70,14 @@ export default function HeroSection() {
           {/* Left column */}
           <motion.div variants={container} initial="hidden" animate="show">
             <motion.div variants={item}>
-              <Badge className="mb-6">Plateforme Cloud PaaS</Badge>
+              <Badge className="mb-6">{t.badge}</Badge>
             </motion.div>
 
             <motion.h1
               variants={item}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary leading-[1.1] mb-6"
             >
-              Deployer.
+              {t.titre}
               <br />
               <span className="inline-block h-[1.2em] overflow-hidden align-bottom">
                 <AnimatePresence mode="wait">
@@ -74,8 +101,7 @@ export default function HeroSection() {
               variants={item}
               className="text-lg text-text-secondary max-w-lg leading-relaxed mb-8"
             >
-              Nubiecloud simplifie votre cycle de vie DevOps du debut a la fin.
-              CI/CD automatise, SSL, monitoring et scalabilite en quelques clics.
+              {t.accroche}
             </motion.p>
 
             <motion.div variants={item} className="flex flex-col sm:flex-row gap-4">
@@ -83,13 +109,13 @@ export default function HeroSection() {
                 href={`${CONSOLE_URL}/register`}
                 className="btn-primary px-6 py-3 rounded-lg font-semibold text-sm inline-flex items-center justify-center transition-colors"
               >
-                Commencer gratuitement
+                {t.commencer}
               </a>
               <a
                 href="mailto:contact@nubitech.io"
                 className="border border-border-1 text-text-primary px-6 py-3 rounded-lg font-medium text-sm hover:bg-surface-2 inline-flex items-center justify-center transition-colors"
               >
-                Demander une demo
+                {t.demo}
               </a>
             </motion.div>
           </motion.div>

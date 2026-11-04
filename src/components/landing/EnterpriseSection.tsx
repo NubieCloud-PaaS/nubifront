@@ -1,6 +1,7 @@
 'use client';
 
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import {
   ServerStackIcon,
@@ -10,38 +11,94 @@ import {
 } from '@heroicons/react/24/outline';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 
-const benefits = [
-  {
-    icon: ServerStackIcon,
-    title: 'Infrastructure Dediee et Isolee',
-    description: 'Beneficiez d\'une infrastructure de qualite enterprise, completement isolee et dediee a votre organisation.',
+const ICONES = [ServerStackIcon, ShieldCheckIcon, PhoneIcon, ArrowsPointingOutIcon];
+
+const AVANTAGES = {
+  fr: [
+    {
+      title: 'Infrastructure Dediee et Isolee',
+      description:
+        "Beneficiez d'une infrastructure de qualite enterprise, completement isolee et dediee a votre organisation.",
+    },
+    {
+      title: 'Securite Renforcee',
+      description: 'Architecture securisee avec conformite RGPD, audit complet et logs detailles.',
+    },
+    {
+      title: 'Support dedie',
+      description:
+        'Account Manager personnel, support prioritaire et engagements negocies au contrat.',
+    },
+    {
+      title: 'Scalabilite Illimitee',
+      description:
+        'Projets illimites, bande passante illimitee et capacite de scaling automatique sans limites.',
+    },
+  ],
+  en: [
+    {
+      title: 'Dedicated, isolated infrastructure',
+      description:
+        'Enterprise-grade infrastructure, fully isolated and dedicated to your organisation.',
+    },
+    {
+      title: 'Hardened security',
+      description: 'A secure architecture with GDPR compliance, full auditing and detailed logs.',
+    },
+    {
+      title: 'Dedicated support',
+      description:
+        'A personal account manager, priority support and commitments negotiated in the contract.',
+    },
+    {
+      title: 'Unlimited scalability',
+      description:
+        'Unlimited projects, unlimited bandwidth and automatic scaling with no ceiling.',
+    },
+  ],
+} satisfies Record<DocsLang, { title: string; description: string }[]>;
+
+const LIBELLES = {
+  fr: {
+    accroche:
+      'Une solution de deploiement dediee, concue sur mesure pour les besoins operationnels de votre organisation.',
+    ventes: 'Parler aux ventes',
+    demo: 'Demander une demo',
+    bandeau: 'Chiffrement \u00b7 RGPD \u00b7 SLA 99,5%',
+    couches: ['Votre Application', 'Load Balancer', 'Nodes (Auto-scaling)'],
+    infra: ['Database', 'CDN Global', 'SSL/TLS', 'Monitoring'],
   },
-  {
-    icon: ShieldCheckIcon,
-    title: 'Securite Renforcee',
-    description: 'Architecture securisee avec conformite RGPD, audit complet et logs detailles.',
+  en: {
+    accroche:
+      "A dedicated deployment solution, built to fit your organisation's operational needs.",
+    ventes: 'Talk to sales',
+    demo: 'Request a demo',
+    bandeau: 'Encryption \u00b7 GDPR \u00b7 99.5% SLA',
+    couches: ['Your application', 'Load balancer', 'Nodes (auto-scaling)'],
+    infra: ['Database', 'Global CDN', 'SSL/TLS', 'Monitoring'],
   },
-  {
-    icon: PhoneIcon,
-    title: 'Support dedie',
-    description: 'Account Manager personnel, support prioritaire et engagements negocies au contrat.',
-  },
-  {
-    icon: ArrowsPointingOutIcon,
-    title: 'Scalabilite Illimitee',
-    description: 'Projets illimites, bande passante illimitee et capacite de scaling automatique sans limites.',
-  },
+} satisfies Record<DocsLang, {
+  accroche: string;
+  ventes: string;
+  demo: string;
+  bandeau: string;
+  couches: string[];
+  infra: string[];
+}>;
+
+const COULEURS_COUCHES = [
+  'border-accent-500/40 bg-accent-500/5',
+  'border-accent-500/40 bg-accent-500/5',
+  'border-violet-500/40 bg-violet-500/5',
 ];
 
-const archLayers = [
-  { label: 'Votre Application', color: 'border-accent-500/40 bg-accent-500/5' },
-  { label: 'Load Balancer', color: 'border-accent-500/40 bg-accent-500/5' },
-  { label: 'Nodes (Auto-scaling)', color: 'border-violet-500/40 bg-violet-500/5' },
-];
 
-const infraItems = ['Database', 'CDN Global', 'SSL/TLS', 'Monitoring'];
 
-export default function EnterpriseSection() {
+export default function EnterpriseSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const t = LIBELLES[lang];
+  const benefits = AVANTAGES[lang].map((a, i) => ({ ...a, icon: ICONES[i] }));
+  const archLayers = t.couches.map((label, i) => ({ label, color: COULEURS_COUCHES[i] }));
+  const infraItems = t.infra;
   return (
     <SectionWrapper id="enterprise" className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,7 +112,7 @@ export default function EnterpriseSection() {
               </span>
             </h2>
             <p className="text-lg text-text-secondary mb-8 leading-relaxed">
-              Une solution de deploiement dediee, concue sur mesure pour les besoins operationnels de votre organisation.
+              {t.accroche}
             </p>
 
             <div className="space-y-5 mb-8">
@@ -84,13 +141,13 @@ export default function EnterpriseSection() {
                 href="mailto:contact@nubitech.io"
                 className="bg-gradient-to-r from-violet-600 to-pink-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all text-center"
               >
-                Parler aux ventes
+                {t.ventes}
               </a>
               <a
                 href="mailto:contact@nubitech.io"
                 className="border border-border-1 text-text-primary px-6 py-3 rounded-lg text-sm font-medium hover:bg-surface-2 transition-colors text-center"
               >
-                Demander une demo
+                {t.demo}
               </a>
             </div>
           </div>
@@ -134,7 +191,7 @@ export default function EnterpriseSection() {
                   className="flex items-center justify-center gap-2 pt-2"
                 >
                   <LockClosedIcon className="w-4 h-4 text-green-400" />
-                  <span className="text-xs text-green-400 font-mono">Chiffrement &middot; RGPD &middot; SLA 99,5%</span>
+                  <span className="text-xs text-green-400 font-mono">{t.bandeau}</span>
                 </motion.div>
               </div>
             </div>

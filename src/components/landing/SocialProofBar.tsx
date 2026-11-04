@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 
 const techs = [
   { name: 'Docker', color: '#2496ED', icon: (
@@ -33,7 +34,13 @@ const techs = [
 // Duplicate for seamless infinite scroll
 const allTechs = [...techs, ...techs];
 
-export default function SocialProofBar() {
+const LIBELLES = {
+  fr: { titre: 'Technologies supportees' },
+  en: { titre: 'Supported technologies' },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+export default function SocialProofBar({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const t = LIBELLES[lang];
   return (
     <SectionWrapper className="py-12 bg-surface-0 border-t border-b border-border-0 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +51,7 @@ export default function SocialProofBar() {
           transition={{ duration: 0.4 }}
           className="text-center text-xs uppercase tracking-widest text-text-tertiary mb-8 font-medium"
         >
-          Technologies supportees
+          {t.titre}
         </motion.p>
 
         {/* Infinite scroll marquee */}

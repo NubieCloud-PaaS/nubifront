@@ -3,38 +3,88 @@
 import SectionWrapper from '@/components/ui/SectionWrapper';
 import AnimatedCard from '@/components/ui/AnimatedCard';
 import { StarIcon } from '@heroicons/react/24/solid';
+import type { DocsLang } from '@/lib/i18n';
 
-const testimonials = [
-  {
-    quote: 'Nubiecloud a reduit notre temps de deploiement de 45 minutes a moins de 3 minutes. L\'equipe peut maintenant se concentrer sur le produit.',
-    name: 'Amadou Diallo',
-    title: 'CTO, FinTech Dakar',
-    initials: 'AD',
-  },
-  {
-    quote: 'Le deploiement WordPress en un clic nous a fait gagner des semaines. Plus besoin de configurer des serveurs manuellement.',
-    name: 'Fatou Ndiaye',
-    title: 'Directrice Technique, AgriSaaS',
-    initials: 'FN',
-  },
-  {
-    quote: 'Le support francophone et la tarification en XOF font toute la difference. Enfin une plateforme cloud pensee pour l\'Afrique de l\'Ouest.',
-    name: 'Ibrahim Koné',
-    title: 'Fondateur, EduTech CI',
-    initials: 'IK',
-  },
-];
+/**
+ * LES CITATIONS SONT TRADUITES, LES PERSONNES NE LE SONT PAS.
+ *
+ * Noms, intitules de poste et entreprises restent identiques dans les deux langues :
+ * ce sont des personnes reelles, pas du contenu. Traduire une citation est l'usage
+ * courant sur un site bilingue ; inventer un temoignage ou en modifier l'attribution ne
+ * l'est pas.
+ */
+const TEMOIGNAGES = {
+  fr: [
+    {
+      quote:
+        "Nubiecloud a reduit notre temps de deploiement de 45 minutes a moins de 3 minutes. L'equipe peut maintenant se concentrer sur le produit.",
+      name: 'Amadou Diallo',
+      title: 'CTO, FinTech Dakar',
+      initials: 'AD',
+    },
+    {
+      quote:
+        'Le deploiement WordPress en un clic nous a fait gagner des semaines. Plus besoin de configurer des serveurs manuellement.',
+      name: 'Fatou Ndiaye',
+      title: 'Directrice Technique, AgriSaaS',
+      initials: 'FN',
+    },
+    {
+      quote:
+        "Le support francophone et la tarification en FCFA font toute la difference. Enfin une plateforme cloud pensee pour l'Afrique.",
+      name: 'Ibrahim Kone',
+      title: 'Fondateur, EduTech CI',
+      initials: 'IK',
+    },
+  ],
+  en: [
+    {
+      quote:
+        'Nubiecloud cut our deployment time from 45 minutes to under 3. The team can now focus on the product.',
+      name: 'Amadou Diallo',
+      title: 'CTO, FinTech Dakar',
+      initials: 'AD',
+    },
+    {
+      quote:
+        'One-click WordPress deployment saved us weeks. No more configuring servers by hand.',
+      name: 'Fatou Ndiaye',
+      title: 'Chief Technology Officer, AgriSaaS',
+      initials: 'FN',
+    },
+    {
+      quote:
+        'French-speaking support and pricing in FCFA make all the difference. At last, a cloud platform designed for Africa.',
+      name: 'Ibrahim Kone',
+      title: 'Founder, EduTech CI',
+      initials: 'IK',
+    },
+  ],
+} satisfies Record<DocsLang, { quote: string; name: string; title: string; initials: string }[]>;
 
-export default function TestimonialsSection() {
+const LIBELLES = {
+  fr: {
+    titre: 'Ce que disent nos utilisateurs',
+    accroche: 'Des equipes en Afrique font confiance a Nubiecloud.',
+  },
+  en: {
+    titre: 'What our users say',
+    accroche: 'Teams across Africa trust Nubiecloud.',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+export default function TestimonialsSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const testimonials = TEMOIGNAGES[lang];
+  const l = LIBELLES[lang];
   return (
     <SectionWrapper className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4">
-            Ce que disent nos utilisateurs
+            {l.titre}
           </h2>
           <p className="text-lg text-text-secondary">
-            Des equipes en Afrique de l&apos;Ouest font confiance a Nubiecloud.
+            {l.accroche}
           </p>
         </div>
 

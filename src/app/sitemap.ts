@@ -2,19 +2,38 @@ import { MetadataRoute } from 'next';
 import { getSortedPostsData } from '@/lib/posts';
 import { source } from '@/lib/source';
 import { PAGES, cheminDe } from '@/lib/legal';
-import { i18n } from '@/lib/i18n';
+import { i18n, langPrefix } from '@/lib/i18n';
 
 const BASE_URL = 'https://nubiecloud.io';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getSortedPostsData();
+  // Les articles de CHAQUE langue : leurs slugs ne sont pas forcement les memes (un
+  // article peut n'exister qu'en francais), donc on liste par langue au lieu de prefixer
+  // une seule liste -- ce qui aurait declare des URL anglaises inexistantes.
+  const blogEntries: MetadataRoute.Sitemap = i18n.languages.flatMap((lang) =>
+    getSortedPostsData(lang).map((post) => ({
+      url: `${BASE_URL}${langPrefix(lang)}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  );
 
-  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }));
+  // L'accueil et l'index du blog, dans les deux langues.
+  const pagesPrincipales: MetadataRoute.Sitemap = i18n.languages.flatMap((lang) => [
+    {
+      url: `${BASE_URL}${langPrefix(lang) || '/'}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: lang === i18n.defaultLanguage ? 1 : 0.9,
+    },
+    {
+      url: `${BASE_URL}${langPrefix(lang)}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+  ]);
 
   // Toutes les pages de la doc Fumadocs, dans les deux langues.
   // page.url vaut déjà /docs/... (fr) ou /en/docs/... (en).
@@ -45,18 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   return [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
+    ...pagesPrincipales,
     ...legalEntries,
     ...blogEntries,
     ...docsEntries,

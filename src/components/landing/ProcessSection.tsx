@@ -1,6 +1,7 @@
 'use client';
 
 import SectionWrapper from '@/components/ui/SectionWrapper';
+import type { DocsLang } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 
 const titleVariants = {
@@ -10,12 +11,49 @@ const titleVariants = {
 
 /* ── Step Illustrations (CSS-based UI mockups) ── */
 
-function RepoIllustration() {
+const LIBELLES = {
+  fr: {
+    titre: 'Du commit au deploiement',
+    connecter: 'Connecter un depot',
+    selectionne: 'Selectionne',
+    configBuild: 'Configuration du build',
+    pipeline: 'Pipeline CI/CD',
+    production: 'En production',
+    live: 'Live',
+  },
+  en: {
+    titre: 'From commit to deployment',
+    connecter: 'Connect a repository',
+    selectionne: 'Selected',
+    configBuild: 'Build configuration',
+    pipeline: 'CI/CD pipeline',
+    production: 'In production',
+    live: 'Live',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+const ETAPES = {
+  fr: [
+    { num: '01', title: 'Connectez votre depot', description: 'Liez GitHub ou GitLab en un clic. Nous detectons automatiquement votre configuration.' },
+    { num: '02', title: 'Configurez votre build', description: "Interface intuitive pour gerer commandes de build et variables d'environnement." },
+    { num: '03', title: 'Poussez votre code', description: 'A chaque git push, Nubiecloud build, teste et prepare le deploiement automatiquement.' },
+    { num: '04', title: 'En production', description: 'Votre application est live sur notre infrastructure globale avec SSL, CDN et monitoring.' },
+  ],
+  en: [
+    { num: '01', title: 'Connect your repository', description: 'Link GitHub or GitLab in one click. We detect your configuration automatically.' },
+    { num: '02', title: 'Configure your build', description: 'An intuitive interface for build commands and environment variables.' },
+    { num: '03', title: 'Push your code', description: 'On every git push, Nubiecloud builds, tests and prepares the deployment automatically.' },
+    { num: '04', title: 'In production', description: 'Your application is live on our global infrastructure, with SSL, CDN and monitoring.' },
+  ],
+} satisfies Record<DocsLang, { num: string; title: string; description: string }[]>;
+
+function RepoIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-4 text-xs font-mono space-y-2.5">
       <div className="flex items-center gap-2 text-text-tertiary mb-3">
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        <span>Connecter un depot</span>
+        <span>{t.connecter}</span>
       </div>
       {['acme/frontend', 'acme/api-server', 'acme/landing-page'].map((repo, i) => (
         <motion.div
@@ -30,19 +68,20 @@ function RepoIllustration() {
             <div className={`w-2 h-2 rounded-full ${i === 2 ? 'bg-accent-400' : 'bg-text-quaternary'}`} />
             <span className="text-text-secondary">{repo}</span>
           </div>
-          {i === 2 && <span className="text-accent-400 text-[10px]">Selectionne</span>}
+          {i === 2 && <span className="text-accent-400 text-[10px]">{t.selectionne}</span>}
         </motion.div>
       ))}
     </div>
   );
 }
 
-function BuildIllustration() {
+function BuildIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-4 text-xs font-mono space-y-2.5">
       <div className="flex items-center gap-2 text-text-tertiary mb-3">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-        <span>Configuration du build</span>
+        <span>{t.configBuild}</span>
       </div>
       {[
         { label: 'Framework', value: 'Next.js 16', detected: true },
@@ -78,12 +117,13 @@ function BuildIllustration() {
   );
 }
 
-function PushIllustration() {
+function PushIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-4 text-xs font-mono">
       <div className="flex items-center gap-2 text-text-tertiary mb-3">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-        <span>Pipeline CI/CD</span>
+        <span>{t.pipeline}</span>
       </div>
       <div className="space-y-2">
         {[
@@ -120,12 +160,13 @@ function PushIllustration() {
   );
 }
 
-function DeployIllustration() {
+function DeployIllustration({ lang }: { lang: DocsLang }) {
+  const t = LIBELLES[lang];
   return (
     <div className="glass-card rounded-lg p-4 text-xs font-mono">
       <div className="flex items-center gap-2 text-text-tertiary mb-3">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>En production</span>
+        <span>{t.production}</span>
       </div>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -140,7 +181,7 @@ function DeployIllustration() {
             transition={{ duration: 2, repeat: Infinity }}
             className="w-2 h-2 rounded-full bg-green-400"
           />
-          <span className="text-green-400 font-medium">Live</span>
+          <span className="text-green-400 font-medium">{t.live}</span>
           <span className="text-text-quaternary ml-auto">4.2s</span>
         </div>
         <span className="text-accent-400">https://console.nubiecloud.io</span>
@@ -170,30 +211,11 @@ function DeployIllustration() {
 
 const illustrations = [RepoIllustration, BuildIllustration, PushIllustration, DeployIllustration];
 
-const steps = [
-  {
-    num: '01',
-    title: 'Connectez votre depot',
-    description: 'Liez GitHub ou GitLab en un clic. Nous detectons automatiquement votre configuration.',
-  },
-  {
-    num: '02',
-    title: 'Configurez votre build',
-    description: 'Interface intuitive pour gerer commandes de build et variables d\'environnement.',
-  },
-  {
-    num: '03',
-    title: 'Poussez votre code',
-    description: 'A chaque git push, Nubiecloud build, teste et prepare le deploiement automatiquement.',
-  },
-  {
-    num: '04',
-    title: 'En production',
-    description: 'Votre application est live sur notre infrastructure globale avec SSL, CDN et monitoring.',
-  },
-];
 
-export default function ProcessSection() {
+
+export default function ProcessSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const steps = ETAPES[lang];
+  const t = LIBELLES[lang];
   return (
     <SectionWrapper id="processus" className="py-20 bg-surface-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -208,7 +230,7 @@ export default function ProcessSection() {
             variants={titleVariants}
             className="text-3xl sm:text-4xl font-bold text-text-primary mb-4"
           >
-            Du commit au deploiement
+            {t.titre}
           </motion.h2>
           <motion.p
             variants={titleVariants}
@@ -242,7 +264,7 @@ export default function ProcessSection() {
                 </div>
                 {/* Illustration */}
                 <div className="h-52 overflow-hidden illustration-mask">
-                  <Illustration />
+                  <Illustration lang={lang} />
                 </div>
               </motion.div>
             );

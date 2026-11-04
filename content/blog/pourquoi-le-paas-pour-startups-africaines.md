@@ -49,17 +49,17 @@ C'est un appartement meuble. Vous arrivez avec vos affaires et vous commencez a 
 
 ### 1. Le talent DevOps est rare (et cher)
 
-En Afrique de l'Ouest, un ingenieur DevOps senior coute entre 1 500 000 et 3 000 000 XOF/mois. Et ils sont tres demandes : les grandes boites les absorbent vite.
+En Afrique de l'Ouest, un ingenieur DevOps senior coute entre 1 500 000 et 3 000 000 FCFA/mois. Et ils sont tres demandes : les grandes boites les absorbent vite.
 
 Avec un PaaS, votre equipe de developpeurs deploie et gere les applications sans expertise DevOps. Un dev junior peut mettre en production une app en 5 minutes, la ou un setup IaaS prendrait des jours de configuration.
 
-L'economie potentielle ? Le salaire d'un DevOps pendant 6 mois, soit 9 a 18 millions XOF. De quoi financer pas mal de features.
+L'economie potentielle ? Le salaire d'un DevOps pendant 6 mois, soit 9 a 18 millions FCFA. De quoi financer pas mal de features.
 
 ### 2. La facturation en dollars pose un vrai probleme
 
 AWS, GCP et Azure facturent en dollars. Pour une startup africaine, ca veut dire :
 
-- Des couts imprevisibles a cause de la fluctuation XOF/USD
+- Des couts imprevisibles a cause de la fluctuation FCFA/USD
 - Des cartes Visa/Mastercard africaines qui ont souvent des limites ou des frais supplementaires
 - Une tarification opaque (la facture AWS est un labyrinthe)
 
@@ -72,15 +72,15 @@ NAT Gateway processing:     $6.15
 Route 53 queries:           $2.30
 CloudWatch:                 $4.89
 ─────────────────────────────────
-Total:                     $81.69 → ~50 500 XOF (taux variable)
+Total:                     $81.69 → ~50 500 FCFA (taux variable)
 
 # Facture Nubiecloud
-Plan Pro:                  250 000 XOF/mois
+Plan Pro:                  145 000 FCFA/mois
 ─────────────────────────────────
-Total:                     250 000 XOF. Point.
+Total:                     145 000 FCFA. Point.
 ```
 
-Chez nous, on facture en XOF avec des tarifs fixes. Pas de mauvaise surprise en fin de mois.
+Chez nous, on facture en FCFA avec des tarifs fixes. Pas de mauvaise surprise en fin de mois.
 
 ### 3. Le time-to-market est critique
 
@@ -100,7 +100,7 @@ Sur un an, ca fait des semaines entieres recuperees pour le developpement produi
 
 Configurer la securite sur AWS est un metier a part entiere : Security Groups, NACLs, IAM policies, encryption, VPC... Une erreur et vos donnees sont exposees. Les incidents lies a des S3 buckets publics ou des Security Groups mal configures font regulierement la une.
 
-Sur Nubiecloud, tout est integre par defaut : isolation des projets, reseau securise, SSL/TLS auto-renouvele, secrets chiffres en AES-256, protection DDoS, conformite RGPD avec logs d'audit.
+Sur Nubiecloud, tout est integre par defaut : isolation des projets, reseau securise, SSL/TLS auto-renouvele, secrets chiffres, protection DDoS, conformite RGPD avec logs d'audit.
 
 On ne vous demande pas de devenir expert en securite cloud. On s'en occupe.
 
@@ -118,30 +118,30 @@ Prenons une startup SaaS classique avec une API Django, un frontend React et une
 
 | Poste | Cout mensuel |
 |---|---|
-| EC2 t3.medium (API) | ~30 000 XOF |
-| EC2 t3.small (Frontend) | ~15 000 XOF |
-| RDS PostgreSQL db.t3.micro | ~25 000 XOF |
-| ALB (Load Balancer) | ~15 000 XOF |
-| Data Transfer | ~10 000 XOF |
-| Route 53 + ACM | ~5 000 XOF |
-| CloudWatch | ~8 000 XOF |
-| **Sous-total infra** | **~108 000 XOF** |
-| Temps DevOps (20h/mois x 15 000 XOF/h) | **300 000 XOF** |
-| **Total reel** | **~408 000 XOF/mois** |
+| EC2 t3.medium (API) | ~30 000 FCFA |
+| EC2 t3.small (Frontend) | ~15 000 FCFA |
+| RDS PostgreSQL db.t3.micro | ~25 000 FCFA |
+| ALB (Load Balancer) | ~15 000 FCFA |
+| Data Transfer | ~10 000 FCFA |
+| Route 53 + ACM | ~5 000 FCFA |
+| CloudWatch | ~8 000 FCFA |
+| **Sous-total infra** | **~108 000 FCFA** |
+| Temps DevOps (20h/mois x 15 000 FCFA/h) | **300 000 FCFA** |
+| **Total reel** | **~408 000 FCFA/mois** |
 
 ### Setup PaaS (Nubiecloud)
 
 | Poste | Cout mensuel |
 |---|---|
-| Plan Pro (API + Frontend + DB) | 250 000 XOF |
-| Temps DevOps | 0 XOF |
-| **Total** | **250 000 XOF/mois** |
+| Plan Pro (API + Frontend + DB) | 145 000 FCFA |
+| Temps DevOps | 0 FCFA |
+| **Total** | **145 000 FCFA/mois** |
 
-Economie : 158 000 XOF/mois, soit pres de 1 900 000 XOF/an. Et on ne compte meme pas le temps de developpement recupere.
+Economie : 263 000 FCFA/mois, soit plus de 3 100 000 FCFA/an. Et on ne compte meme pas le temps de developpement recupere.
 
 ## Quand l'IaaS se justifie quand meme
 
-On ne va pas pretendre que le PaaS est la reponse a tout. Migrer vers l'IaaS peut se justifier quand votre architecture atteint 50+ microservices, quand vous avez des contraintes de conformite bancaire tres strictes, quand vous avez une equipe DevOps de 3+ personnes dediee, ou quand votre budget infra depasse 5 000 000 XOF/mois (les economies d'echelle commencent a jouer a ce stade).
+On ne va pas pretendre que le PaaS est la reponse a tout. Migrer vers l'IaaS peut se justifier quand votre architecture atteint 50+ microservices, quand vous avez des contraintes de conformite bancaire tres strictes, quand vous avez une equipe DevOps de 3+ personnes dediee, ou quand votre budget infra depasse 5 000 000 FCFA/mois (les economies d'echelle commencent a jouer a ce stade).
 
 Pour la majorite des startups en phase seed a serie A, le PaaS reste le choix rationnel.
 
@@ -149,7 +149,7 @@ Pour la majorite des startups en phase seed a serie A, le PaaS reste le choix ra
 
 Les startups africaines operent dans un contexte unique : connectivite variable, moyens de paiement specifiques, marches multilingues, reglementations locales. Elles meritent des outils cloud penses pour leur realite, pas des versions degradees de services americains.
 
-C'est exactement pour ca qu'on a cree Nubiecloud. Une plateforme avec une tarification en XOF, un support francophone et une experience pensee pour les devs africains.
+C'est exactement pour ca qu'on a cree Nubiecloud. Une plateforme avec une tarification en FCFA, un support francophone et une experience pensee pour les devs africains.
 
 ## Envie de tester ?
 

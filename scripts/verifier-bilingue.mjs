@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * LES DEUX LANGUES D'UN DOCUMENT CONTRACTUEL DOIVENT AVOIR LA MÊME STRUCTURE.
+ * LES DEUX LANGUES D'UN MÊME CONTENU DOIVENT AVOIR LA MÊME STRUCTURE.
+ *
+ * Couvre les deux documents contractuels ET les articles de blog.
  *
  * Le mode de panne que ce script existe pour attraper : quelqu'un ajoute une clause au
  * français — une exclusion de responsabilité, une durée de conservation — et oublie
@@ -9,7 +11,7 @@
  * qu'au litige.
  *
  * Ce dépôt n'a pas de runner de tests (ni jest, ni vitest) : ce script est donc lancé à
- * la main, `npm run verifier:legal`, et avant toute publication d'une modification de ces
+ * la main, `npm run verifier:bilingue`, et avant toute publication d'une modification de ces
  * pages.
  *
  * LES COMPARAISONS SONT STRUCTURELLES, JAMAIS TEXTUELLES. Un contrôle qui chercherait une
@@ -88,6 +90,56 @@ for (const doc of DOCUMENTS) {
   if (!/reference/i.test(en)) {
     dire(`  en : la page ne dit pas que le francais est le texte de reference`);
     defauts++;
+  }
+}
+
+// ---------------------------------------------------------------- articles de blog
+//
+// Le francais vit a la racine de `content/blog`, l'anglais dans `content/blog/en` (meme
+// convention que la documentation Fumadocs). Un article peut legitimement n'exister qu'en
+// francais -- `getAllPostSlugs('en')` ne liste que ce qui est traduit, donc pas d'URL
+// anglaise servant du francais. On ne REFUSE donc pas une traduction manquante : on la
+// NOMME, parce qu'un article oublie pendant des mois n'est visible nulle part.
+//
+// Ce qui est un DEFAUT, c'est un article anglais ORPHELIN : son slug n'existe pas en
+// francais, donc il est servi sans contrepartie et sans `hreflang` valide.
+import { readdirSync, existsSync } from 'node:fs';
+
+const articles = (dossier) =>
+  existsSync(dossier)
+    ? readdirSync(dossier, { withFileTypes: true })
+        .filter((e) => e.isFile() && e.name.endsWith('.md'))
+        .map((e) => e.name)
+        .sort()
+    : [];
+
+dire('\n=== articles de blog ===');
+const blogFr = articles('content/blog');
+const blogEn = articles('content/blog/en');
+dire(`  fr=${blogFr.length}  en=${blogEn.length}`);
+
+const nonTraduits = blogFr.filter((f) => !blogEn.includes(f));
+if (nonTraduits.length) dire(`  non traduits (acceptable) : ${nonTraduits.join(', ')}`);
+
+const orphelins = blogEn.filter((f) => !blogFr.includes(f));
+if (orphelins.length) {
+  dire(`  ORPHELINS -- article anglais sans original francais : ${orphelins.join(', ')}`);
+  defauts += orphelins.length;
+}
+
+// Pour les articles traduits, le frontmatter doit porter les MEMES metadonnees
+// structurelles : une date differente les classerait differemment dans les deux listes,
+// et un `image` absent casse le rendu de la carte.
+for (const nom of blogFr.filter((f) => blogEn.includes(f))) {
+  const lire = (chemin) => readFileSync(chemin, 'utf8');
+  const champ = (src, cle) => (src.match(new RegExp(`^${cle}:\\s*(.+)$`, 'm')) || [, ''])[1].trim();
+  const fr = lire(`content/blog/${nom}`);
+  const en = lire(`content/blog/en/${nom}`);
+  for (const cle of ['date', 'image', 'readingTime']) {
+    if (champ(fr, cle) !== champ(en, cle)) {
+      dire(`  ${nom} : « ${cle} » differe (fr=${champ(fr, cle)} en=${champ(en, cle)})`);
+      defauts++;
+    }
   }
 }
 
