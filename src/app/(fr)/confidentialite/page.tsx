@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import BasculeLangue from '@/components/BasculeLangue';
+import { DATE_CONFIDENTIALITE, alternatesDe } from '@/lib/legal';
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité — Nubiecloud',
@@ -22,12 +24,16 @@ export const metadata: Metadata = {
     description:
       'Quelles données Nubiecloud collecte, pourquoi, avec qui elles sont partagées et combien de temps elles sont conservées.',
   },
-  alternates: {
-    canonical: 'https://nubiecloud.io/confidentialite',
-  },
+  alternates: alternatesDe('confidentialite', 'fr'),
 };
 
-const DERNIERE_MISE_A_JOUR = '3 novembre 2026';
+/**
+ * La date est PARTAGÉE avec la version anglaise (`src/lib/legal.ts`). Deux dates qui
+ * divergent feraient croire qu'une des deux langues a été oubliée lors d'une révision —
+ * et pour une politique de confidentialité, c'est la date qui dit si le lecteur a sous
+ * les yeux l'état courant du traitement.
+ */
+const DERNIERE_MISE_A_JOUR = DATE_CONFIDENTIALITE.fr;
 
 export default function ConfidentialitePage() {
   return (
@@ -37,6 +43,9 @@ export default function ConfidentialitePage() {
       <main className="flex-grow pt-12 pb-16">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="py-12">
+            <div className="mb-6">
+              <BasculeLangue page="confidentialite" lang="fr" />
+            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">
               Politique de confidentialité
             </h1>

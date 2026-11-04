@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import BasculeLangue from '@/components/BasculeLangue';
+import {
+  VERSION_CONDITIONS,
+  DATE_VERSION as DATES,
+  alternatesDe,
+  cheminDe,
+} from '@/lib/legal';
 
 export const metadata: Metadata = {
   title: 'Conditions d’utilisation — Nubiecloud',
@@ -22,24 +29,25 @@ export const metadata: Metadata = {
     description:
       'Objet, compte, répartition des responsabilités, disponibilité, usages interdits, tarifs et résiliation.',
   },
-  alternates: {
-    canonical: 'https://nubiecloud.io/conditions',
-  },
+  alternates: alternatesDe('conditions', 'fr'),
 };
 
 /**
- * VERSION ET DATE SONT CONTRACTUELLES, pas décoratives.
+ * VERSION ET DATE SONT CONTRACTUELLES, pas décoratives — et PARTAGÉES avec la version
+ * anglaise, d'où `src/lib/legal.ts`.
  *
- * L'acceptation de ces conditions est enregistrée côté serveur à l'inscription,
- * avec la version acceptée. Modifier le TEXTE sans incrémenter `VERSION` rend
- * donc tous les enregistrements inexploitables : on ne saurait plus ce que les
- * personnes ont accepté.
+ * L'acceptation de ces conditions est enregistrée côté serveur à l'inscription, avec la
+ * version acceptée. Modifier le TEXTE sans incrémenter la version rend donc tous les
+ * enregistrements inexploitables : on ne saurait plus ce que les personnes ont accepté.
+ * Et afficher deux versions différentes selon la langue serait pire — on enregistrerait
+ * une acceptation pour un texte que la personne n'a pas lu.
  *
- * Toute modification de fond de cette page = nouvelle version + nouvelle date.
- * Une correction de pure forme (faute de frappe) peut rester à version égale.
+ * Toute modification de fond de cette page = nouvelle version + nouvelle date, DANS LES
+ * DEUX LANGUES. Une correction de pure forme (faute de frappe) peut rester à version
+ * égale.
  */
-const VERSION = '1.0';
-const DATE_VERSION = '3 novembre 2026';
+const VERSION = VERSION_CONDITIONS;
+const DATE_VERSION = DATES.fr;
 
 export default function ConditionsPage() {
   return (
@@ -49,6 +57,9 @@ export default function ConditionsPage() {
       <main className="flex-grow pt-12 pb-16">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="py-12">
+            <div className="mb-6">
+              <BasculeLangue page="conditions" lang="fr" />
+            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">
               Conditions d’utilisation
             </h1>
@@ -389,7 +400,7 @@ export default function ConditionsPage() {
 
             <p>
               Le traitement des données personnelles est décrit dans notre{' '}
-              <a href="/confidentialite">politique de confidentialité</a>, qui fait partie
+              <a href={cheminDe('confidentialite', 'fr')}>politique de confidentialité</a>, qui fait partie
               intégrante des présentes conditions. Nous ne la répétons pas ici.
             </p>
 
@@ -529,7 +540,7 @@ export default function ConditionsPage() {
 
             <p>
               Ce délai s’accorde avec notre{' '}
-              <a href="/confidentialite">politique de confidentialité</a>, qui annonce un
+              <a href={cheminDe('confidentialite', 'fr')}>politique de confidentialité</a>, qui annonce un
               effacement sous 30 jours — et qui détaille les deux seules exceptions : les factures,
               que nous devons conserver dix ans, et les sauvegardes déjà prises, qui subsistent
               jusqu’à l’échéance de la rétention que vous avez vous-même réglée.
@@ -655,7 +666,7 @@ export default function ConditionsPage() {
                 Conditions d’utilisation — version {VERSION}, en vigueur depuis le{' '}
                 {DATE_VERSION}. NUBITECH SAS — SIREN 105&nbsp;358&nbsp;543 —{' '}
                 <a href="mailto:contact@nubitech.io">contact@nubitech.io</a>. Voir aussi la{' '}
-                <a href="/confidentialite">politique de confidentialité</a>.
+                <a href={cheminDe('confidentialite', 'fr')}>politique de confidentialité</a>.
               </em>
             </p>
           </div>

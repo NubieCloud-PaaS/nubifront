@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "verifier:legal": "node scripts/verifier-pages-legales.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

@@ -6,18 +6,58 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '@/components/ThemeProvider';
 import Logo from '@/components/Logo';
+import { langPrefix, type DocsLang } from '@/lib/i18n';
 
 const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubiecloud.io';
 
-const navLinks = [
-  { label: 'Produit', href: '/#plateformes' },
-  { label: 'Processus', href: '/#processus' },
-  { label: 'Tarifs', href: '/#tarifs' },
-  { label: 'Docs', href: '/docs' },
-  { label: 'Blog', href: '/blog' },
-];
+/**
+ * La navigation, par langue.
+ *
+ * Deux choses à savoir avant d'en déduire que le site est bilingue :
+ *
+ * - les trois ancres visent la LANDING, qui n'est pas traduite — un anglophone y arrive
+ *   donc sur une page française, et c'est assumé ;
+ * - seule `Docs` a une vraie contrepartie anglaise, d'où le préfixe dérivé de
+ *   `langPrefix` plutôt qu'un chemin écrit à la main.
+ *
+ * `satisfies Record<DocsLang, …>` force les deux langues : une entrée oubliée ne compile
+ * pas.
+ */
+const NAV = {
+  fr: [
+    { label: 'Produit', href: '/#plateformes' },
+    { label: 'Processus', href: '/#processus' },
+    { label: 'Tarifs', href: '/#tarifs' },
+    { label: 'Docs', href: `${langPrefix('fr')}/docs` },
+    { label: 'Blog', href: '/blog' },
+  ],
+  en: [
+    { label: 'Product', href: '/#plateformes' },
+    { label: 'How it works', href: '/#processus' },
+    { label: 'Pricing', href: '/#tarifs' },
+    { label: 'Docs', href: `${langPrefix('en')}/docs` },
+    { label: 'Blog', href: '/blog' },
+  ],
+} satisfies Record<DocsLang, { label: string; href: string }[]>;
 
-export default function Navbar() {
+const LIBELLES = {
+  fr: {
+    lancer: 'Lancez-vous',
+    clair: 'Activer le mode clair',
+    sombre: 'Activer le mode sombre',
+    menu: 'Menu',
+  },
+  en: {
+    lancer: 'Get started',
+    clair: 'Switch to light mode',
+    sombre: 'Switch to dark mode',
+    menu: 'Menu',
+  },
+} satisfies Record<DocsLang, Record<string, string>>;
+
+export default function Navbar({ lang = 'fr' }: { lang?: DocsLang } = {}) {
+  const navLinks = NAV[lang];
+  const t = LIBELLES[lang];
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -55,7 +95,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <button
               onClick={toggleDarkMode}
-              aria-label={isDarkMode ? 'Activer le mode clair' : 'Activer le mode sombre'}
+              aria-label={isDarkMode ? t.clair : t.sombre}
               className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-surface-3 transition-colors"
             >
               {isDarkMode ? (
@@ -72,7 +112,7 @@ export default function Navbar() {
               href={`${CONSOLE_URL}/login`}
               className="btn-primary px-4 py-2 rounded-lg text-sm font-medium transition-colors"
             >
-              Lancez-vous
+              {t.lancer}
             </a>
           </div>
 
@@ -80,7 +120,7 @@ export default function Navbar() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden h-8 w-8 flex items-center justify-center rounded-md hover:bg-surface-3 transition-colors"
-            aria-label="Menu"
+            aria-label={t.menu}
           >
             {mobileOpen ? (
               <XMarkIcon className="h-5 w-5 text-text-primary" />
@@ -131,7 +171,7 @@ export default function Navbar() {
                   href={`${CONSOLE_URL}/login`}
                   className="flex-1 text-center btn-primary px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
-                  Lancez-vous
+                  {t.lancer}
                 </a>
               </div>
             </div>

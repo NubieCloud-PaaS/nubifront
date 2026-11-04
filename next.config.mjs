@@ -28,6 +28,20 @@ const nextConfig = {
       { source: '/cgu', destination: '/conditions', permanent: true },
       { source: '/terms', destination: '/conditions', permanent: true },
       { source: '/terms-of-service', destination: '/conditions', permanent: true },
+
+      // Les mêmes mots, sous le préfixe de langue, vers la version ANGLAISE. Un
+      // anglophone qui connaît déjà `/en/docs` essaie `/en/terms` ; sans ces entrées il
+      // reçoit un 404 là où le document existe.
+      //
+      // Les redirections SANS préfixe ci-dessus continuent de viser le français, et ce
+      // n'est pas un oubli : le français est le texte de référence (droit français,
+      // `x-default`), il porte désormais un lien « Read in English », et une 301 déjà
+      // servie reste en cache côté navigateur — la retourner vers l'anglais ne changerait
+      // rien pour ceux qui l'ont déjà suivie, tout en déplaçant la version qui fait foi.
+      { source: '/en/terms', destination: '/en/conditions', permanent: true },
+      { source: '/en/terms-of-service', destination: '/en/conditions', permanent: true },
+      { source: '/en/privacy', destination: '/en/confidentialite', permanent: true },
+      { source: '/en/privacy-policy', destination: '/en/confidentialite', permanent: true },
     ];
   },
 };
