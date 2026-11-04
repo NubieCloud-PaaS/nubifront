@@ -75,10 +75,11 @@ export function jsonLdPour(lang: DocsLang) {
       offers: {
         '@type': 'AggregateOffer',
         lowPrice: '0',
-        // XOF ou XAF ? La grille affiche « FCFA », qui couvre les DEUX zones, et
-        // `priceCurrency` exige un code ISO 4217. La valeur d'origine est conservée
-        // faute d'avoir pu la trancher : à confirmer selon la zone facturée.
-        priceCurrency: 'XOF',
+        // XAF : la societe est au Cameroun, donc en zone CEMAC. « FCFA » couvre les
+        // deux francs CFA et ne suffit pas ici -- `priceCurrency` exige un code ISO
+        // 4217. Les montants affiches ne changent pas pour autant : les deux francs
+        // CFA ont la meme parite fixe avec l'euro, seul le code differe.
+        priceCurrency: 'XAF',
         offerCount: 4,
       },
       featureList: t.fonctionnalites,

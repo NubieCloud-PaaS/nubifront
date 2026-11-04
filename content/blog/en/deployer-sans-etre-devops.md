@@ -16,9 +16,9 @@ Because production is another world. Provisioning a server, installing dependenc
 
 When you are a three-developer startup or a solo freelancer, the question is simple: who does all that?
 
-## Daily life for teams in West Africa
+## Daily life for teams in Africa
 
-In West Africa, this complexity costs even more. DevOps talent is scarce and expensive. Most teams are made up of full-stack developers who have to handle the infrastructure *as well*, often on platforms designed for the American market and billed in dollars.
+In Africa, this complexity costs even more. DevOps talent is scarce and expensive. Most teams are made up of full-stack developers who have to handle the infrastructure *as well*, often on platforms designed for the American market and billed in dollars.
 
 We see it regularly among the teams who contact us, and the outcome is nearly always the same:
 

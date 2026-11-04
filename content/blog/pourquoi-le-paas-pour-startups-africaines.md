@@ -49,7 +49,7 @@ C'est un appartement meuble. Vous arrivez avec vos affaires et vous commencez a 
 
 ### 1. Le talent DevOps est rare (et cher)
 
-En Afrique de l'Ouest, un ingenieur DevOps senior coute entre 1 500 000 et 3 000 000 FCFA/mois. Et ils sont tres demandes : les grandes boites les absorbent vite.
+En Afrique, un ingenieur DevOps senior coute entre 1 500 000 et 3 000 000 FCFA/mois. Et ils sont tres demandes : les grandes boites les absorbent vite.
 
 Avec un PaaS, votre equipe de developpeurs deploie et gere les applications sans expertise DevOps. Un dev junior peut mettre en production une app en 5 minutes, la ou un setup IaaS prendrait des jours de configuration.
 
@@ -108,7 +108,7 @@ On ne vous demande pas de devenir expert en securite cloud. On s'en occupe.
 
 Quand votre application plante a 2h du matin, avoir un support qui parle francais et qui comprend les contraintes locales fait toute la difference.
 
-La documentation AWS fait des dizaines de milliers de pages, en anglais. Notre equipe est basee en Afrique de l'Ouest. On repond en francais, on connait les galeres de connectivite, les contraintes de paiement, les realites du terrain.
+La documentation AWS fait des dizaines de milliers de pages, en anglais. Notre equipe est basee au Cameroun. On repond en francais, on connait les galeres de connectivite, les contraintes de paiement, les realites du terrain.
 
 ## Le vrai cout : comparons les chiffres
 

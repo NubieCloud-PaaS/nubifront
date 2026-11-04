@@ -49,7 +49,7 @@ It is a furnished flat. You arrive with your things and start living.
 
 ### 1. DevOps talent is scarce (and expensive)
 
-In West Africa, a senior DevOps engineer costs between 1,500,000 and 3,000,000 FCFA a month. And they are in high demand: large companies absorb them quickly.
+In Africa, a senior DevOps engineer costs between 1,500,000 and 3,000,000 FCFA a month. And they are in high demand: large companies absorb them quickly.
 
 With a PaaS, your developers deploy and run the applications without DevOps expertise. A junior developer can put an app into production in five minutes, where an IaaS setup would take days of configuration.
 
@@ -108,7 +108,7 @@ We do not ask you to become a cloud security expert. We handle it.
 
 When your application falls over at 2 a.m., having support that speaks French and understands local constraints makes all the difference.
 
-The AWS documentation runs to tens of thousands of pages, in English. Our team is based in Africa. We answer in French, we know the connectivity headaches, the payment constraints, the realities on the ground.
+The AWS documentation runs to tens of thousands of pages, in English. Our team is based in Cameroon. We answer in French, we know the connectivity headaches, the payment constraints, the realities on the ground.
 
 ## The real cost: let's compare the numbers
 
