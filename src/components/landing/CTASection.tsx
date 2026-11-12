@@ -12,12 +12,12 @@ const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubi
 
 const LIBELLES = {
   fr: {
-    titre: 'Pret a deployer ?',
+    titre: 'Prêt à déployer ?',
     accroche: 'Commencez gratuitement en 30 secondes. Pas de carte bancaire requise.',
     demarrer: 'Demarrer gratuitement',
     contact: 'Nous contacter',
-    securite: 'Securite',
-    automatise: 'Automatise',
+    securite: 'Sécurité',
+    automatise: 'Automatisé',
     scalable: 'Scalable',
   },
   en: {

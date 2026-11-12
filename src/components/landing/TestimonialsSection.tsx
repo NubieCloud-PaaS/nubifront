@@ -17,21 +17,21 @@ const TEMOIGNAGES = {
   fr: [
     {
       quote:
-        "Nubiecloud a reduit notre temps de deploiement de 45 minutes a moins de 3 minutes. L'equipe peut maintenant se concentrer sur le produit.",
+        "Nubiecloud a réduit notre temps de déploiement de 45 minutes à moins de 3 minutes. L'équipe peut maintenant se concentrer sur le produit.",
       name: 'Amadou Diallo',
       title: 'CTO, FinTech Dakar',
       initials: 'AD',
     },
     {
       quote:
-        'Le deploiement WordPress en un clic nous a fait gagner des semaines. Plus besoin de configurer des serveurs manuellement.',
+        'Le déploiement WordPress en un clic nous a fait gagner des semaines. Plus besoin de configurer des serveurs manuellement.',
       name: 'Fatou Ndiaye',
       title: 'Directrice Technique, AgriSaaS',
       initials: 'FN',
     },
     {
       quote:
-        "Le support francophone et la tarification en FCFA font toute la difference. Enfin une plateforme cloud pensee pour l'Afrique.",
+        "Le support francophone et la tarification en FCFA font toute la différence. Enfin une plateforme cloud pensée pour l'Afrique.",
       name: 'Ibrahim Kone',
       title: 'Fondateur, EduTech CI',
       initials: 'IK',
@@ -65,7 +65,7 @@ const TEMOIGNAGES = {
 const LIBELLES = {
   fr: {
     titre: 'Ce que disent nos utilisateurs',
-    accroche: 'Des equipes en Afrique font confiance a Nubiecloud.',
+    accroche: 'Des équipes en Afrique font confiance à Nubiecloud.',
   },
   en: {
     titre: 'What our users say',

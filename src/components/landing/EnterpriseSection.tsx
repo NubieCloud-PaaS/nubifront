@@ -16,23 +16,23 @@ const ICONES = [ServerStackIcon, ShieldCheckIcon, PhoneIcon, ArrowsPointingOutIc
 const AVANTAGES = {
   fr: [
     {
-      title: 'Infrastructure Dediee et Isolee',
+      title: 'Infrastructure Dédiée et Isolée',
       description:
-        "Beneficiez d'une infrastructure de qualite enterprise, completement isolee et dediee a votre organisation.",
+        "Bénéficiez d'une infrastructure de qualité enterprise, complètement isolée et dédiée a votre organisation.",
     },
     {
-      title: 'Securite Renforcee',
-      description: 'Architecture securisee avec conformite RGPD, audit complet et logs detailles.',
+      title: 'Sécurité Renforcée',
+      description: 'Architecture sécurisée avec conformité RGPD, audit complet et logs détaillés.',
     },
     {
-      title: 'Support dedie',
+      title: 'Support dédié',
       description:
         'Account Manager personnel, support prioritaire et engagements negocies au contrat.',
     },
     {
-      title: 'Scalabilite Illimitee',
+      title: 'Scalabilité Illimitée',
       description:
-        'Projets illimites, bande passante illimitee et capacite de scaling automatique sans limites.',
+        'Projets illimités, bande passante illimitée et capacité de scaling automatique sans limites.',
     },
   ],
   en: [
@@ -61,7 +61,7 @@ const AVANTAGES = {
 const LIBELLES = {
   fr: {
     accroche:
-      'Une solution de deploiement dediee, concue sur mesure pour les besoins operationnels de votre organisation.',
+      'Une solution de déploiement dédiée, conçue sur mesure pour les besoins opérationnels de votre organisation.',
     ventes: 'Parler aux ventes',
     demo: 'Demander une demo',
     bandeau: 'Chiffrement \u00b7 RGPD \u00b7 SLA 99,5%',

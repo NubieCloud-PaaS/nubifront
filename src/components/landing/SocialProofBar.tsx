@@ -35,7 +35,7 @@ const techs = [
 const allTechs = [...techs, ...techs];
 
 const LIBELLES = {
-  fr: { titre: 'Technologies supportees' },
+  fr: { titre: 'Technologies supportées' },
   en: { titre: 'Supported technologies' },
 } satisfies Record<DocsLang, Record<string, string>>;
 

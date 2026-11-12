@@ -32,7 +32,7 @@ const LIBELLES = {
     accroche:
       "Nubiecloud s'adapte a vos besoins, que vous soyez un developpeur solo ou une grande entreprise.",
     deployer: 'Deployer en 1 clic \u2192',
-    databases: 'Databases managees',
+    databases: 'Databases managées',
     backup: 'Backup auto',
     quotidien: 'Quotidien \u2713',
     templates: 'Templates 1-Click',
@@ -189,21 +189,21 @@ const PLATEFORMES = {
       title: 'Applications Code',
       techs: ['Node.js', 'Python', 'PHP', 'Go', 'Java', '.NET'],
       description:
-        "Concentrez-vous sur votre code, pas sur l'infrastructure. Deployez en quelques secondes avec des environnements de previsualisation.",
+        "Concentrez-vous sur votre code, pas sur l'infrastructure. Déployez en quelques secondes avec des environnements de previsualisation.",
       accent: 'from-accent-400 to-accent-600',
     },
     {
       title: 'SaaS / ERP',
       techs: ['WordPress', 'Odoo', 'Dolibarr', 'Ghost'],
       description:
-        'Deployez WordPress, Odoo et autres SaaS en un clic. Templates preconfigures, bases de donnees incluses.',
+        'Déployez WordPress, Odoo et autres SaaS en un clic. Templates preconfigures, bases de données incluses.',
       accent: 'from-violet-500 to-pink-500',
     },
     {
       title: 'Databases',
       techs: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis'],
       description:
-        'Bases de donnees managees avec backups automatiques, replications et monitoring integre.',
+        'Bases de données managées avec backups automatiques, replications et monitoring intégré.',
       accent: 'from-emerald-500 to-teal-500',
     },
   ],

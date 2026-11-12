@@ -12,14 +12,14 @@ const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubi
 const LIBELLES = {
   fr: {
     badge: 'Plateforme Cloud PaaS',
-    titre: 'Deployer.',
+    titre: 'Déployer.',
     // Les mots qui defilent : une liste, donc TypeScript ne verifie que le TYPE. Garder
     // le meme NOMBRE d'entrees dans les deux langues -- la rotation est a duree fixe
     // (3 s), donc une liste plus courte d'un cote ferait boucler plus vite sans que rien
     // ne le signale.
-    mots: ['En toute simplicite.', 'En quelques clics.', 'Sans effort.', 'Sans ops.', 'A votre rythme.'],
+    mots: ['En toute simplicité.', 'En quelques clics.', 'Sans effort.', 'Sans ops.', 'À votre rythme.'],
     accroche:
-      'Nubiecloud simplifie votre cycle de vie DevOps du debut a la fin. CI/CD automatise, SSL, monitoring et scalabilite en quelques clics.',
+      'Nubiecloud simplifie votre cycle de vie DevOps du début à la fin. CI/CD automatisé, SSL, monitoring et scalabilité en quelques clics.',
     commencer: 'Commencer gratuitement',
     demo: 'Demander une demo',
   },

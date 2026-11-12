@@ -11,9 +11,9 @@ const CRITERES = {
     { label: 'SSL auto', nubi: true, aws: true, heroku: true, vercel: true },
     { label: 'Prix en FCFA', nubi: true, aws: false, heroku: false, vercel: false },
     { label: 'Support francophone', nubi: true, aws: false, heroku: false, vercel: false },
-    { label: 'CI/CD integre', nubi: true, aws: 'partial', heroku: true, vercel: true },
+    { label: 'CI/CD intégré', nubi: true, aws: 'partial', heroku: true, vercel: true },
     { label: 'Monitoring', nubi: true, aws: 'partial', heroku: 'partial', vercel: 'partial' },
-    { label: 'Complexite', nubi: 'Faible', aws: 'Elevee', heroku: 'Moyenne', vercel: 'Faible' },
+    { label: 'Complexité', nubi: 'Faible', aws: 'Élevée', heroku: 'Moyenne', vercel: 'Faible' },
   ],
   en: [
     { label: 'Deploy time', nubi: '< 5 min', aws: '30+ min', heroku: '5-10 min', vercel: '< 1 min' },

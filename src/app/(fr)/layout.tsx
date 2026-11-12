@@ -5,15 +5,15 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://nubiecloud.io'),
   title: "Nubiecloud - Simplifying Cloud, Amplifying Business",
   description:
-    "Plateforme de deploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes avec CI/CD automatise, SSL, monitoring et scalabilite.",
+    "Plateforme de déploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes avec CI/CD automatisé, SSL, monitoring et scalabilité.",
   keywords: [
     "cloud",
-    "deploiement",
+    "déploiement",
     "PaaS",
     "CI/CD",
     "DevOps",
     "Nubiecloud",
-    "hebergement",
+    "hébergement",
   ],
   icons: {
     icon: "/favicon.png?v=2",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nubiecloud - Simplifying Cloud, Amplifying Business",
     description:
-      "Plateforme de deploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes avec CI/CD automatise, SSL, monitoring et scalabilite.",
+      "Plateforme de déploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes avec CI/CD automatisé, SSL, monitoring et scalabilité.",
     url: "https://nubiecloud.io",
     siteName: "Nubiecloud",
     locale: "fr_FR",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nubiecloud - Simplifying Cloud, Amplifying Business",
     description:
-      "Plateforme de deploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes.",
+      "Plateforme de déploiement cloud pour applications web. Deployez vos applications, SaaS et ERP en quelques minutes.",
   },
   alternates: {
     canonical: "https://nubiecloud.io",

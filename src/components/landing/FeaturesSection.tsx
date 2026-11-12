@@ -136,28 +136,28 @@ function StackIllust() {
 const CARTES = {
   fr: [
     {
-      title: 'Deploiement ultra-rapide',
+      title: 'Déploiement ultra-rapide',
       description:
-        "Passez de l'idee a la production en quelques minutes grace a notre pipeline CI/CD optimise.",
+        "Passez de l'idée à la production en quelques minutes grâce à notre pipeline CI/CD optimisé.",
     },
     {
-      title: 'Securite Enterprise',
+      title: 'Sécurité Enterprise',
       description:
-        'Protection DDoS, certificats SSL automatiques et surveillance continue de la securite.',
+        'Protection DDoS, certificats SSL automatiques et surveillance continue de la sécurité.',
     },
     {
-      title: 'Scalabilite Automatique',
+      title: 'Scalabilité Automatique',
       description:
         "Votre application s'adapte au trafic sans aucune intervention manuelle de votre part.",
     },
     {
       title: 'SaaS/ERP 1-Click',
-      description: 'Deployez WordPress, Odoo et autres SaaS en un seul clic sans configuration.',
+      description: 'Déployez WordPress, Odoo et autres SaaS en un seul clic sans configuration.',
     },
     {
-      title: 'Configuration Simplifiee',
+      title: 'Configuration Simplifiée',
       description:
-        'Interface intuitive pour gerer tous les aspects de votre infrastructure sans complexite.',
+        'Interface intuitive pour gérer tous les aspects de votre infrastructure sans complexité.',
     },
     {
       title: 'Multi-Stack Support',
@@ -212,8 +212,8 @@ const ILLUSTRATIONS = [
 
 const LIBELLES = {
   fr: {
-    titre: 'Fonctionnalites Principales',
-    accroche: 'Tout ce dont vous avez besoin pour deployer et gerer vos applications en production.',
+    titre: 'Fonctionnalités Principales',
+    accroche: 'Tout ce dont vous avez besoin pour déployer et gérer vos applications en production.',
   },
   en: {
     titre: 'Key features',
