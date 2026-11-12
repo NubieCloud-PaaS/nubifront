@@ -257,12 +257,15 @@ function FluxSchema({ lang }: { lang: DocsLang }) {
   const largeur = etapes.length * PAS - ECART;
   return (
     <div className="mb-16">
-      {/* Le diagramme garde sa largeur et défile sur un téléphone : le réduire
-          rendrait les libellés illisibles. */}
+      {/* AUCUNE ANIMATION A L'INTERIEUR DU SVG, ET C'EST LA CORRECTION.
+          `whileInView` repose sur IntersectionObserver, que Safari n'honore PAS sur les
+          elements d'un SVG : les noeuds restaient a `opacity: 0` pour toujours, donc une
+          boite vide a la bonne taille -- texte selectionnable, rien de peint. Les quatre
+          etapes voisines s'affichaient, elles : ce sont des elements HTML. C'est la regle
+          du socle des sites vitrines, appliquee ici -- du contenu ne depend JAMAIS de JS
+          pour etre visible. La section entiere apparait deja par `SectionWrapper`, qui
+          anime un element HTML. */}
       <div className="overflow-x-auto pb-2">
-        {/* `width`/`height` EN ATTRIBUTS, pas seulement un viewBox : Safari ne derive
-            pas la hauteur du ratio quand la largeur vient du CSS, et rend alors une
-            bande de hauteur nulle -- le texte est dans le DOM, rien ne s'affiche. */}
         <svg
           viewBox={`0 0 ${largeur} 124`}
           width={largeur}
@@ -274,75 +277,48 @@ function FluxSchema({ lang }: { lang: DocsLang }) {
         >
           {etapes.map((e, i) => {
             const x = i * PAS;
+            const dernier = i === etapes.length - 1;
             return (
               <g key={e.k}>
-                {/* Connecteur vers l'étape suivante */}
                 {i < etapes.length - 1 && (
-                  <g>
-                    <motion.line
-                      x1={x + NOEUD_L + 6}
-                      y1={62}
-                      x2={x + NOEUD_L + ECART - 12}
-                      y2={62}
-                      style={{ stroke: 'var(--token-border-2)' }}
-                      strokeWidth={1.5}
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.25 + i * 0.16, duration: 0.3 }}
-                    />
-                    <motion.path
+                  <g style={{ stroke: 'var(--token-border-2)' }} strokeWidth={1.5}>
+                    <line x1={x + NOEUD_L + 6} y1={62} x2={x + NOEUD_L + ECART - 12} y2={62} />
+                    <path
                       d={`M${x + NOEUD_L + ECART - 14} 57l6 5-6 5`}
                       fill="none"
-                      style={{ stroke: 'var(--token-border-2)' }}
-                      strokeWidth={1.5}
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.45 + i * 0.16, duration: 0.2 }}
                     />
                   </g>
                 )}
-                <motion.g
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.16, duration: 0.35, ease: 'easeOut' as const }}
+                <rect
+                  x={x}
+                  y={16}
+                  width={NOEUD_L}
+                  height={92}
+                  rx={12}
+                  style={{
+                    fill: 'var(--token-surface-2)',
+                    stroke: dernier ? 'var(--token-accent-emphasis)' : 'var(--token-border-0)',
+                  }}
+                  strokeWidth={1}
+                />
+                <g
+                  transform={`translate(${x + 16} 30) scale(0.83)`}
+                  fill="none"
+                  style={{ stroke: 'var(--token-accent-emphasis)' }}
+                  strokeWidth={1.7}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <rect
-                    x={x}
-                    y={16}
-                    width={NOEUD_L}
-                    height={92}
-                    rx={12}
-                    style={{
-                      fill: 'var(--token-surface-2)',
-                      stroke:
-                        i === etapes.length - 1
-                          ? 'var(--token-accent-emphasis)'
-                          : 'var(--token-border-0)',
-                    }}
-                    strokeWidth={1}
-                  />
-                  <g
-                    transform={`translate(${x + 16} 30) scale(0.83)`}
-                    fill="none"
-                    style={{ stroke: 'var(--token-accent-emphasis)' }}
-                    strokeWidth={1.7}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d={GLYPHES[e.k]} />
-                  </g>
-                  <text x={x + 16} y={78} style={{ fill: 'var(--token-text-1)' }} fontSize={14} fontWeight={600}>
-                    {e.label}
-                  </text>
-                  <text x={x + 16} y={96} style={{ fill: 'var(--token-text-3)' }} fontSize={11}>
-                    {e.sub}
-                  </text>
-                </motion.g>
+                  <path d={GLYPHES[e.k]} />
+                </g>
+                <text x={x + 16} y={78} style={{ fill: 'var(--token-text-1)' }} fontSize={14} fontWeight={600}>
+                  {e.label}
+                </text>
+                <text x={x + 16} y={96} style={{ fill: 'var(--token-text-3)' }} fontSize={11}>
+                  {e.sub}
+                </text>
               </g>
             );
           })}
