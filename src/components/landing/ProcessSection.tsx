@@ -260,11 +260,16 @@ function FluxSchema({ lang }: { lang: DocsLang }) {
       {/* Le diagramme garde sa largeur et défile sur un téléphone : le réduire
           rendrait les libellés illisibles. */}
       <div className="overflow-x-auto pb-2">
+        {/* `width`/`height` EN ATTRIBUTS, pas seulement un viewBox : Safari ne derive
+            pas la hauteur du ratio quand la largeur vient du CSS, et rend alors une
+            bande de hauteur nulle -- le texte est dans le DOM, rien ne s'affiche. */}
         <svg
           viewBox={`0 0 ${largeur} 124`}
+          width={largeur}
+          height={124}
           role="img"
           aria-label={LIBELLES[lang].titre}
-          className="w-full"
+          className="w-full h-auto"
           style={{ minWidth: 740 }}
         >
           {etapes.map((e, i) => {
@@ -279,17 +284,17 @@ function FluxSchema({ lang }: { lang: DocsLang }) {
                       y1={62}
                       x2={x + NOEUD_L + ECART - 12}
                       y2={62}
-                      stroke="var(--token-border-2)"
+                      style={{ stroke: 'var(--token-border-2)' }}
                       strokeWidth={1.5}
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      whileInView={{ pathLength: 1, opacity: 1 }}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.25 + i * 0.16, duration: 0.3 }}
                     />
                     <motion.path
                       d={`M${x + NOEUD_L + ECART - 14} 57l6 5-6 5`}
                       fill="none"
-                      stroke="var(--token-border-2)"
+                      style={{ stroke: 'var(--token-border-2)' }}
                       strokeWidth={1.5}
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -312,24 +317,29 @@ function FluxSchema({ lang }: { lang: DocsLang }) {
                     width={NOEUD_L}
                     height={92}
                     rx={12}
-                    fill="var(--token-surface-2)"
-                    stroke={i === etapes.length - 1 ? 'var(--token-accent-emphasis)' : 'var(--token-border-0)'}
+                    style={{
+                      fill: 'var(--token-surface-2)',
+                      stroke:
+                        i === etapes.length - 1
+                          ? 'var(--token-accent-emphasis)'
+                          : 'var(--token-border-0)',
+                    }}
                     strokeWidth={1}
                   />
                   <g
                     transform={`translate(${x + 16} 30) scale(0.83)`}
                     fill="none"
-                    stroke="var(--token-accent-emphasis)"
+                    style={{ stroke: 'var(--token-accent-emphasis)' }}
                     strokeWidth={1.7}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
                     <path d={GLYPHES[e.k]} />
                   </g>
-                  <text x={x + 16} y={78} fill="var(--token-text-1)" fontSize={14} fontWeight={600}>
+                  <text x={x + 16} y={78} style={{ fill: 'var(--token-text-1)' }} fontSize={14} fontWeight={600}>
                     {e.label}
                   </text>
-                  <text x={x + 16} y={96} fill="var(--token-text-3)" fontSize={11}>
+                  <text x={x + 16} y={96} style={{ fill: 'var(--token-text-3)' }} fontSize={11}>
                     {e.sub}
                   </text>
                 </motion.g>
