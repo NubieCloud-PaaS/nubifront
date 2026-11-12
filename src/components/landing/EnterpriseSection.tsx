@@ -16,9 +16,9 @@ const ICONES = [ServerStackIcon, ShieldCheckIcon, PhoneIcon, ArrowsPointingOutIc
 const AVANTAGES = {
   fr: [
     {
-      title: 'Infrastructure Dédiée et Isolée',
+      title: 'Région dédiée et isolée',
       description:
-        "Bénéficiez d'une infrastructure de qualité enterprise, complètement isolée et dédiée a votre organisation.",
+        "Une infrastructure complètement isolée et dédiée à votre organisation \u2014 jusqu'à un cluster dans votre propre datacenter, rattaché à la plateforme par un lien chiffré.",
     },
     {
       title: 'Sécurité Renforcée',
@@ -37,9 +37,9 @@ const AVANTAGES = {
   ],
   en: [
     {
-      title: 'Dedicated, isolated infrastructure',
+      title: 'Dedicated, isolated region',
       description:
-        'Enterprise-grade infrastructure, fully isolated and dedicated to your organisation.',
+        'Infrastructure fully isolated and dedicated to your organisation \u2014 up to a cluster in your own datacenter, attached to the platform over an encrypted link.',
     },
     {
       title: 'Hardened security',

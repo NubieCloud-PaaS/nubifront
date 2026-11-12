@@ -11,7 +11,7 @@ const CONSOLE_URL = process.env.NEXT_PUBLIC_CONSOLE_URL || 'https://console.nubi
 
 const LIBELLES = {
   fr: {
-    badge: 'Plateforme Cloud PaaS',
+    badge: 'Région Afrique Centrale — bientôt disponible',
     titre: 'Déployer.',
     // Les mots qui defilent : une liste, donc TypeScript ne verifie que le TYPE. Garder
     // le meme NOMBRE d'entrees dans les deux langues -- la rotation est a duree fixe
@@ -24,7 +24,7 @@ const LIBELLES = {
     demo: 'Demander une demo',
   },
   en: {
-    badge: 'Cloud PaaS Platform',
+    badge: 'Central Africa region — coming soon',
     titre: 'Deploy.',
     mots: ['Effortlessly.', 'In a few clicks.', 'Without the ops.', 'At your own pace.', 'And move on.'],
     accroche:
@@ -69,8 +69,23 @@ export default function HeroSection({ lang = 'fr' }: { lang?: DocsLang } = {}) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left column */}
           <motion.div variants={container} initial="hidden" animate="show">
+            {/* Le badge porte l'annonce de la region, et MENE a la section qui dit
+                l'etat reel des trois regions : une annonce qui ne se verifie nulle part
+                est une affirmation, pas une information. */}
             <motion.div variants={item}>
-              <Badge className="mb-6">{t.badge}</Badge>
+              <a href="#souverainete" className="inline-block mb-6 group">
+                <Badge className="gap-2 group-hover:border-accent-500/50 transition-colors">
+                  <span className="relative flex items-center justify-center w-2 h-2">
+                    <motion.span
+                      animate={{ scale: [1, 2.4, 1], opacity: [0.7, 0, 0.7] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute inset-0 rounded-full bg-accent-400/30"
+                    />
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-400" />
+                  </span>
+                  {t.badge}
+                </Badge>
+              </a>
             </motion.div>
 
             <motion.h1

@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/landing/HeroSection';
+import SovereigntySection from '@/components/landing/SovereigntySection';
 import SocialProofBar from '@/components/landing/SocialProofBar';
 import PlatformSection from '@/components/landing/PlatformSection';
 import ProcessSection from '@/components/landing/ProcessSection';
@@ -16,7 +17,7 @@ import type { DocsLang } from '@/lib/i18n';
 /**
  * LA PAGE D'ACCUEIL, DANS UNE LANGUE.
  *
- * Elle existe pour que l'ORDRE DES DIX SECTIONS ne soit écrit qu'une fois. Recopier cette
+ * Elle existe pour que l'ORDRE DES ONZE SECTIONS ne soit écrit qu'une fois. Recopier cette
  * liste dans `(en)/en/page.tsx` aurait fait deux séquences à tenir : une section insérée
  * d'un côté et pas de l'autre ne lève rien et ne se voit qu'en comparant les deux pages à
  * l'œil. C'est le défaut déjà payé trois fois dans ce dépôt — la FAQ en était la dernière
@@ -44,6 +45,7 @@ export default function LandingPage({ lang }: { lang: DocsLang }) {
       <Navbar lang={lang} />
       <main>
         <HeroSection lang={lang} />
+        <SovereigntySection lang={lang} />
         <SocialProofBar lang={lang} />
         <PlatformSection lang={lang} />
         <ProcessSection lang={lang} />
