@@ -17,7 +17,11 @@ export function RootHtml({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html
+      lang={lang}
+      className={fontVariables}
+      suppressHydrationWarning
+    >
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/favicon.png?v=2" />
@@ -43,7 +47,7 @@ export function RootHtml({
           }}
         />
       </head>
-      <body className={`${fontVariables} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
