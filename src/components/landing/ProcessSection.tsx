@@ -13,13 +13,15 @@ const titleVariants = {
 
 const LIBELLES = {
   fr: {
-    titre: 'Du commit au deploiement',
-    connecter: 'Connecter un depot',
-    selectionne: 'Selectionne',
+    titre: 'Du commit au déploiement',
+    connecter: 'Connecter un dépôt',
+    selectionne: 'Sélectionné',
     configBuild: 'Configuration du build',
     pipeline: 'Pipeline CI/CD',
     production: 'En production',
     live: 'Live',
+    sousTitre: '4 étapes simples vers la production',
+    fluxLegende: 'Chaque push rejoue ce chemin, en entier.',
   },
   en: {
     titre: 'From commit to deployment',
@@ -29,14 +31,16 @@ const LIBELLES = {
     pipeline: 'CI/CD pipeline',
     production: 'In production',
     live: 'Live',
+    sousTitre: '4 simple steps to production',
+    fluxLegende: 'Every push replays this path, end to end.',
   },
 } satisfies Record<DocsLang, Record<string, string>>;
 
 const ETAPES = {
   fr: [
-    { num: '01', title: 'Connectez votre depot', description: 'Liez GitHub ou GitLab en un clic. Nous detectons automatiquement votre configuration.' },
-    { num: '02', title: 'Configurez votre build', description: "Interface intuitive pour gerer commandes de build et variables d'environnement." },
-    { num: '03', title: 'Poussez votre code', description: 'A chaque git push, Nubiecloud build, teste et prepare le deploiement automatiquement.' },
+    { num: '01', title: 'Connectez votre dépôt', description: 'Liez GitHub ou GitLab en un clic. Nous détectons automatiquement votre configuration.' },
+    { num: '02', title: 'Configurez votre build', description: "Interface intuitive pour gérer commandes de build et variables d'environnement." },
+    { num: '03', title: 'Poussez votre code', description: 'À chaque git push, Nubiecloud build, teste et prépare le déploiement automatiquement.' },
     { num: '04', title: 'En production', description: 'Votre application est live sur notre infrastructure globale avec SSL, CDN et monitoring.' },
   ],
   en: [
@@ -129,7 +133,7 @@ function PushIllustration({ lang }: { lang: DocsLang }) {
         {[
           { icon: '●', label: 'git push origin main', color: 'text-accent-400', delay: 0.4 },
           { icon: '◐', label: 'Building...', color: 'text-yellow-400', delay: 0.6 },
-          { icon: '✓', label: 'Tests passes (12/12)', color: 'text-green-400', delay: 0.8 },
+          { icon: '✓', label: 'Tests passed (12/12)', color: 'text-green-400', delay: 0.8 },
           { icon: '✓', label: 'Image built (234 MB)', color: 'text-green-400', delay: 1.0 },
           { icon: '✓', label: 'Deploying to prod...', color: 'text-green-400', delay: 1.2 },
         ].map((line, i) => (
@@ -209,6 +213,136 @@ function DeployIllustration({ lang }: { lang: DocsLang }) {
   );
 }
 
+/* ── Schéma du flux ──────────────────────────────────────────────────────────
+   Un DIAGRAMME, pas une maquette d'écran : c'est le registre qui manquait à la
+   page, où les quatre illustrations sont toutes des captures de console. Il dit
+   en un coup d'œil ce que fait une PaaS, avant que les quatre étapes le
+   détaillent. Aucune image : un SVG en ligne, quelques kilo-octets.
+   Les couleurs passent par les jetons `--token-*`, donc le thème clair suit
+   sans règle supplémentaire.                                               */
+
+const FLUX = {
+  fr: [
+    { k: 'code', label: 'Votre code', sub: 'git push' },
+    { k: 'build', label: 'Build', sub: 'langage détecté' },
+    { k: 'image', label: 'Image', sub: 'versionnée' },
+    { k: 'deploy', label: 'Déploiement', sub: 'sans coupure' },
+    { k: 'live', label: 'En ligne', sub: 'HTTPS + CDN' },
+  ],
+  en: [
+    { k: 'code', label: 'Your code', sub: 'git push' },
+    { k: 'build', label: 'Build', sub: 'language detected' },
+    { k: 'image', label: 'Image', sub: 'versioned' },
+    { k: 'deploy', label: 'Deployment', sub: 'no downtime' },
+    { k: 'live', label: 'Live', sub: 'HTTPS + CDN' },
+  ],
+} satisfies Record<DocsLang, { k: string; label: string; sub: string }[]>;
+
+/* Glyphes dessinés sur une grille de 24, en trait : ils prennent la couleur
+   d'accent du thème et restent nets à toute échelle. */
+const GLYPHES: Record<string, string> = {
+  code: 'M9 8l-4 4 4 4M15 8l4 4-4 4',
+  build: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM4 7.5l8 4.5 8-4.5M12 12v9',
+  image: 'M4 8.5L12 4l8 4.5-8 4.5-8-4.5zM4 13l8 4.5 8-4.5',
+  deploy: 'M12 20V5M7 10l5-5 5 5M5 20h14',
+  live: 'M12 3a9 9 0 100 18 9 9 0 000-18zM3.5 12h17M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18',
+};
+
+const NOEUD_L = 150;
+const ECART = 44;
+const PAS = NOEUD_L + ECART;
+
+function FluxSchema({ lang }: { lang: DocsLang }) {
+  const etapes = FLUX[lang];
+  const largeur = etapes.length * PAS - ECART;
+  return (
+    <div className="mb-16">
+      {/* Le diagramme garde sa largeur et défile sur un téléphone : le réduire
+          rendrait les libellés illisibles. */}
+      <div className="overflow-x-auto pb-2">
+        <svg
+          viewBox={`0 0 ${largeur} 124`}
+          role="img"
+          aria-label={LIBELLES[lang].titre}
+          className="w-full"
+          style={{ minWidth: 740 }}
+        >
+          {etapes.map((e, i) => {
+            const x = i * PAS;
+            return (
+              <g key={e.k}>
+                {/* Connecteur vers l'étape suivante */}
+                {i < etapes.length - 1 && (
+                  <g>
+                    <motion.line
+                      x1={x + NOEUD_L + 6}
+                      y1={62}
+                      x2={x + NOEUD_L + ECART - 12}
+                      y2={62}
+                      stroke="var(--token-border-2)"
+                      strokeWidth={1.5}
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      whileInView={{ pathLength: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.25 + i * 0.16, duration: 0.3 }}
+                    />
+                    <motion.path
+                      d={`M${x + NOEUD_L + ECART - 14} 57l6 5-6 5`}
+                      fill="none"
+                      stroke="var(--token-border-2)"
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.45 + i * 0.16, duration: 0.2 }}
+                    />
+                  </g>
+                )}
+                <motion.g
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.16, duration: 0.35, ease: 'easeOut' as const }}
+                >
+                  <rect
+                    x={x}
+                    y={16}
+                    width={NOEUD_L}
+                    height={92}
+                    rx={12}
+                    fill="var(--token-surface-2)"
+                    stroke={i === etapes.length - 1 ? 'var(--token-accent-emphasis)' : 'var(--token-border-0)'}
+                    strokeWidth={1}
+                  />
+                  <g
+                    transform={`translate(${x + 16} 30) scale(0.83)`}
+                    fill="none"
+                    stroke="var(--token-accent-emphasis)"
+                    strokeWidth={1.7}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d={GLYPHES[e.k]} />
+                  </g>
+                  <text x={x + 16} y={78} fill="var(--token-text-1)" fontSize={14} fontWeight={600}>
+                    {e.label}
+                  </text>
+                  <text x={x + 16} y={96} fill="var(--token-text-3)" fontSize={11}>
+                    {e.sub}
+                  </text>
+                </motion.g>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <p className="mt-3 text-center text-sm text-text-tertiary">{LIBELLES[lang].fluxLegende}</p>
+    </div>
+  );
+}
+
 const illustrations = [RepoIllustration, BuildIllustration, PushIllustration, DeployIllustration];
 
 
@@ -236,9 +370,11 @@ export default function ProcessSection({ lang = 'fr' }: { lang?: DocsLang } = {}
             variants={titleVariants}
             className="text-lg text-text-secondary"
           >
-            4 etapes simples vers la production
+            {t.sousTitre}
           </motion.p>
         </motion.div>
+
+        <FluxSchema lang={lang} />
 
         {/* Steps grid with illustrations */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14">
